@@ -15,13 +15,11 @@
   "private": false,
   "dependencies": {
     "@angular/animations": "9.1.13",
-    "@angular/cdk": "9.2.4",
     "@angular/common": "9.1.13",
     "@angular/compiler": "9.1.13",
     "@angular/core": "9.1.13",
     "@angular/forms": "9.1.13",
     "@angular/localize": "^9.1.13",
-    "@angular/material": "9.2.4",
     "@angular/platform-browser": "9.1.13",
     "@angular/platform-browser-dynamic": "9.1.13",
     "@angular/router": "9.1.13",
@@ -30,7 +28,9 @@
     "zone.js": "~0.10.2"
   },
   "peerDependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "@angular/cdk": "9.2.4",
+    "@angular/material": "9.2.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.901.15",
