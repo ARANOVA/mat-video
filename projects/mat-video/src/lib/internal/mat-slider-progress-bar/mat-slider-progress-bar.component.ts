@@ -1,7 +1,9 @@
-import { Component, Input, ElementRef, ChangeDetectorRef, ChangeDetectionStrategy, Optional, Attribute } from "@angular/core";
+import { Component, Input, ElementRef, ChangeDetectorRef, ChangeDetectionStrategy, Optional, Attribute, NgZone, Inject } from "@angular/core";
 import { MatSlider, MAT_SLIDER_VALUE_ACCESSOR } from "@angular/material/slider";
 import { FocusMonitor } from "@angular/cdk/a11y";
 import { Directionality } from "@angular/cdk/bidi";
+import { DOCUMENT } from "@angular/common";
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 /** Counter used to generate unique IDs for progress bars. */
 let sliderprogressbarId = 0;
@@ -45,7 +47,7 @@ let sliderprogressbarId = 0;
 })
 export class MatSliderProgressBarComponent extends MatSlider {
   @Input() mode = "buffer";
-  @Input() value = 0;
+
   /** Buffer value of the progress bar. Defaults to zero. */
   @Input()
   get bufferValue(): number {
@@ -56,22 +58,43 @@ export class MatSliderProgressBarComponent extends MatSlider {
   }
   private pBufferValue = 0;
 
+
   /** The id of the progress bar. */
   sliderprogressbarId = `mat-slider-progress-bar-${sliderprogressbarId++}`;
 
-  constructor(
-    elementRef: ElementRef,
-    focusMonitor: FocusMonitor,
-    changeDetectorRef: ChangeDetectorRef,
-    @Optional() dir: Directionality,
-    @Attribute("tabindex") tabIndex: string
-  ) {
-    super(elementRef, focusMonitor, changeDetectorRef, dir, tabIndex);
+  constructor(elementRef: ElementRef,
+    _focusMonitor: FocusMonitor,
+    _changeDetectorRef: ChangeDetectorRef,
+    @Optional() _dir: Directionality,
+    @Attribute('tabindex') tabIndex: string,
+    _ngZone: NgZone,
+    @Inject(DOCUMENT) _document: any,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+    super(
+      elementRef,
+      _focusMonitor,
+      _changeDetectorRef,
+      _dir,
+      tabIndex,
+      _ngZone,
+      _document,
+      _animationMode
+    );
     this.tabIndex = parseInt(tabIndex, 10) || 0;
   }
 
+  /** CSS styles for the ticks container element. */
+  _getTrackFillStyles(): { [key: string]: string } {
+    if (this.mode === "buffer") {
+      const axis = this.vertical ? "Y" : "X";
+      return {
+        transform: `translate${axis}(0px) scale${axis}(${this.percent / 100})`
+      };
+    }
+  }
+
   /** CSS styles for the track fill element. */
-  get _trackBufferStyles(): { [key: string]: string } {
+  _getTrackBufferStyles(): { [key: string]: string } {
     if (this.mode === "buffer") {
       const axis = this.vertical ? "Y" : "X";
       return {
