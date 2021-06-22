@@ -1,3 +1,17 @@
+# 2.10.0 (2021-06-22)
+
+### Features:
+
+- **angular:** added support for Angular 10
+
+
+# 2.9.0 (2021-06-22)
+
+### Features:
+
+- **angular:** added support for Angular 9
+
+
 # 2.8.1 (2020-04-20)
 
 ### Bug Fixes:

@@ -144,7 +144,8 @@ mat-video Version | Angular Version
 --- | ---
 1.0.0 - 2.7.2 | Angular 5, 6, 7, 8
 2.8.0 - 2.8.1 | Angular 8
-2.9.0+ | Angular 9
+2.9.0 - 2.9.0 | Angular 9
+2.10.0+ | Angular 10
 
 
 ## Credits
