@@ -30,7 +30,7 @@ deploy:
   local-dir: dist/mat-video-app
   github-token: $GIT_TOKEN  # Set in travis-ci.org dashboard, marked secure
   keep-history: false
-  repo: nkoehler/mat-video
+  repo: ARANOVA/mat-video
   target-branch: gh-pages
   on:
     branch: master
