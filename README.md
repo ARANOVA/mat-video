@@ -1,17 +1,15 @@
-**July 2020 - This project is no longer maintained**
-
-# mat-video is an Angular 8/9+ video player using Material
+# mat-video is an Angular video player using Material
 [![npm version](https://badge.fury.io/js/mat-video.svg)](https://badge.fury.io/js/mat-video)
-[![Build Status](https://travis-ci.org/nkoehler/mat-video.svg?branch=master)](https://travis-ci.org/nkoehler/mat-video)
-[![Maintainability](https://api.codeclimate.com/v1/badges/46fb1a751d60d0f8b316/maintainability)](https://codeclimate.com/github/nkoehler/mat-video/maintainability)
+[![Build Status](https://travis-ci.org/ARANOVA/mat-video.svg?branch=master)](https://travis-ci.org/ARANOVA/mat-video)
+[![Maintainability](https://api.codeclimate.com/v1/badges/46fb1a751d60d0f8b316/maintainability)](https://codeclimate.com/github/ARANOVA/mat-video/maintainability)
 
-**mat-video** is an Angular component for playing videos.  It has all the features you would expect from a standard video player, all in an extremely light package. The video player is designed to be flexible and easy to use; you can be up and running in less than 5 minutes!
+**mat-video** is an Angular component for playing videos. It has all the features you would expect from a standard video player, all in an extremely light package. The video player is designed to be flexible and easy to use; you can be up and running in less than 5 minutes!
 
-It was built for modern browsers using _TypeScript_, _CSS3_ and _HTML5_ with _Angular & Material 8/9+_.
+It was built for modern browsers using _TypeScript_, _CSS3_ and _HTML5_ with _Angular & Material.
 
-See the [changelog](https://github.com/nkoehler/mat-video/blob/master/CHANGELOG.md) for recent changes.  
+See the [changelog](https://github.com/ARANOVA/mat-video/blob/master/CHANGELOG.md) for recent changes.  
 
-If you wish to contribute, please fill out the [pull request template](https://github.com/nkoehler/mat-video/blob/master/CONTRIBUTING.md).  For issues, please fill out the [issue template](https://github.com/nkoehler/mat-video/blob/master/ISSUE_TEMPLATE.md) before submitting.
+If you wish to contribute, please fill out the [pull request template](https://github.com/ARANOVA/mat-video/blob/master/CONTRIBUTING.md).  For issues, please fill out the [issue template](https://github.com/ARANOVA/mat-video/blob/master/ISSUE_TEMPLATE.md) before submitting.
 
 ## Features
 - Native _HTML5_ video player
@@ -145,11 +143,12 @@ This API feature is considered experimental, and is subject to change.
 mat-video Version | Angular Version
 --- | ---
 1.0.0 - 2.7.2 | Angular 5, 6, 7, 8
-2.8.0+ | Angular 8, 9
+2.8.0 - 2.8.1 | Angular 8
+2.9.0+ | Angular 9
 
 
 ## Credits
-**mat-video** is an open-source project developed by Nicholas Koehler.
+**mat-video** is an open-source project developed by Nicholas Koehler. Contributed by [ARANOVA](https://aranova.es)
 
 Special thanks:
 - [mediapack-me](https://github.com/mediapack-me) for responsive assistance.
