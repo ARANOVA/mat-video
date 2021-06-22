@@ -1,3 +1,23 @@
+# 2.12.0 (2021-06-22)
+
+### Features:
+
+- **angular:** added support for Angular 12
+
+### Bug Fixes:
+- **internal:** progress slider component not work propertly
+
+
+# 2.11.0 (2021-06-22)
+
+### Features:
+
+- **angular:** added support for Angular 11
+
+### Bug Fixes:
+- **internal:** progress slider component not work propertly
+
+
 # 2.10.0 (2021-06-22)
 
 ### Features:

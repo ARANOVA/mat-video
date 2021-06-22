@@ -1,12 +1,12 @@
 {
   "name": "mat-video",
-  "version": "2.8.1",
+  "version": "2.12.0",
   "description": "mat-video is an Angular 8/9+ video player using Material",
   "license": "MIT",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nkoehler/mat-video.git"
+    "url": "git+https://github.com/ARANOVA/mat-video.git"
   },
   "keywords": [
     "angular",
@@ -26,20 +26,19 @@
   ],
   "author": "Nicholas Koehler",
   "bugs": {
-    "url": "https://github.com/nkoehler/mat-video/issues"
+    "url": "https://github.com/ARANOVA/mat-video/issues"
   },
-  "homepage": "https://github.com/nkoehler/mat-video",
+  "homepage": "https://github.com/ARANOVA/mat-video",
   "peerDependencies": {
-    "@angular/common": ">=8.0.0",
-    "@angular/compiler": ">=8.0.0",
-    "@angular/core": ">=8.0.0",
-    "@angular/platform-browser": ">=8.0.0",
-    "@angular/platform-browser-dynamic": ">=8.0.0",
-    "@angular/material": ">=8.0.0",
-    "@angular/cdk": ">=8.0.0",
-    "@angular/animations": ">=8.0.0",
-    "rxjs": ">=6.5.2",
-    "hammerjs": ">=2.0.8",
-    "core-js": ">=3.2.1"
+    "@angular/common": ">=12.0.0",
+    "@angular/compiler": ">=12.0.0",
+    "@angular/core": ">=12.0.0",
+    "@angular/platform-browser": ">=12.0.0",
+    "@angular/platform-browser-dynamic": ">=12.0.0",
+    "@angular/material": ">=12.0.0",
+    "@angular/cdk": ">=12.0.0",
+    "@angular/animations": ">=12.0.0",
+    "rxjs": ">=6.6.7",
+    "zone.js": ">=0.11.4"
   }
 }
