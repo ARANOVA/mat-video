@@ -20,15 +20,42 @@ export class AppComponent {
   autoplay = false;
   preload = true;
   loop = false;
-  quality = true;
-  download = true;
-  fullscreen = true;
+  quality = false;
+  download = false;
+  fullscreen = false;
   playsinline = false;
-  showFrameByFrame = false;
+  showFrameByFrame = true;
+  controlClass = 'no-float';
+  headerClass = 'hidden';
   keyboard = true;
   color = "primary";
   spinner = "spin";
   poster = "assets/NASA.jpg";
-  overlay = null;
+  overlay = true;
   muted = false;
+  showSpeed = true;
+  showVolume = false;
+  orderConfiguration = {
+    playButton: 0,
+    frameByFrameControl: 1,
+    volumeControl: 2,
+    timeControl: 4,
+    speedControl: 6,
+    spacer: 5,
+    qualityControl: 6,
+    downloadButton: 7,
+    fullscreenButton: 8
+  };
+  editorOrderButtons = {
+    tcinInput: 0,
+    tcinButton: 1,
+    tcoutButton: 2,
+    tcoutInput: 3,
+    typeCutSelector: 4,
+    spacer: 5,
+    addButton: 6,
+    saveButton: 7,
+    removeButton: 8,
+    resetButton: 9
+  }
 }

@@ -16,6 +16,11 @@ import { ThemePalette } from "@angular/material/core";
 import { EventHandler } from "./interfaces/event-handler.interface";
 import { EventService } from "./services/event.service";
 
+interface HashNumber {
+  [key: string]: number
+}
+
+
 @Component({
   selector: "mat-video",
   templateUrl: "./video.component.html",
@@ -34,7 +39,9 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() fullscreen = true;
   @Input() playsinline = false;
   @Input() showFrameByFrame = false;
-  @Input() fps = 29.97;
+  @Input() showVolume = false;
+  @Input() showSpeed = false;
+  @Input() fps = 25;
   @Input() download = false;
   @Input() color: ThemePalette = "primary";
   @Input() spinner = "spin";
@@ -42,6 +49,31 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() keyboard = true;
   @Input() overlay: boolean = null;
   @Input() muted = false;
+  @Input() controlClass: string = '';
+  @Input() headerClass: string = '';
+  @Input() orderConfiguration: HashNumber = {
+    playButton: 0,
+    frameByFrameControl: 1,
+    volumeControl: 2,
+    timeControl: 3,
+    speedControl: 4,
+    spacer: 5,
+    qualityControl: 6,
+    downloadButton: 7,
+    fullscreenButton: 8
+  };
+  @Input() editorOrderButtons: HashNumber = {
+    tcinInput: 0,
+    tcinButton: 1,
+    tcoutButton: 2,
+    tcoutInput: 3,
+    typeCutSelector: 4,
+    spacer: 5,
+    addButton: 6,
+    saveButton: 7,
+    removeButton: 8,
+    resetButton: 9
+  }
   @Output() mutedChange = new EventEmitter<boolean>();
 
   @Output() timeChange = new EventEmitter<number>();
@@ -210,5 +242,9 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
 
     this.video.nativeElement.muted = this.muted;
+  }
+
+  log($event: any) {
+    console.log($event);
   }
 }

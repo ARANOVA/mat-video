@@ -1,0 +1,57 @@
+<mat-slider [color]="color" min="0" max="100" step="0.1" [value]="curTimePercent" (input)="seekVideo($event.value)">
+</mat-slider>
+<div class="cut-bar" #trimmerBar (click)="deselectCut($event)">
+    <ng-container *ngFor="let cut of cuts; let idx=index">
+        <div (click)="selectCut($event, idx)" [ngClass]="getClassCut(cut)"
+            [ngStyle]="{'left.px': getStartCut(cut.tcin), 'width.px': getWidthCut(cut.tcin, cut.tcout)}">
+        </div>
+    </ng-container>
+</div>
+
+<div class="menu">
+    <div class="buttons">
+        <div class="inline-small" [style.order]="editorOrderButtons.tcinInput">
+            <mat-form-field color="primary" [style.width.px]="50">
+                <mat-label>TcIn</mat-label>
+                <input matInput placeholder="0" type="number" min="0" [step]="1/fps" [(ngModel)]="selectedCut.tcin" />
+            </mat-form-field>
+        </div>
+        <button mat-icon-button (click)="setTcIn()" [style.order]="editorOrderButtons.tcinButton">
+            <mat-icon>skip_previous</mat-icon>
+        </button>
+        <button mat-icon-button (click)="setTcOut()" [style.order]="editorOrderButtons.tcoutButton">
+            <mat-icon>skip_next</mat-icon>
+        </button>
+        <div class="inline-small" [style.order]="editorOrderButtons.tcoutInput">
+            <mat-form-field color="primary" [style.width.px]="50">
+                <mat-label>TcOut</mat-label>
+                <input matInput placeholder="0" type="number" min="0" [step]="1/fps" [(ngModel)]="selectedCut.tcout" />
+            </mat-form-field>
+        </div>
+
+        <mat-radio-group aria-label="Tipo de corte" [(ngModel)]="selectedCut.type"
+            [style.order]="editorOrderButtons.typeCutSelector">
+            <mat-radio-button [value]="'cut'" class="marr-16">Corte</mat-radio-button>
+            <mat-radio-button [value]="'invalid'">Desechar</mat-radio-button>
+        </mat-radio-group>
+
+        <div style="flex: 1" [style.order]="editorOrderButtons.spacer"></div>
+
+        <button mat-icon-button aria-label="Crear zona" *ngIf="selectedCut.idx === -1 && selectedCut.tcin >= 0 && selectedCut.tcout > selectedCut.tcin" (click)="addCut()" [style.order]="editorOrderButtons.addButton">
+            <mat-icon>add_circle_outline</mat-icon>
+        </button>
+        <button mat-icon-button aria-label="Guardar zona" *ngIf="selectedCut.idx !== -1" (click)="editCut()" [style.order]="editorOrderButtons.saveButton">
+            <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button aria-label="Eliminar zona" *ngIf="selectedCut.idx !== -1" (click)="removeCut()"
+            [style.order]="editorOrderButtons.removeButton">
+            <mat-icon>remove_circle_outline</mat-icon>
+        </button>
+
+        <button mat-icon-button aria-label="Eliminar zona" *ngIf="selectedCut.idx === -1" (click)="resetCut()"
+            [style.order]="editorOrderButtons.resetButton">
+            <mat-icon>clear</mat-icon>
+        </button>
+
+    </div>
+</div>

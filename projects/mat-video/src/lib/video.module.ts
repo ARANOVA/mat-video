@@ -1,8 +1,13 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
+import { FormsModule } from '@angular/forms';
+
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSliderModule } from "@angular/material/slider";
+import { MatRadioModule } from '@angular/material/radio'; 
+import { MatMenuModule } from "@angular/material/menu";
+import { MatInputModule } from '@angular/material/input'; 
 
 import { MatVideoSourceDirective } from "./directives/mat-video-source.directive";
 import { MatVideoTrackDirective } from "./directives/mat-video-track.directive";
@@ -19,6 +24,8 @@ import { MatSeekProgressControlComponent } from "./ui/mat-seek-progress-control/
 import { MatTimeControlComponent } from "./ui/mat-time-control/mat-time-control.component";
 import { MatVideoSpinnerComponent } from "./ui/mat-video-spinner/mat-video-spinner.component";
 import { MatVolumeControlComponent } from "./ui/mat-volume-control/mat-volume-control.component";
+import { MatSpeedControlComponent } from "./ui/mat-speed-control/mat-speed-control.component";
+import { MatEditorControlComponent } from "./ui/mat-editor-control/mat-editor-control.component";
 import { MatVideoComponent } from "./video.component";
 
 @NgModule({
@@ -36,9 +43,11 @@ import { MatVideoComponent } from "./video.component";
     MatSeekProgressControlComponent,
     MatVideoSourceDirective,
     MatVideoTrackDirective,
-    MatFrameByFrameControlComponent
+    MatFrameByFrameControlComponent,
+    MatSpeedControlComponent,
+    MatEditorControlComponent
   ],
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatSliderModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, MatSliderModule, MatInputModule, MatRadioModule, MatMenuModule, MatMenuModule],
   exports: [MatVideoComponent, MatVideoSourceDirective, MatVideoTrackDirective],
   providers: [FullscreenService, EventService]
 })

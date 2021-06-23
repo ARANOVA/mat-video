@@ -15,6 +15,8 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppComponent } from "./app.component";
 import { MatVideoModule } from "projects/mat-video/src/public-api";
 
+import { MatSliderModule } from '@angular/material/slider'; 
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -30,7 +32,8 @@ import { MatVideoModule } from "projects/mat-video/src/public-api";
     MatSlideToggleModule,
     MatTooltipModule,
     MatRadioModule,
-    MatVideoModule
+    MatVideoModule,
+    MatSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -49,12 +49,16 @@
   height: 48px;
 }
 
-.controls .menu .left {
+.controls .menu .buttons {
   justify-content: flex-start;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
 }
 
-.controls .menu .right {
-  justify-content: flex-end;
+mat-time-control {
+  padding: 0 16px;
 }
 
 .visible {

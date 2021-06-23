@@ -1,0 +1,9 @@
+<div class="left">
+    <button mat-icon-button (click)="speedControl(-1)" [disabled]="speedIndex <= 0">
+        <mat-icon class="material-icons-outlined">fast_rewind</mat-icon>
+    </button>
+    <p class="speedText">{{ speed }}</p>
+    <button mat-icon-button (click)="speedControl(1)" [disabled]="speedIndex >= speedScale.length">
+        <mat-icon class="material-icons-outlined">fast_forward</mat-icon>
+    </button>
+</div>
