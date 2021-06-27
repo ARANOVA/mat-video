@@ -59,4 +59,8 @@ export class AppComponent {
     removeButton: 8,
     resetButton: 9
   }
+
+  cutEvent($event: any) {
+    console.log("CUT EVENT", $event);
+  }
 }

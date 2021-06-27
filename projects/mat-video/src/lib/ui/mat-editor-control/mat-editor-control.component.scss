@@ -1,13 +1,44 @@
 @use 'sass:map';
 @use '~@angular/material' as mat;
 
+$flyfut-dark-palette: (
+    50: #c2c2c2,
+    100: #999999,
+    200: #707070,
+    300: #666666,
+    400: #5c5c5c,
+    500: #4d4d4d,
+    600: #3d3d3d,
+    700: #212121,
+    800: #1b1b1b,
+    900: black,
+    A100: #f88948,
+    A200: #ed5b08,
+    A400: #652704,
+    contrast: (
+        50: rgba(black, 0.87),
+        100: rgba(black, 0.87),
+        200: rgba(black, 0.87),
+        300: black,
+        400: black,
+        500: white,
+        600: white,
+        700: rgba(white, 0.87),
+        800: rgba(white, 0.87),
+        900: rgba(white, 0.87),
+        A100: white,
+        A200: white,
+        A400: white,
+    ),
+);
+
+$primary-palette: mat.define-palette($flyfut-dark-palette, 500, 200, 800);
+$accent-palette: mat.define-palette($flyfut-dark-palette, A200, A100, A400);
 $warn-palette: mat.define-palette(mat.$red-palette);
-$primary-palette: mat.define-palette(mat.$green-palette);
-$accent-palette: mat.define-palette(mat.$purple-palette);
 
 $warn: mat.get-color-from-palette($warn-palette, 500);
 $primary: mat.get-color-from-palette($primary-palette, 500);
-$accent: mat.get-color-from-palette($accent-palette, 500);
+$accent: mat.get-color-from-palette($accent-palette, "A200");
 
 .mat-slider-horizontal {
     width: 100%;
@@ -25,7 +56,7 @@ $accent: mat.get-color-from-palette($accent-palette, 500);
 }
 .cut-bar {
     height: 32px;
-    background: #c7c7d4;
+    background-color: $primary;
     border-radius: 4px;
     position: relative;
 }
@@ -41,12 +72,12 @@ $accent: mat.get-color-from-palette($accent-palette, 500);
         -45deg,
         rgba(0, 0, 0, 0) 5px,
         rgba(255, 255, 255, 0) 10px,
-        $primary 5px,
-        $primary 15px
+        $accent 5px,
+        $accent 15px
     );
 }
 .cut.selected, .invalid.selected {
-    border: 2px solid $accent;
+    border: 2px solid #fff;
 }
 .cut.editing, .invalid.editing {
     border: 2px solid $warn;
@@ -56,7 +87,7 @@ $accent: mat.get-color-from-palette($accent-palette, 500);
     top: 0;
     bottom: 0;
     left: 20;
-    background-color: $primary;
+    background-color: $accent;
 }
 .marr-16 {
     margin-right: 16px;

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, Renderer2, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, Renderer2, SimpleChanges, ViewChild } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
 
 
@@ -26,7 +26,7 @@ interface HashNumber {
   templateUrl: './mat-editor-control.component.html',
   styleUrls: ['./mat-editor-control.component.scss']
 })
-export class MatEditorControlComponent implements AfterViewInit, OnDestroy {
+export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDestroy {
 
   curTimePercent = 0;
 
@@ -71,7 +71,12 @@ export class MatEditorControlComponent implements AfterViewInit, OnDestroy {
     this.fullWidth = this.trimmerBar.nativeElement.offsetWidth;
     //this.__paintCuts();
     this.evt.addEvents(this.renderer, this.events);
-    this.selectedCut.type = this.defaultCutType;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.defaultCutType) {
+      this.selectedCut.type = this.defaultCutType;
+    }
   }
 
   private __paintCuts() {

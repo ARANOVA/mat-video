@@ -95,7 +95,7 @@
         [currentTime]="time"
         [defaultCutType]="defaultCutType"
         [editorOrderButtons]="editorOrderButtons"
-        (cutEvent)="log($event)"
+        (cutEvent)="emitCutEvent($event)"
       ></mat-editor-control>
     </div>
   </div>

@@ -80,6 +80,8 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   @Output() timeChange = new EventEmitter<number>();
 
+  @Output() cutEvent = new EventEmitter<any>();
+
   @Input()
   get time() {
     return this.getVideoTag().currentTime;
@@ -246,7 +248,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.video.nativeElement.muted = this.muted;
   }
 
-  log($event: any) {
-    console.log($event);
+  emitCutEvent($event: any) {
+    this.cutEvent.emit($event)
   }
 }
