@@ -26,7 +26,8 @@ export class AppComponent {
   playsinline = false;
   showFrameByFrame = true;
   controlClass = 'no-float';
-  headerClass = 'hidden';
+  headerClass = 'nodisplay';
+  sliderClass = 'nodisplay';
   keyboard = true;
   color = "primary";
   spinner = "spin";

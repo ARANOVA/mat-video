@@ -43,7 +43,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() showSpeed = false;
   @Input() fps = 25;
   @Input() download = false;
-  @Input() color: ThemePalette = "primary";
+  @Input() color: ThemePalette = "accent";
   @Input() spinner = "spin";
   @Input() poster: string = null;
   @Input() keyboard = true;
@@ -51,6 +51,8 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() muted = false;
   @Input() controlClass: string = '';
   @Input() headerClass: string = '';
+  @Input() sliderClass: string = '';
+  @Input() defaultCutType: string = 'invalid';
   @Input() orderConfiguration: HashNumber = {
     playButton: 0,
     frameByFrameControl: 1,

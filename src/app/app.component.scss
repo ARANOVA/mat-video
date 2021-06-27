@@ -101,17 +101,3 @@ div {
 .item-margin {
   margin: 0 10px;
 }
-
-::ng-deep {
-  .controls.no-float {
-    position: relative !important;
-    margin-top: 20px;
-    background: none !important;
-    & * {
-      color: #000;
-    }
-  }
-  .videoplayer {
-    background: none !important;
-  }
-}

@@ -6,12 +6,14 @@ import { EventHandler } from "../../interfaces/event-handler.interface";
 import { EventService } from "../../services/event.service";
 
 var countDecimals = function (value) {
-  if(Math.floor(value) === value) return 0;
+  if (Math.floor(value) === value) {
+    return 0;
+  }
   return value.toString().split(".")[1].length || 0; 
 }
 
 function round(number, increment, offset) {
-  const dec = 10**countDecimals(increment);
+  const dec = 10 ** countDecimals(increment);
   return (Math.round(Math.round((number - offset) / increment ) * increment * dec) / dec) + offset;
 }
 
@@ -36,6 +38,8 @@ export class MatEditorControlComponent implements AfterViewInit, OnDestroy {
 
   @Input() currentTime: number = 0;
 
+  @Input() defaultCutType: string = 'cut';
+
   @Input() editorOrderButtons: HashNumber;
 
   @Output() currentTimeChanged = new EventEmitter<number>();
@@ -47,19 +51,12 @@ export class MatEditorControlComponent implements AfterViewInit, OnDestroy {
   public selectedCut: {tcin: number, tcout: number, type: string, idx: number, selected?: boolean } = {
     tcin: 0,
     tcout: 0,
-    type: 'cut',
+    type: this.defaultCutType,
     idx: -1
   };
 
   private events: EventHandler[];
-  private xRight: number = 0;
-  private xLeft: number = 0;
-  private x: number = 0;
   private fullWidth: number = 0;
-  private partVideo: any = {
-    full_cut_ini: 0,
-    full_cut_fin: 0
-  };
   private mode: string = 'tcin';
 
   @ViewChild('trimmerBar') trimmerBar;
@@ -72,9 +69,9 @@ export class MatEditorControlComponent implements AfterViewInit, OnDestroy {
       { element: this.video, name: "timeupdate", callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null }
     ];
     this.fullWidth = this.trimmerBar.nativeElement.offsetWidth;
-    console.log("this.fullWidth", this.fullWidth);
-    this.__paintCuts();
+    //this.__paintCuts();
     this.evt.addEvents(this.renderer, this.events);
+    this.selectedCut.type = this.defaultCutType;
   }
 
   private __paintCuts() {
@@ -100,7 +97,7 @@ export class MatEditorControlComponent implements AfterViewInit, OnDestroy {
       this.selectedCut = {
         tcin: 0,
         tcout: 0,
-        type: 'cut',
+        type: this.defaultCutType,
         idx: -1
       };
     } else {
@@ -115,6 +112,8 @@ export class MatEditorControlComponent implements AfterViewInit, OnDestroy {
       this.cuts.slice(this.selectedCut.idx, 1);
     }
     this.resetCut(true);
+    this.mode = 'tc';
+    this.selectedCut.tcin = 0;
   }
 
   addCut() {
@@ -146,6 +145,7 @@ export class MatEditorControlComponent implements AfterViewInit, OnDestroy {
   editCut() {
     this.cutEvent.emit({type: 'edit', cut: {...this.selectedCut}});
     this.deselectCut();
+    this.resetCut(true);
   }
 
   deselectCut($event?: MouseEvent) {
@@ -176,7 +176,6 @@ export class MatEditorControlComponent implements AfterViewInit, OnDestroy {
   getStartCut(tcin: number): number {
     if (tcin > 0) {
       const l = (tcin / this.video.duration) * this.fullWidth;
-      console.log("left", tcin, l);
       return l;
     }
   }
@@ -185,7 +184,6 @@ export class MatEditorControlComponent implements AfterViewInit, OnDestroy {
     if (tcout < this.video.duration) {
       const w = (tcout / this.video.duration) * this.fullWidth;
       const l = (tcin / this.video.duration) * this.fullWidth;
-      console.log("width", tcout, Math.max(2, w - l));
       return Math.max(2, w - l);
     }
     return 2;
@@ -199,20 +197,6 @@ export class MatEditorControlComponent implements AfterViewInit, OnDestroy {
     const percentage = value / 100;
     const newTime = this.video.duration * percentage;
     this.video.currentTime = newTime;
-    /*
-    if (this.mode === 'tcin') {
-      this.partVideo.full_cut_ini = this.video.currentTime;
-    } else if (this.mode === 'tcout') {
-      if (this.partVideo.full_cut_ini > this.video.currentTime) {
-        if (!this.partVideo.full_cut_fin) {
-          this.partVideo.full_cut_fin = this.partVideo.full_cut_ini;
-        }
-        this.partVideo.full_cut_ini = this.video.currentTime;
-      } else {
-        this.partVideo.full_cut_fin = this.video.currentTime;
-      }
-    }
-    */
     if (this.mode === 'tcin') {
       this.selectedCut.tcin = round(this.video.currentTime, 0.04, 0);
     } else if (this.mode === 'tcout') {
@@ -220,9 +204,9 @@ export class MatEditorControlComponent implements AfterViewInit, OnDestroy {
         if (!this.selectedCut.tcout) {
           this.selectedCut.tcout = this.selectedCut.tcin;
         }
-        this.selectedCut.tcin = this.video.currentTime;
+        this.selectedCut.tcin = round(this.video.currentTime, 0.04, 0);
       } else {
-        this.selectedCut.tcout = this.video.currentTime;
+        this.selectedCut.tcout = round(this.video.currentTime, 0.04, 0);
       }
     }
   }

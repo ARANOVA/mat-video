@@ -7,7 +7,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatSliderModule } from "@angular/material/slider";
 import { MatRadioModule } from '@angular/material/radio'; 
 import { MatMenuModule } from "@angular/material/menu";
-import { MatInputModule } from '@angular/material/input'; 
+import { MatInputModule } from '@angular/material/input';
+import { MatBadgeModule } from '@angular/material/badge';
 
 import { MatVideoSourceDirective } from "./directives/mat-video-source.directive";
 import { MatVideoTrackDirective } from "./directives/mat-video-track.directive";
@@ -47,7 +48,7 @@ import { MatVideoComponent } from "./video.component";
     MatSpeedControlComponent,
     MatEditorControlComponent
   ],
-  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, MatSliderModule, MatInputModule, MatRadioModule, MatMenuModule, MatMenuModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, MatSliderModule, MatInputModule, MatRadioModule, MatMenuModule, MatMenuModule, MatBadgeModule],
   exports: [MatVideoComponent, MatVideoSourceDirective, MatVideoTrackDirective],
   providers: [FullscreenService, EventService]
 })

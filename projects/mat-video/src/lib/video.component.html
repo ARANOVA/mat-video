@@ -3,22 +3,24 @@
     {{ title }}
   </div>
 
-  <video
-    #video
-    class="video"
-    [attr.autoplay]="autoplay ? true : null"
-    [preload]="preload ? 'auto' : 'metadata'"
-    [attr.poster]="poster ? poster : null"
-    [attr.loop]="loop ? loop : null"
-    [attr.playsinline]="playsinline ? true : null"
-  >
-    <ng-content select="source"></ng-content>
-    <ng-content select="track"></ng-content>
-    This browser does not support HTML5 video.
-  </video>
+  <div class="videoaspect">
+    <video
+      #video
+      class="video"
+      [attr.autoplay]="autoplay ? true : null"
+      [preload]="preload ? 'auto' : 'metadata'"
+      [attr.poster]="poster ? poster : null"
+      [attr.loop]="loop ? loop : null"
+      [attr.playsinline]="playsinline ? true : null"
+    >
+      <ng-content select="source"></ng-content>
+      <ng-content select="track"></ng-content>
+      This browser does not support HTML5 video.
+    </video>
+  </div>
 
   <div class="controls" *ngIf="videoLoaded" [ngClass]="getOverlayClass('visible ' + controlClass, 'hidden')">
-    <div class="progress">
+    <div class="progress" [ngClass]="sliderClass">
       <mat-seek-progress-control
         [color]="color"
         [video]="video"
@@ -90,6 +92,8 @@
       <mat-editor-control
         [color]="color"
         [video]="video"
+        [currentTime]="time"
+        [defaultCutType]="defaultCutType"
         [editorOrderButtons]="editorOrderButtons"
         (cutEvent)="log($event)"
       ></mat-editor-control>
