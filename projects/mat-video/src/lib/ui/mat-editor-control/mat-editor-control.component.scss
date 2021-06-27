@@ -46,6 +46,7 @@ $accent: mat.get-color-from-palette($accent-palette, "A200");
 
 ::ng-deep {
     .mat-slider-horizontal {
+        height: 26px;
         .mat-slider-wrapper {
             height: 4px;
             top: 13px;
