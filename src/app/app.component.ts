@@ -36,6 +36,7 @@ export class AppComponent {
   muted = false;
   showSpeed = true;
   showVolume = false;
+  editor = true;
   orderConfiguration = {
     playButton: 0,
     frameByFrameControl: 1,
