@@ -1,13 +1,15 @@
 {
   "name": "mat-video-app",
-  "version": "2.12.2",
+  "version": "2.12.3",
   "description": "",
   "scripts": {
     "ng": "ng",
     "start": "ng serve mat-video-app",
     "build": "ng build mat-video-app",
     "build:lib": "ng build mat-video && copy README.md .\\dist\\mat-video\\README.md && copy CHANGELOG.md .\\dist\\mat-video\\CHANGELOG.md && copy LICENSE .\\dist\\mat-video\\LICENSE",
+    "build:lib:linux": "ng build mat-video && cp README.md ./dist/mat-video/README.md && cp CHANGELOG.md ./dist/mat-video/CHANGELOG.md && cp LICENSE ./dist/mat-video/LICENSE",
     "pkg": "cd .\\dist\\mat-video && npm pack",
+    "pkg:linux": "cd dist/mat-video && npm pack",
     "test": "ng test mat-video --code-coverage",
     "lint": "ng lint",
     "e2e": "ng e2e",

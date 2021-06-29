@@ -92,7 +92,9 @@
       <mat-editor-control
         [color]="color"
         [video]="video"
+        [cuts]="cuts"
         [currentTime]="time"
+        [(selected)]="selected"
         [defaultCutType]="defaultCutType"
         [editorOrderButtons]="editorOrderButtons"
         (cutEvent)="emitCutEvent($event)"

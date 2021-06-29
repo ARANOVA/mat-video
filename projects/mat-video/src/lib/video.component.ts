@@ -53,6 +53,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() controlClass: string = '';
   @Input() headerClass: string = '';
   @Input() sliderClass: string = '';
+  @Input() cuts: any;
   @Input() defaultCutType: string = 'invalid';
   @Input() orderConfiguration: HashNumber = {
     playButton: 0,
@@ -82,6 +83,8 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Output() timeChange = new EventEmitter<number>();
 
   @Output() cutEvent = new EventEmitter<any>();
+
+  @Input() selected: number | null | undefined;
 
   @Input()
   get time() {

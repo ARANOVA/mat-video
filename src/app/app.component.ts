@@ -61,6 +61,14 @@ export class AppComponent {
     resetButton: 9
   }
 
+  cuts = [
+      {tcin: 20, tcout: 40, type: 'invalid'},
+      {tcin: 45, tcout: 50, type: 'cut'},
+  ];
+
+  selected = null;
+
+
   cutEvent($event: any) {
     console.log("CUT EVENT", $event);
   }

@@ -1,4 +1,15 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, Renderer2, SimpleChanges, ViewChild } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  Renderer2,
+  SimpleChanges,
+  ViewChild
+} from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
 
 
@@ -46,6 +57,17 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   @Input() cuts: any = [];
 
+  @Input()
+  get selected() {
+    return this.selectedCut?.idx;
+  }
+
+  set selected(idx: number | undefined | null) {
+    if (idx !== undefined && idx !== null) {
+      this.selectCut(null, idx);
+    }
+  }
+
   @Output() cutEvent = new EventEmitter<any>();
 
   public selectedCut: {tcin: number, tcout: number, type: string, idx: number, selected?: boolean } = {
@@ -61,7 +83,10 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   @ViewChild('trimmerBar') trimmerBar;
   
-  constructor(private renderer: Renderer2, private evt: EventService) { }
+  constructor(
+    private renderer: Renderer2,
+    private evt: EventService
+  ) { }
 
   ngAfterViewInit(): void {
     this.events = [
@@ -69,7 +94,6 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       { element: this.video, name: "timeupdate", callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null }
     ];
     this.fullWidth = this.trimmerBar.nativeElement.offsetWidth;
-    //this.__paintCuts();
     this.evt.addEvents(this.renderer, this.events);
   }
 
@@ -77,13 +101,9 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     if (changes.defaultCutType) {
       this.selectedCut.type = this.defaultCutType;
     }
-  }
-
-  private __paintCuts() {
-    this.cuts = [
-      {tcin: 20, tcout: 40, type: 'invalid'},
-      {tcin: 45, tcout: 50, type: 'cut'},
-    ];
+    if (changes.select && !changes.select.firstChange) {
+      this.selectCut(null, changes.select.currentValue);
+    }
   }
 
   setTcIn() {
@@ -167,7 +187,9 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   selectCut($event: MouseEvent, idx: number) {
-    $event.stopPropagation();
+    if ($event) {
+      $event.stopPropagation();
+    }
     this.cuts.forEach((cut: any) => {
       cut.selected = false;
     });

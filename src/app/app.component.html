@@ -200,10 +200,13 @@
         [showSpeed]="showSpeed"
         [showFrameByFrame]="showFrameByFrame"
         [(time)]="currentTime"
+        [cuts]="cuts"
+        [selected]="selected"
         (cutEvent)="cutEvent($event)"
       >
       </mat-video>
 
+      <button (click)="selected = 1">Select 1</button>
     </div>
 
     <div class="mat-toolbar mat-primary mat-toolbar-single-row footer">
