@@ -202,10 +202,14 @@
         [(time)]="currentTime"
         [cuts]="cuts"
         [selected]="selected"
+        [speedScale]="speedScale"
+        [speedIndex]="speedIndex"
+        [defaultCutType]="defaultCutType"
+        [cutType]="cutType"
         (cutEvent)="cutEvent($event)"
       >
       </mat-video>
-
+{{ defaultCutType }}
       <button (click)="selected = 1">Select 1</button>
     </div>
 

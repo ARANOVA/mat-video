@@ -51,6 +51,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   @Input() defaultCutType: string = 'cut';
 
+  @Input() cutType: string | null = null;
+
   @Input() editorOrderButtons: HashNumber;
 
   @Output() currentTimeChanged = new EventEmitter<number>();
@@ -73,7 +75,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   public selectedCut: {tcin: number, tcout: number, type: string, idx: number, selected?: boolean } = {
     tcin: 0,
     tcout: 0,
-    type: this.defaultCutType,
+    type: this.cutType ? this.cutType : this.defaultCutType,
     idx: -1
   };
 
@@ -98,8 +100,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.defaultCutType) {
-      this.selectedCut.type = this.defaultCutType;
+    if (changes.defaultCutType || changes.cutType) {
+      this.selectedCut.type = this.cutType ? this.cutType : this.defaultCutType;
     }
     if (changes.select && !changes.select.firstChange) {
       this.selectCut(null, changes.select.currentValue);
@@ -122,7 +124,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       this.selectedCut = {
         tcin: 0,
         tcout: 0,
-        type: this.defaultCutType,
+        type: this.cutType ? this.cutType : this.defaultCutType,
         idx: -1
       };
     } else {

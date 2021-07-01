@@ -54,7 +54,11 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() headerClass: string = '';
   @Input() sliderClass: string = '';
   @Input() cuts: any;
-  @Input() defaultCutType: string = 'invalid';
+  @Input() defaultCutType: string = 'cut';
+  @Input() cutType: string | null = null;
+  @Input() speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4, 8];
+  @Input() speedIndex: number = 2;
+
   @Input() orderConfiguration: HashNumber = {
     playButton: 0,
     frameByFrameControl: 1,

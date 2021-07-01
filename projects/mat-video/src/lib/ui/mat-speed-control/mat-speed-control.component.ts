@@ -7,7 +7,7 @@ import { Component, Input } from "@angular/core";
 })
 export class MatSpeedControlComponent {
   @Input() video: HTMLVideoElement;
-  @Input() speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4];
+  @Input() speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4, 8];
   @Input() speedIndex: number = 2;
 
   constructor() {}

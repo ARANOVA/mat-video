@@ -61,6 +61,8 @@
         <mat-speed-control
           *ngIf="showSpeed"
           [video]="video"
+          [speedScale]="speedScale"
+          [speedIndex]="speedIndex"
           [style.order]="orderConfiguration.speedControl"
         ></mat-speed-control>
         <div style="flex: 1" [style.order]="orderConfiguration.spacer"></div>
@@ -96,6 +98,7 @@
         [currentTime]="time"
         [(selected)]="selected"
         [defaultCutType]="defaultCutType"
+        [cutType]="cutType"
         [editorOrderButtons]="editorOrderButtons"
         (cutEvent)="emitCutEvent($event)"
       ></mat-editor-control>

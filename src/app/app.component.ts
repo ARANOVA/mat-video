@@ -66,8 +66,12 @@ export class AppComponent {
       {tcin: 45, tcout: 50, type: 'cut'},
   ];
 
-  selected = null;
+  defaultCutType = 'invalid';
+  cutType = 'cut';
 
+  selected = null;
+  speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 3, 5, 6];
+  speedIndex: number = 0;
 
   cutEvent($event: any) {
     console.log("CUT EVENT", $event);
