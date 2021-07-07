@@ -1,14 +1,14 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: "mat-frame-by-frame-control",
-  templateUrl: "./mat-frame-by-frame-control.component.html",
-  styleUrls: ["./mat-frame-by-frame-control.component.scss"]
+  selector: 'mat-frame-by-frame-control',
+  templateUrl: './mat-frame-by-frame-control.component.html',
+  styleUrls: ['./mat-frame-by-frame-control.component.scss']
 })
 export class MatFrameByFrameControlComponent {
   @Input() video: HTMLVideoElement;
   @Input() fps = 25;
-  private _lastClick: number = 0;
+  private _lastClick = 0;
   private _diffLimit = 350;
   private _interval: any;
   private _bigPrevJump = false;

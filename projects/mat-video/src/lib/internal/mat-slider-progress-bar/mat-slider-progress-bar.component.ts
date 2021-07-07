@@ -1,52 +1,52 @@
-import { Component, Input, ElementRef, ChangeDetectorRef, ChangeDetectionStrategy, Optional, Attribute, NgZone, Inject } from "@angular/core";
-import { MatSlider, MAT_SLIDER_VALUE_ACCESSOR } from "@angular/material/slider";
-import { FocusMonitor } from "@angular/cdk/a11y";
-import { Directionality } from "@angular/cdk/bidi";
-import { DOCUMENT } from "@angular/common";
+import { Component, Input, ElementRef, ChangeDetectorRef, ChangeDetectionStrategy, Optional, Attribute, NgZone, Inject } from '@angular/core';
+import { MatSlider, MAT_SLIDER_VALUE_ACCESSOR } from '@angular/material/slider';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { Directionality } from '@angular/cdk/bidi';
+import { DOCUMENT } from '@angular/common';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 /** Counter used to generate unique IDs for progress bars. */
 let sliderprogressbarId = 0;
 
 @Component({
-  selector: "mat-slider-progress-bar",
-  templateUrl: "./mat-slider-progress-bar.component.html",
-  styleUrls: ["./mat-slider-progress-bar.component.scss"],
+  selector: 'mat-slider-progress-bar',
+  templateUrl: './mat-slider-progress-bar.component.html',
+  styleUrls: ['./mat-slider-progress-bar.component.scss'],
   providers: [MAT_SLIDER_VALUE_ACCESSOR],
   host: {
-    "(focus)": "_onFocus()",
-    "(blur)": "_onBlur()",
-    "(click)": 'this["_onClick"] ? this["_onClick"]($event) : null', // Angular 5/6 support
-    "(mousedown)": 'this["_onMousedown"] ? this["_onMousedown"]($event) : null', // Angular 7 support
-    "(keydown)": "_onKeydown($event)",
-    "(keyup)": "_onKeyup()",
-    "(mouseenter)": "_onMouseenter()",
-    "(slide)": "_onSlide($event)",
-    "(slideend)": "_onSlideEnd()",
-    "(slidestart)": "_onSlideStart($event)",
-    class: "mat-slider",
-    role: "slider",
-    "[tabIndex]": "tabIndex",
-    "[attr.aria-disabled]": "disabled",
-    "[attr.aria-valuemax]": "max",
-    "[attr.aria-valuemin]": "min",
-    "[attr.aria-valuenow]": "value",
-    "[attr.aria-orientation]": 'vertical ? "vertical" : "horizontal"',
-    "[class.mat-slider-disabled]": "disabled",
-    "[class.mat-slider-has-ticks]": "tickInterval",
-    "[class.mat-slider-horizontal]": "!vertical",
-    "[class.mat-slider-axis-inverted]": "_invertAxis",
-    "[class.mat-slider-sliding]": "_isSliding",
-    "[class.mat-slider-thumb-label-showing]": "thumbLabel",
-    "[class.mat-slider-vertical]": "vertical",
-    "[class.mat-slider-min-value]": "_isMinValue",
-    "[class.mat-slider-hide-last-tick]": "disabled || _isMinValue && _thumbGap && _invertAxis"
+    '(focus)': '_onFocus()',
+    '(blur)': '_onBlur()',
+    '(click)': 'this[\'_onClick\'] ? this[\'_onClick\']($event) : null', // Angular 5/6 support
+    '(mousedown)': 'this[\'_onMousedown\'] ? this[\'_onMousedown\']($event) : null', // Angular 7 support
+    '(keydown)': '_onKeydown($event)',
+    '(keyup)': '_onKeyup()',
+    '(mouseenter)': '_onMouseenter()',
+    '(slide)': '_onSlide($event)',
+    '(slideend)': '_onSlideEnd()',
+    '(slidestart)': '_onSlideStart($event)',
+    class: 'mat-slider',
+    role: 'slider',
+    '[tabIndex]': 'tabIndex',
+    '[attr.aria-disabled]': 'disabled',
+    '[attr.aria-valuemax]': 'max',
+    '[attr.aria-valuemin]': 'min',
+    '[attr.aria-valuenow]': 'value',
+    '[attr.aria-orientation]': 'vertical ? \'vertical\' : \'horizontal\'',
+    '[class.mat-slider-disabled]': 'disabled',
+    '[class.mat-slider-has-ticks]': 'tickInterval',
+    '[class.mat-slider-horizontal]': '!vertical',
+    '[class.mat-slider-axis-inverted]': '_invertAxis',
+    '[class.mat-slider-sliding]': '_isSliding',
+    '[class.mat-slider-thumb-label-showing]': 'thumbLabel',
+    '[class.mat-slider-vertical]': 'vertical',
+    '[class.mat-slider-min-value]': '_isMinValue',
+    '[class.mat-slider-hide-last-tick]': 'disabled || _isMinValue && _thumbGap && _invertAxis'
   },
-  inputs: ["disabled", "color", "tabIndex"],
+  inputs: ['disabled', 'color', 'tabIndex'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatSliderProgressBarComponent extends MatSlider {
-  @Input() mode = "buffer";
+  @Input() mode = 'buffer';
 
   /** Buffer value of the progress bar. Defaults to zero. */
   @Input()
@@ -85,8 +85,8 @@ export class MatSliderProgressBarComponent extends MatSlider {
 
   /** CSS styles for the ticks container element. */
   _getTrackFillStyles(): { [key: string]: string } {
-    if (this.mode === "buffer") {
-      const axis = this.vertical ? "Y" : "X";
+    if (this.mode === 'buffer') {
+      const axis = this.vertical ? 'Y' : 'X';
       return {
         transform: `translate${axis}(0px) scale${axis}(${this.percent / 100})`
       };
@@ -95,8 +95,8 @@ export class MatSliderProgressBarComponent extends MatSlider {
 
   /** CSS styles for the track fill element. */
   _getTrackBufferStyles(): { [key: string]: string } {
-    if (this.mode === "buffer") {
-      const axis = this.vertical ? "Y" : "X";
+    if (this.mode === 'buffer') {
+      const axis = this.vertical ? 'Y' : 'X';
       return {
         transform: `translate${axis}(0px) scale${axis}(${this.pBufferValue / 100})`
       };

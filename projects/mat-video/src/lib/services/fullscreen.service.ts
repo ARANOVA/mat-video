@@ -1,47 +1,47 @@
-import { Injectable } from "@angular/core";
-import { FullscreenControls } from "../interfaces/fullscreen-controls.interface";
+import { Injectable } from '@angular/core';
+import { FullscreenControls } from '../interfaces/fullscreen-controls.interface';
 
 @Injectable()
 export class FullscreenService {
   private fnMap: string[][] = [
     // Object keys
-    ["requestFullscreen", "exitFullscreen", "fullscreenElement", "fullscreenEnabled", "fullscreenchange", "fullscreenerror"],
+    ['requestFullscreen', 'exitFullscreen', 'fullscreenElement', 'fullscreenEnabled', 'fullscreenchange', 'fullscreenerror'],
     // New WebKit
     [
-      "webkitRequestFullscreen",
-      "webkitExitFullscreen",
-      "webkitFullscreenElement",
-      "webkitFullscreenEnabled",
-      "webkitfullscreenchange",
-      "webkitfullscreenerror"
+      'webkitRequestFullscreen',
+      'webkitExitFullscreen',
+      'webkitFullscreenElement',
+      'webkitFullscreenEnabled',
+      'webkitfullscreenchange',
+      'webkitfullscreenerror'
     ],
     // Old WebKit (Safari 5.1)
     [
-      "webkitRequestFullScreen",
-      "webkitCancelFullScreen",
-      "webkitCurrentFullScreenElement",
-      "webkitCancelFullScreen",
-      "webkitfullscreenchange",
-      "webkitfullscreenerror"
+      'webkitRequestFullScreen',
+      'webkitCancelFullScreen',
+      'webkitCurrentFullScreenElement',
+      'webkitCancelFullScreen',
+      'webkitfullscreenchange',
+      'webkitfullscreenerror'
     ],
     // Mozilla
     [
-      "mozRequestFullScreen",
-      "mozCancelFullScreen",
-      "mozFullScreenElement",
-      "mozFullScreenEnabled",
-      "mozfullscreenchange",
-      "mozfullscreenerror"
+      'mozRequestFullScreen',
+      'mozCancelFullScreen',
+      'mozFullScreenElement',
+      'mozFullScreenEnabled',
+      'mozfullscreenchange',
+      'mozfullscreenerror'
     ],
     // MS
-    ["msRequestFullscreen", "msExitFullscreen", "msFullscreenElement", "msFullscreenEnabled", "MSFullscreenChange", "MSFullscreenError"]
+    ['msRequestFullscreen', 'msExitFullscreen', 'msFullscreenElement', 'msFullscreenEnabled', 'MSFullscreenChange', 'MSFullscreenError']
   ];
 
   private fn: FullscreenControls;
   private keyboardAllowed: boolean;
 
   constructor() {
-    this.keyboardAllowed = typeof Element !== "undefined" && "ALLOW_KEYBOARD_INPUT" in Element;
+    this.keyboardAllowed = typeof Element !== 'undefined' && 'ALLOW_KEYBOARD_INPUT' in Element;
     const ret: any = {};
     let val;
 

@@ -1,9 +1,9 @@
-import { Directive, ElementRef, Host, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { Directive, ElementRef, Host, Input, OnChanges, SimpleChanges } from '@angular/core';
 
-import { MatVideoComponent } from "../video.component";
+import { MatVideoComponent } from '../video.component';
 
 @Directive({
-  selector: "[matVideoSource]"
+  selector: '[matVideoSource]'
 })
 export class MatVideoSourceDirective implements OnChanges {
   @Input() src: string = null;

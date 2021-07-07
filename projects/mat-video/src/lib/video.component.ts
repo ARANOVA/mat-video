@@ -10,11 +10,11 @@ import {
   Renderer2,
   SimpleChanges,
   ViewChild
-} from "@angular/core";
-import { ThemePalette } from "@angular/material/core";
+} from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
 
-import { EventHandler } from "./interfaces/event-handler.interface";
-import { EventService } from "./services/event.service";
+import { EventHandler } from './interfaces/event-handler.interface';
+import { EventService } from './services/event.service';
 
 interface HashNumber {
   [key: string]: number
@@ -22,13 +22,13 @@ interface HashNumber {
 
 
 @Component({
-  selector: "mat-video",
-  templateUrl: "./video.component.html",
-  styleUrls: ["./video.component.scss", "./styles/icons.scss"]
+  selector: 'mat-video',
+  templateUrl: './video.component.html',
+  styleUrls: ['./video.component.scss', './styles/icons.scss']
 })
 export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
-  @ViewChild("player") private player: ElementRef;
-  @ViewChild("video") private video: ElementRef;
+  @ViewChild('player') private player: ElementRef;
+  @ViewChild('video') private video: ElementRef;
 
   @Input() src: string | MediaStream | MediaSource | Blob = null;
   @Input() title: string = null;
@@ -44,20 +44,20 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() showSpeed = false;
   @Input() fps = 25;
   @Input() download = false;
-  @Input() color: ThemePalette = "accent";
-  @Input() spinner = "spin";
+  @Input() color: ThemePalette = 'accent';
+  @Input() spinner = 'spin';
   @Input() poster: string = null;
   @Input() keyboard = true;
   @Input() overlay: boolean = null;
   @Input() muted = false;
-  @Input() controlClass: string = '';
-  @Input() headerClass: string = '';
-  @Input() sliderClass: string = '';
+  @Input() controlClass = '';
+  @Input() headerClass = '';
+  @Input() sliderClass = '';
   @Input() cuts: any;
-  @Input() defaultCutType: string = 'cut';
+  @Input() defaultCutType = 'cut';
   @Input() cutType: string | null = null;
   @Input() speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4, 8];
-  @Input() speedIndex: number = 2;
+  @Input() speedIndex = 2;
 
   @Input() orderConfiguration: HashNumber = {
     playButton: 0,
@@ -138,37 +138,37 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.events = [
       {
         element: this.video.nativeElement,
-        name: "loadstart",
+        name: 'loadstart',
         callback: event => (this.videoLoaded = false),
         dispose: null
       },
       {
         element: this.video.nativeElement,
-        name: "loadedmetadata",
+        name: 'loadedmetadata',
         callback: event => this.evLoadedMetadata(event),
         dispose: null
       },
       {
         element: this.video.nativeElement,
-        name: "error",
-        callback: event => console.error("Unhandled Video Error", event),
+        name: 'error',
+        callback: event => console.error('Unhandled Video Error', event),
         dispose: null
       },
       {
         element: this.video.nativeElement,
-        name: "contextmenu",
+        name: 'contextmenu',
         callback: event => event.preventDefault(),
         dispose: null
       },
       {
         element: this.video.nativeElement,
-        name: "timeupdate",
+        name: 'timeupdate',
         callback: event => this.evTimeUpdate(event),
         dispose: null
       },
       {
         element: this.player.nativeElement,
-        name: "mousemove",
+        name: 'mousemove',
         callback: event => this.evMouseMove(event),
         dispose: null
       }
@@ -241,12 +241,12 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     if (!src) {
       this.video.nativeElement.src = null;
-      if ("srcObject" in HTMLVideoElement.prototype) {
+      if ('srcObject' in HTMLVideoElement.prototype) {
         this.video.nativeElement.srcObject = new MediaStream();
       }
-    } else if (typeof src === "string") {
+    } else if (typeof src === 'string') {
       this.video.nativeElement.src = src;
-    } else if ("srcObject" in HTMLVideoElement.prototype) {
+    } else if ('srcObject' in HTMLVideoElement.prototype) {
       this.video.nativeElement.srcObject = src;
     } else {
       this.srcObjectURL = URL.createObjectURL(src);

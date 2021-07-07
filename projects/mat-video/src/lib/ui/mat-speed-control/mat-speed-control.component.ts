@@ -1,14 +1,14 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: "mat-speed-control",
-  templateUrl: "./mat-speed-control.component.html",
-  styleUrls: ["./mat-speed-control.component.scss"]
+  selector: 'mat-speed-control',
+  templateUrl: './mat-speed-control.component.html',
+  styleUrls: ['./mat-speed-control.component.scss']
 })
 export class MatSpeedControlComponent {
   @Input() video: HTMLVideoElement;
   @Input() speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4, 8];
-  @Input() speedIndex: number = 2;
+  @Input() speedIndex = 2;
 
   constructor() {}
 

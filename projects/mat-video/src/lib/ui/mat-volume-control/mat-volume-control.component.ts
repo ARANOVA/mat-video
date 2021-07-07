@@ -1,17 +1,17 @@
-import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
-import { ThemePalette } from "@angular/material/core";
+import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
 
-import { EventService } from "../../services/event.service";
+import { EventService } from '../../services/event.service';
 
 @Component({
-  selector: "mat-volume-control",
-  templateUrl: "./mat-volume-control.component.html",
-  styleUrls: ["./mat-volume-control.component.scss"]
+  selector: 'mat-volume-control',
+  templateUrl: './mat-volume-control.component.html',
+  styleUrls: ['./mat-volume-control.component.scss']
 })
 export class MatVolumeControlComponent implements AfterViewInit, OnChanges {
   @Input() video: HTMLVideoElement = null;
 
-  @Input() color: ThemePalette = "primary";
+  @Input() color: ThemePalette = 'primary';
 
   @Input() volume = 1;
 
@@ -66,7 +66,7 @@ export class MatVolumeControlComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  @HostListener("document:keyup.m", ["$event"])
+  @HostListener('document:keyup.m', ['$event'])
   onMuteKey(event: KeyboardEvent) {
     if (this.keyboard) {
       this.toggleMuted();

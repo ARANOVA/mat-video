@@ -9,26 +9,26 @@ import {
   Renderer2,
   SimpleChanges,
   ViewChild
-} from "@angular/core";
-import { ThemePalette } from "@angular/material/core";
+} from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
 
 
-import { EventHandler } from "../../interfaces/event-handler.interface";
-import { EventService } from "../../services/event.service";
+import { EventHandler } from '../../interfaces/event-handler.interface';
+import { EventService } from '../../services/event.service';
 
-const countDecimals = function (value) {
+const countDecimals = (value) => {
   if (Math.floor(value) === value) {
     return 0;
   }
-  return value.toString().split(".")[1].length || 0; 
+  return value.toString().split('.')[1].length || 0; 
 }
 
-const round = function(number, increment, offset) {
+const roundFn = (number, increment, offset) => {
   const dec = 10 ** countDecimals(increment);
   return (Math.round(Math.round((number - offset) / increment ) * increment * dec) / dec) + offset;
 }
 
-const randomString = function(length: number) {
+const randomString = (length: number) => {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let result = '';
   for (let i = length; i > 0; --i) {
@@ -52,13 +52,13 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   @Input() video: HTMLVideoElement = null;
 
-  @Input() fps: number = 25;
+  @Input() fps = 25;
 
-  @Input() color: ThemePalette = "accent";
+  @Input() color: ThemePalette = 'accent';
 
-  @Input() currentTime: number = 0;
+  @Input() currentTime = 0;
 
-  @Input() defaultCutType: string = 'cut';
+  @Input() defaultCutType = 'cut';
 
   @Input() cutType: string | null = null;
 
@@ -96,9 +96,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   };
 
   private events: EventHandler[];
-  private fullWidth: number = 0;
-  public mode: string = 'tcin';
-  public imageURL: string;
+  private fullWidth = 0;
+  public mode = 'tcin';
 
   @ViewChild('trimmerBar') trimmerBar;
   
@@ -109,9 +108,11 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   ngAfterViewInit(): void {
     this.events = [
-      { element: this.video, name: "seeking", callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
-      { element: this.video, name: "seeked", callback: event => { this.selectedCut.thumb = this.getFrame(this.video.currentTime)}, dispose: null },
-      { element: this.video, name: "timeupdate", callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null }
+      { element: this.video, name: 'seeking', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
+      { element: this.video, name: 'seeked', callback: 
+          event => { this.selectedCut.thumb = this.getFrame(this.video.currentTime)}
+          , dispose: null },
+      { element: this.video, name: 'timeupdate', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null }
     ];
     this.fullWidth = this.trimmerBar.nativeElement.offsetWidth;
     this.evt.addEvents(this.renderer, this.events);
@@ -137,13 +138,13 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
         }
         */
       });
-      //this.seekVideo(0);
+      // this.seekVideo(0);
       this.cuts.sort((a, b) => a.tcin - b.tcin );
     }
   }
 
   setTcIn() {
-    this.selectedCut.tcin = round(this.video.currentTime, 0.04, 0);
+    this.selectedCut.tcin = roundFn(this.video.currentTime, 0.04, 0);
     this.mode = 'tcout';
     this.selectedCut.selected = true;
     if (!this.selectedCut.idx) {
@@ -152,7 +153,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   setTcOut() {
-    this.selectedCut.tcout = round(this.video.currentTime, 0.04, 0);
+    this.selectedCut.tcout = roundFn(this.video.currentTime, 0.04, 0);
     this.mode = 'tc';
   }
 
@@ -245,7 +246,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     this.selectedCut = this.cuts[idx];
     this.mode = 'tc';
     this.seekVideo(this.selectedCut.tcin / this.video.duration * 100);
-    //setTimeout(() => this.mode = 'tcin', 200);
+    // setTimeout(() => this.mode = 'tcin', 200);
   }
 
   getStartCut(tcin: number): number {
@@ -273,15 +274,15 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     const newTime = this.video.duration * percentage;
     this.video.currentTime = newTime;
     if (this.mode === 'tcin') {
-      this.selectedCut.tcin = round(this.video.currentTime, 0.04, 0);
+      this.selectedCut.tcin = roundFn(this.video.currentTime, 0.04, 0);
     } else if (this.mode === 'tcout') {
       if (this.selectedCut.tcin > this.video.currentTime) {
         if (!this.selectedCut.tcout) {
           this.selectedCut.tcout = this.selectedCut.tcin;
         }
-        this.selectedCut.tcin = round(this.video.currentTime, 0.04, 0);
+        this.selectedCut.tcin = roundFn(this.video.currentTime, 0.04, 0);
       } else {
-        this.selectedCut.tcout = round(this.video.currentTime, 0.04, 0);
+        this.selectedCut.tcout = roundFn(this.video.currentTime, 0.04, 0);
       }
     }
   }

@@ -1,44 +1,6 @@
-@use 'sass:map';
-@use '~@angular/material' as mat;
-
-$flyfut-dark-palette: (
-    50: #c2c2c2,
-    100: #999999,
-    200: #707070,
-    300: #666666,
-    400: #5c5c5c,
-    500: #4d4d4d,
-    600: #3d3d3d,
-    700: #212121,
-    800: #1b1b1b,
-    900: black,
-    A100: #f88948,
-    A200: #ed5b08,
-    A400: #652704,
-    contrast: (
-        50: rgba(black, 0.87),
-        100: rgba(black, 0.87),
-        200: rgba(black, 0.87),
-        300: black,
-        400: black,
-        500: white,
-        600: white,
-        700: rgba(white, 0.87),
-        800: rgba(white, 0.87),
-        900: rgba(white, 0.87),
-        A100: white,
-        A200: white,
-        A400: white,
-    ),
-);
-
-$primary-palette: mat.define-palette($flyfut-dark-palette, 500, 200, 800);
-$accent-palette: mat.define-palette($flyfut-dark-palette, A200, A100, A400);
-$warn-palette: mat.define-palette(mat.$red-palette);
-
-$warn: mat.get-color-from-palette($warn-palette, 500);
-$primary: mat.get-color-from-palette($primary-palette, 500);
-$accent: mat.get-color-from-palette($accent-palette, "A200");
+$primary: #4d4d4d;
+$warn: #f44336;
+$accent: #ed5b08;
 
 .mat-slider-horizontal {
     width: 100%;

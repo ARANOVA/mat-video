@@ -1,12 +1,12 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 
-import { EventService } from "../../services/event.service";
-import { FullscreenService } from "../../services/fullscreen.service";
+import { EventService } from '../../services/event.service';
+import { FullscreenService } from '../../services/fullscreen.service';
 
 @Component({
-  selector: "mat-fullscreen-button",
-  templateUrl: "./mat-fullscreen-button.component.html",
-  styleUrls: ["./mat-fullscreen-button.component.scss"]
+  selector: 'mat-fullscreen-button',
+  templateUrl: './mat-fullscreen-button.component.html',
+  styleUrls: ['./mat-fullscreen-button.component.scss']
 })
 export class MatFullscreenButtonComponent implements OnInit {
   canFullscreen = false;
@@ -50,7 +50,7 @@ export class MatFullscreenButtonComponent implements OnInit {
     this.fullscreenChanged.emit(this.fullscreen);
   }
 
-  @HostListener("document:keyup.f", ["$event"])
+  @HostListener('document:keyup.f', ['$event'])
   onFullscreenKey(event: KeyboardEvent) {
     if (this.keyboard) {
       this.toggleFullscreen();

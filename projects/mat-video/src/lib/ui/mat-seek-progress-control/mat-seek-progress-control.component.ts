@@ -1,13 +1,13 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, Renderer2 } from "@angular/core";
-import { ThemePalette } from "@angular/material/core";
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, Renderer2 } from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
 
-import { EventHandler } from "../../interfaces/event-handler.interface";
-import { EventService } from "../../services/event.service";
+import { EventHandler } from '../../interfaces/event-handler.interface';
+import { EventService } from '../../services/event.service';
 
 @Component({
-  selector: "mat-seek-progress-control",
-  templateUrl: "./mat-seek-progress-control.component.html",
-  styleUrls: ["./mat-seek-progress-control.component.scss"]
+  selector: 'mat-seek-progress-control',
+  templateUrl: './mat-seek-progress-control.component.html',
+  styleUrls: ['./mat-seek-progress-control.component.scss']
 })
 export class MatSeekProgressControlComponent implements AfterViewInit, OnDestroy {
   curTimePercent = 0;
@@ -15,7 +15,7 @@ export class MatSeekProgressControlComponent implements AfterViewInit, OnDestroy
 
   @Input() video: HTMLVideoElement = null;
 
-  @Input() color: ThemePalette = "primary";
+  @Input() color: ThemePalette = 'primary';
 
   @Input() currentTime = 0;
 
@@ -31,10 +31,10 @@ export class MatSeekProgressControlComponent implements AfterViewInit, OnDestroy
 
   ngAfterViewInit(): void {
     this.events = [
-      { element: this.video, name: "seeking", callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
-      { element: this.video, name: "canplaythrough", callback: event => this.updateBufferedTime(), dispose: null },
-      { element: this.video, name: "timeupdate", callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
-      { element: this.video, name: "progress", callback: event => this.updateBufferedTime(), dispose: null }
+      { element: this.video, name: 'seeking', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
+      { element: this.video, name: 'canplaythrough', callback: event => this.updateBufferedTime(), dispose: null },
+      { element: this.video, name: 'timeupdate', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
+      { element: this.video, name: 'progress', callback: event => this.updateBufferedTime(), dispose: null }
     ];
 
     this.evt.addEvents(this.renderer, this.events);
