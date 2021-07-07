@@ -16,10 +16,12 @@
                 <input matInput placeholder="0" type="number" min="0" [step]="1/fps" [(ngModel)]="selectedCut.tcin" />
             </mat-form-field>
         </div>
-        <button mat-icon-button (click)="setTcIn()" [style.order]="editorOrderButtons.tcinButton">
+        <button mat-icon-button (click)="setTcIn()" [style.order]="editorOrderButtons.tcinButton"
+            [disabled]="mode === 'tcout'">
             <mat-icon>skip_previous</mat-icon>
         </button>
-        <button mat-icon-button (click)="setTcOut()" [style.order]="editorOrderButtons.tcoutButton">
+        <button mat-icon-button (click)="setTcOut()" [style.order]="editorOrderButtons.tcoutButton"
+            [disabled]="mode === 'tcin'">
             <mat-icon>skip_next</mat-icon>
         </button>
         <div class="inline-small px-2" [style.order]="editorOrderButtons.tcoutInput" [ngClass]="{'pl-0': editorOrderButtons.tcoutInput == 0, 'pr-0': editorOrderButtons.tcoutInput == 9}">
@@ -37,18 +39,17 @@
 
         <div style="flex: 1" [style.order]="editorOrderButtons.spacer"></div>
 
-        <button mat-icon-button aria-label="Crear zona" *ngIf="selectedCut.idx === -1 && selectedCut.tcin >= 0 && selectedCut.tcout > selectedCut.tcin" (click)="addCut()" [style.order]="editorOrderButtons.addButton">
+        <button mat-icon-button aria-label="Crear zona" *ngIf="!selectedCut.idx && mode === 'tc'" (click)="addCut()" [style.order]="editorOrderButtons.addButton">
             <mat-icon>add_circle_outline</mat-icon>
         </button>
-        <button mat-icon-button aria-label="Guardar zona" *ngIf="selectedCut.idx !== -1" (click)="editCut()" [style.order]="editorOrderButtons.saveButton">
+        <button mat-icon-button aria-label="Guardar zona" *ngIf="selectedCut.idx" (click)="editCut()" [style.order]="editorOrderButtons.saveButton">
             <mat-icon>save</mat-icon>
         </button>
-        <button mat-icon-button aria-label="Eliminar zona" *ngIf="selectedCut.idx !== -1" (click)="removeCut()"
+        <button mat-icon-button aria-label="Eliminar zona" *ngIf="selectedCut.idx" (click)="removeCut()"
             [style.order]="editorOrderButtons.removeButton">
             <mat-icon>remove_circle_outline</mat-icon>
         </button>
-
-        <button mat-icon-button aria-label="Eliminar zona" *ngIf="selectedCut.idx === -1" (click)="resetCut()"
+        <button mat-icon-button aria-label="Eliminar zona" *ngIf="!selectedCut.idx && mode !== 'tcin'" (click)="resetCut()"
             [style.order]="editorOrderButtons.resetButton">
             <mat-icon>clear</mat-icon>
         </button>

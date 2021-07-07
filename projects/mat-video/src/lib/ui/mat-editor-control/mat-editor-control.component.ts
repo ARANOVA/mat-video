@@ -16,16 +16,25 @@ import { ThemePalette } from "@angular/material/core";
 import { EventHandler } from "../../interfaces/event-handler.interface";
 import { EventService } from "../../services/event.service";
 
-var countDecimals = function (value) {
+const countDecimals = function (value) {
   if (Math.floor(value) === value) {
     return 0;
   }
   return value.toString().split(".")[1].length || 0; 
 }
 
-function round(number, increment, offset) {
+const round = function(number, increment, offset) {
   const dec = 10 ** countDecimals(increment);
   return (Math.round(Math.round((number - offset) / increment ) * increment * dec) / dec) + offset;
+}
+
+const randomString = function(length: number) {
+  const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let result = '';
+  for (let i = length; i > 0; --i) {
+      result += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return result;
 }
 
 interface HashNumber {
@@ -64,7 +73,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     return this.selectedCut?.idx;
   }
 
-  set selected(idx: number | undefined | null) {
+  set selected(idx: string | undefined | null) {
     if (idx !== undefined && idx !== null) {
       this.selectCut(null, idx);
     }
@@ -72,16 +81,24 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   @Output() cutEvent = new EventEmitter<any>();
 
-  public selectedCut: {tcin: number, tcout: number, type: string, idx: number, selected?: boolean } = {
+  public selectedCut: {
+    tcin: number,
+    tcout: number,
+    type: string,
+    idx: string,
+    selected?: boolean,
+    thumb?: string
+  } = {
     tcin: 0,
     tcout: 0,
     type: this.cutType ? this.cutType : this.defaultCutType,
-    idx: -1
+    idx: ''
   };
 
   private events: EventHandler[];
   private fullWidth: number = 0;
-  private mode: string = 'tcin';
+  public mode: string = 'tcin';
+  public imageURL: string;
 
   @ViewChild('trimmerBar') trimmerBar;
   
@@ -93,6 +110,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   ngAfterViewInit(): void {
     this.events = [
       { element: this.video, name: "seeking", callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
+      { element: this.video, name: "seeked", callback: event => { this.selectedCut.thumb = this.getFrame(this.video.currentTime)}, dispose: null },
       { element: this.video, name: "timeupdate", callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null }
     ];
     this.fullWidth = this.trimmerBar.nativeElement.offsetWidth;
@@ -106,12 +124,31 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     if (changes.select && !changes.select.firstChange) {
       this.selectCut(null, changes.select.currentValue);
     }
+    if (changes.cuts && changes.cuts.firstChange) {
+      this.cuts.forEach((cut: any, idx: number) => {
+        if (!cut.idx) {
+          this.cuts[idx].idx = randomString(8);
+        }
+        /*
+        TODO
+        if (!cut.thumb) {
+          this.seekVideo(cut.tcin / this.video.duration * 100);
+          this.cuts[idx].thumb = this.getFrame(cut.tcin);
+        }
+        */
+      });
+      //this.seekVideo(0);
+      this.cuts.sort((a, b) => a.tcin - b.tcin );
+    }
   }
 
   setTcIn() {
     this.selectedCut.tcin = round(this.video.currentTime, 0.04, 0);
     this.mode = 'tcout';
-    this.cuts.push(this.selectedCut);
+    this.selectedCut.selected = true;
+    if (!this.selectedCut.idx) {
+      this.cuts.push(this.selectedCut);
+    }
   }
 
   setTcOut() {
@@ -121,22 +158,33 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   resetCut(partial?: boolean) {
     if (!partial) {
+      this.__removeCut('');
       this.selectedCut = {
         tcin: 0,
         tcout: 0,
         type: this.cutType ? this.cutType : this.defaultCutType,
-        idx: -1
+        idx: ''
       };
+      this.mode = 'tcin';
     } else {
       this.selectedCut.tcout = 0;
-      this.selectedCut.idx = -1;
+      this.selectedCut.idx = randomString(8);
     }
   }
 
+  private __removeCut(idx: string) {
+    for (let i = this.cuts.length - 1; i >= 0; --i) {
+      if (this.cuts[i].idx === idx) {
+        this.cuts.splice(i, 1);
+      }
+    }
+    this.cuts.sort((a, b) => a.tcin - b.tcin );
+  }
+
   removeCut() {
-    if (this.selectedCut.idx > -1) {
+    if (this.selectedCut.idx) {
       this.cutEvent.emit({type: 'remove', cut: {...this.selectedCut}});
-      this.cuts.slice(this.selectedCut.idx, 1);
+      this.__removeCut(this.selectedCut.idx);
     }
     this.resetCut(true);
     this.mode = 'tc';
@@ -144,18 +192,15 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   addCut() {
-    if (this.selectedCut.idx >= 0) {
-      // TODO: Edición 
-    } else {
-      if (this.cuts[this.cuts.length - 1].idx == -1) {
-        this.selectedCut = this.cuts.pop();
-      }
-      this.selectedCut.idx = this.cuts.length;
-      this.cuts.push({...this.selectedCut});
-      this.cutEvent.emit({type: 'add', cut: {...this.selectedCut}});
-      this.resetCut(true);
+    if (!this.selectedCut.idx) {
+      this.__removeCut(this.selectedCut.idx);
     }
-    this.mode = 'tcin';
+    this.selectedCut.selected = false;
+    this.selectedCut.idx = randomString(8);
+    this.cuts.push({...this.selectedCut});
+    this.cuts.sort((a, b) => a.tcin - b.tcin );
+    this.cutEvent.emit({type: 'add', cut: {...this.selectedCut}});
+    this.resetCut(false);
   }
 
   getClassCut(cut) {
@@ -170,9 +215,10 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   editCut() {
+    this.selectedCut.selected = false;
     this.cutEvent.emit({type: 'edit', cut: {...this.selectedCut}});
+    this.mode = 'tc';
     this.deselectCut();
-    this.resetCut(true);
   }
 
   deselectCut($event?: MouseEvent) {
@@ -188,7 +234,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     }
   }
 
-  selectCut($event: MouseEvent, idx: number) {
+  selectCut($event: MouseEvent, idx: string) {
     if ($event) {
       $event.stopPropagation();
     }
@@ -238,6 +284,15 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
         this.selectedCut.tcout = round(this.video.currentTime, 0.04, 0);
       }
     }
+  }
+
+  getFrame(time: number): string {
+    const canvas = document.createElement('canvas');
+    canvas.width  = 500;
+    canvas.height = 282;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(this.video, 0, 0, 480, 270);
+    return canvas.toDataURL();
   }
 
   updateCurrentTime(time: number): void {

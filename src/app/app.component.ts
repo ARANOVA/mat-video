@@ -62,8 +62,8 @@ export class AppComponent {
   }
 
   cuts = [
-      {tcin: 20, tcout: 40, type: 'invalid'},
       {tcin: 45, tcout: 50, type: 'cut'},
+      {tcin: 20, tcout: 40, type: 'invalid'},
   ];
 
   defaultCutType = 'invalid';

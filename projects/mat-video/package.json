@@ -1,6 +1,6 @@
 {
   "name": "mat-video",
-  "version": "2.12.4",
+  "version": "2.12.5",
   "description": "mat-video is an Angular 8/9+ video player using Material",
   "license": "MIT",
   "private": false,
@@ -33,15 +33,17 @@
   },
   "homepage": "https://github.com/ARANOVA/mat-video",
   "peerDependencies": {
-    "@angular/common": ">=12.0.0",
-    "@angular/compiler": ">=12.0.0",
-    "@angular/core": ">=12.0.0",
-    "@angular/platform-browser": ">=12.0.0",
-    "@angular/platform-browser-dynamic": ">=12.0.0",
-    "@angular/material": ">=12.0.0",
-    "@angular/cdk": ">=12.0.0",
-    "@angular/animations": ">=12.0.0",
-    "rxjs": ">=6.6.7",
-    "zone.js": ">=0.11.4"
+    "@angular/animations": "^11.0.0 || ^12.0.0",
+    "@angular/cdk": "^11.0.0 || ^12.0.0",
+    "@angular/common": "^11.0.0 || ^12.0.0",
+    "@angular/forms": "^11.0.0 || ^12.0.0",
+    "@angular/compiler": "^11.0.0 || ^12.0.0",
+    "@angular/core": "^11.0.0 || ^12.0.0",
+    "@angular/material": "^11.0.0 || ^12.0.0",
+    "@angular/platform-browser": "^11.0.0 || ^12.0.0",
+    "@angular/platform-browser-dynamic": "^11.0.0 || ^12.0.0",
+    "rxjs": "6.6.7",
+    "tslib": "^2.0.0 || ^2.1.0 || ^2.2.0 || ^2.3.0",
+    "zone.js": "^0.10.0 || ^0.11.0"
   }
 }

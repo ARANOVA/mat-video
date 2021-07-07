@@ -1,3 +1,12 @@
+# 2.12.5 (2021-07-07)
+
+### Features:
+
+- **angular:** compatibily with Angular 11+, 12+
+- **video-editor:** cuts by id and reorder by TC in
+- **video-editor:** Support for thumbnails
+
+
 # 2.12.0 (2021-06-22)
 
 ### Features:

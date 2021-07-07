@@ -209,8 +209,13 @@
         (cutEvent)="cutEvent($event)"
       >
       </mat-video>
-{{ defaultCutType }}
       <button (click)="selected = 1">Select 1</button>
+      <ul>
+        <li *ngFor="let cut of cuts">
+          <img [src]="cut.thumb" />
+          {{ cut.tcin }} - {{ cut.tcout}} ({{ cut.idx }})
+        </li>
+      </ul>
     </div>
 
     <div class="mat-toolbar mat-primary mat-toolbar-single-row footer">
