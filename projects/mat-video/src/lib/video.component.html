@@ -97,12 +97,13 @@
         [video]="video"
         [cuts]="cuts"
         [currentTime]="time"
-        [(selected)]="selected"
         [defaultCutType]="defaultCutType"
         [cutType]="cutType"
         [editorOrderButtons]="editorOrderButtons"
+        [selected]="selected"
         (cutEvent)="emitCutEvent($event)"
         (posterChanged)="emitPosterChange($event)"
+        (selectedChanged)="emitSelectedChange($event)"
       ></mat-editor-control>
     </div>
   </div>

@@ -200,21 +200,41 @@
         [showSpeed]="showSpeed"
         [showFrameByFrame]="showFrameByFrame"
         [(time)]="currentTime"
-        [cuts]="cuts"
-        [selected]="selected"
+        [cuts]="initialcuts"
         [speedScale]="speedScale"
         [speedIndex]="speedIndex"
         [defaultCutType]="defaultCutType"
+        [selected]="selected"
         [cutType]="cutType"
         (cutEvent)="cutEvent($event)"
         (posterChanged)="posterChanged($event)"
+        (selectedChanged)="selectedChanged($event)"
       >
       </mat-video>
-      <button (click)="selected = 1">Select 1</button>
+
+      <div class="w-full flex-1 pt-4 pb-4 overflow-x-auto overflow-y-auto" *ngIf="cuts && cuts.length > 0">
+          <div class="slider" #sliderItems>
+              <div *ngFor="let video of cuts; let idx=index;" class="videofull" (click)="selectCut($event, idx)" [title]="video.title">
+                  <div [ngClass]="video.selected ? 'selected': 'none'">
+                      <img *ngIf="video.thumb" class="w-16/9 h-9/16" [src]="video.thumb" />
+                      <div *ngIf="!video.thumb && checkCutOrNot(video)">
+                          <div class="w-16/9 h-9/16 bg-red-300">
+                          </div>
+                      </div>
+                      <div *ngIf="!video.thumb && !checkCutOrNot(video)">
+                          <div class="w-16/9 h-9/16 bg-green-300">
+                          </div>
+                      </div>
+                  </div>
+                  <h3 class="mt-2">{{ getVideoTitle(video) }} {{ video.selected }}</h3>
+              </div>
+          </div>
+      </div>
+      
       <ul>
         <li *ngFor="let cut of cuts">
           <img *ngIf="cut.thumb" [src]="cut.thumb" style="width: 240px;height: 135px"/>
-          {{ cut.tcin }} - {{ cut.tcout}} ({{ cut.idx }})
+          {{ cut.tcin }} - {{ cut.tcout}} ({{ cut.idx }}) {{cut.selected}}
         </li>
       </ul>
     </div>

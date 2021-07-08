@@ -16,6 +16,11 @@ import { AppComponent } from './app.component';
 import { MatVideoModule } from 'projects/mat-video/src/public-api';
 
 import { MatSliderModule } from '@angular/material/slider'; 
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+registerLocaleData(localeEs);
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,7 +40,9 @@ import { MatSliderModule } from '@angular/material/slider';
     MatVideoModule,
     MatSliderModule
   ],
-  providers: [],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es-ES' }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -1,3 +1,4 @@
+import { formatNumber } from '@angular/common';
 import { Component, VERSION } from '@angular/core';
 import buildInfo from './../../package.json';
 
@@ -63,9 +64,11 @@ export class AppComponent {
   }
 
   cuts = [
-      {tcin: 45, tcout: 50, type: 'cut'},
-      {tcin: 20, tcout: 40, type: 'invalid'},
+      {tcin: 45, tcout: 50, type: 'cut', idx: '1', selected: false},
+      {tcin: 20, tcout: 40, type: 'invalid', idx: '2', selected: false},
   ];
+
+  initialcuts = this.cuts.map((cut: any) => { return {...cut} });
 
   defaultCutType = 'invalid';
   cutType = 'cut';
@@ -80,6 +83,52 @@ export class AppComponent {
 
   posterChanged($event: string) {
     this.poster = $event;
+  }
+
+  selectedChanged($event: string | null) {
+    console.log("selectedChanged");
+    this.cuts.forEach((cut: any, i: number) => {
+      console.log("selectedChanged", $event, cut.idx, cut.idx == $event);
+      if (cut.idx == $event) {
+        this.cuts[i].selected = true;
+        this.selected = i;
+      } else {
+        cut.selected = false;
+      }
+    });
+  }
+
+  selectCut($event: MouseEvent, idx: number) {
+    this.cuts.forEach((cut: any) => {
+      cut.selected = false;
+    });
+    this.cuts[idx].selected = true;
+    // "Emit" selected
+    this.selected = this.cuts[idx].idx;
+  }
+
+  checkCutOrNot($: any) {
+    return true;
+  }
+
+  /*
+     * Returns duration in seconds
+     *
+     * @param Object cut
+     * @returns number
+    */
+  getDuration(cut: { tcout: number; tcin: number; }) {
+    return Math.round(cut.tcout - cut.tcin);
+  }
+
+  getVideoTitle(video: any, force: boolean = false) {
+      if (!video.title || video.title.startsWith('gen:') || force) {
+          video.title = `gen:${video.type == 'cut' ? 'Corte' : 'Descarte'} de ` +
+              `${formatNumber(video.tcin, 'es', '2.2-2')} a ` +
+              `${formatNumber(video.tcout, 'es', '2.2-2')} ` +
+              `(${formatNumber(this.getDuration(video), 'es', '0.0-2')} segundos)`;
+      }
+      return video.title.startsWith('gen:') ? video.title.substr(4) : video.title;
   }
 
 }

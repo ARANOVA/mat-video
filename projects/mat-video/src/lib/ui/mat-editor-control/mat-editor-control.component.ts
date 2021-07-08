@@ -68,18 +68,11 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   @Input() cuts: any = [];
 
+  @Input() selected: string;
+
   @Output() posterChanged = new EventEmitter<string>();
   
-  @Input()
-  get selected() {
-    return this.selectedCut?.idx;
-  }
-
-  set selected(idx: string | undefined | null) {
-    if (idx !== undefined && idx !== null) {
-      this.selectCut(null, idx);
-    }
-  }
+  @Output() selectedChanged = new EventEmitter<string | null>();
 
   @Output() cutEvent = new EventEmitter<any>();
 
@@ -138,6 +131,12 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     }
     if (changes.select && !changes.select.firstChange) {
       this.selectCut(null, changes.select.currentValue);
+    }
+    if (changes.selected)
+      if (changes.selected.currentValue !== null) {
+        this.selectCut(null, changes.selected.currentValue, false);
+      } else {
+        this.deselectCut(null, false);
     }
     if (changes.cuts && changes.cuts.firstChange) {
       this.cuts.forEach((cut: any, idx: number) => {
@@ -242,9 +241,12 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     this.deselectCut();
   }
 
-  deselectCut($event?: MouseEvent) {
+  deselectCut($event?: MouseEvent, emit: boolean = true) {
     if ($event) {
       $event.stopPropagation();
+    }
+    if (emit) {
+      this.selectedChanged.emit(null);
     }
     if (this.mode !== 'tcin' && this.mode !== 'tcout') {
       this.selectedCut.selected = false;
@@ -255,20 +257,26 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     }
   }
 
-  selectCut($event: MouseEvent, idx: string) {
+  selectCut($event: MouseEvent, idx: string = '', emit: boolean = true) {
     if ($event) {
       $event.stopPropagation();
     }
-    this.cuts.forEach((cut: any) => {
-      cut.selected = false;
+    this.cuts.forEach((cut: any, i: number) => {
+      cut.selected = cut.idx === idx;
+      if (cut.idx === idx) {
+        this.selectedCut = this.cuts[i];
+      }
     });
-    this.cuts[idx].selected = true;
-    this.selectedCut = this.cuts[idx];
-    if (!this.selectedCut.thumb) {
-      this.__askFrame = true;
+    if (this.selectedCut) {
+      if (emit) {
+        this.selectedChanged.emit(idx);
+      }
+      if (!this.selectedCut.thumb) {
+        this.__askFrame = true;
+      }
+      this.mode = 'tc';
+      this.seekVideo(this.selectedCut.tcin / this.video.duration * 100);
     }
-    this.mode = 'tc';
-    this.seekVideo(this.selectedCut.tcin / this.video.duration * 100);
     // setTimeout(() => this.mode = 'tcin', 200);
   }
 
