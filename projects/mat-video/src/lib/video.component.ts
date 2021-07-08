@@ -87,6 +87,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Output() timeChange = new EventEmitter<number>();
 
   @Output() cutEvent = new EventEmitter<any>();
+  @Output() posterChanged = new EventEmitter<string>();
 
   @Input() selected: number | null | undefined;
 
@@ -258,5 +259,9 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   emitCutEvent($event: any) {
     this.cutEvent.emit($event)
+  }
+
+  emitPosterChange($event: string) {
+    this.posterChanged.emit($event)
   }
 }

@@ -207,12 +207,13 @@
         [defaultCutType]="defaultCutType"
         [cutType]="cutType"
         (cutEvent)="cutEvent($event)"
+        (posterChanged)="posterChanged($event)"
       >
       </mat-video>
       <button (click)="selected = 1">Select 1</button>
       <ul>
         <li *ngFor="let cut of cuts">
-          <img [src]="cut.thumb" />
+          <img *ngIf="cut.thumb" [src]="cut.thumb" style="width: 240px;height: 135px"/>
           {{ cut.tcin }} - {{ cut.tcout}} ({{ cut.idx }})
         </li>
       </ul>

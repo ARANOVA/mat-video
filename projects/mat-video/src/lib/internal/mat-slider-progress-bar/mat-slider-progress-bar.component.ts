@@ -62,6 +62,12 @@ export class MatSliderProgressBarComponent extends MatSlider {
   /** The id of the progress bar. */
   sliderprogressbarId = `mat-slider-progress-bar-${sliderprogressbarId++}`;
 
+  _invertAxis: false;
+  _thumbGap: false;
+  _onSlide = null;
+  _onSlideEnd = null;
+  _onSlideStart = null;
+
   constructor(elementRef: ElementRef,
     _focusMonitor: FocusMonitor,
     _changeDetectorRef: ChangeDetectorRef,

@@ -5,6 +5,7 @@
 
   <div class="videoaspect">
     <video
+      crossorigin="*"
       #video
       class="video"
       [attr.autoplay]="autoplay ? true : null"
@@ -101,6 +102,7 @@
         [cutType]="cutType"
         [editorOrderButtons]="editorOrderButtons"
         (cutEvent)="emitCutEvent($event)"
+        (posterChanged)="emitPosterChange($event)"
       ></mat-editor-control>
     </div>
   </div>

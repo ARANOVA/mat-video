@@ -68,6 +68,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   @Input() cuts: any = [];
 
+  @Output() posterChanged = new EventEmitter<string>();
+  
   @Input()
   get selected() {
     return this.selectedCut?.idx;
@@ -98,6 +100,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   private events: EventHandler[];
   private fullWidth = 0;
   public mode = 'tcin';
+  private __askFrame = true;
+  private __videoSize: {w: number, h: number};
 
   @ViewChild('trimmerBar') trimmerBar;
   
@@ -110,9 +114,19 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     this.events = [
       { element: this.video, name: 'seeking', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
       { element: this.video, name: 'seeked', callback: 
-          event => { this.selectedCut.thumb = this.getFrame(this.video.currentTime)}
+          event => {
+            const aux = this.getFrame(this.video.currentTime);
+            if (aux) {
+              if (this.selectedCut && this.selectedCut.tcin !== 0 && this.selectedCut.tcout !== 0) {
+                this.selectedCut.thumb = aux;
+              } else {
+                this.posterChanged.emit(aux);
+              }
+            }
+          }
           , dispose: null },
-      { element: this.video, name: 'timeupdate', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null }
+      { element: this.video, name: 'timeupdate', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
+      { element: this.video, name: 'loadeddata', callback: event => this.getVideoSize(event), dispose: null }
     ];
     this.fullWidth = this.trimmerBar.nativeElement.offsetWidth;
     this.evt.addEvents(this.renderer, this.events);
@@ -138,18 +152,24 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
         }
         */
       });
-      // this.seekVideo(0);
+      this.seekVideo(0);
       this.cuts.sort((a, b) => a.tcin - b.tcin );
     }
   }
 
   setTcIn() {
+    this.__askFrame = true;
     this.selectedCut.tcin = roundFn(this.video.currentTime, 0.04, 0);
-    this.mode = 'tcout';
-    this.selectedCut.selected = true;
-    if (!this.selectedCut.idx) {
-      this.cuts.push(this.selectedCut);
+    if (this.mode === 'tcin') {
+      this.mode = 'tcout';
+      this.selectedCut.selected = true;
+      if (!this.selectedCut.idx) {
+        this.cuts.push(this.selectedCut);
+      }
+    } else {
+      this.mode = 'tc';
     }
+    this.seekVideo(this.selectedCut.tcin / this.video.duration * 100);
   }
 
   setTcOut() {
@@ -244,6 +264,9 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     });
     this.cuts[idx].selected = true;
     this.selectedCut = this.cuts[idx];
+    if (!this.selectedCut.thumb) {
+      this.__askFrame = true;
+    }
     this.mode = 'tc';
     this.seekVideo(this.selectedCut.tcin / this.video.duration * 100);
     // setTimeout(() => this.mode = 'tcin', 200);
@@ -287,13 +310,29 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     }
   }
 
-  getFrame(time: number): string {
-    const canvas = document.createElement('canvas');
-    canvas.width  = 500;
-    canvas.height = 282;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(this.video, 0, 0, 480, 270);
-    return canvas.toDataURL();
+  getFrame(time: number): string | null {
+    if (this.__askFrame) {
+      const canvas = document.createElement('canvas');
+      const w = 240;
+      let h = 135; // 16:9
+      if (this.__videoSize) {
+        h = Math.round(this.__videoSize.h * 240 / this.__videoSize.w);
+      }
+      canvas.width  = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(this.video, 0, 0, w, h);
+      this.__askFrame = false;
+      return canvas.toDataURL();
+    }
+    return null;
+  }
+
+  getVideoSize(event: any) {
+    this.__videoSize = {
+      w: event.target.videoWidth,
+      h: event.target.videoHeight
+    }
   }
 
   updateCurrentTime(time: number): void {
