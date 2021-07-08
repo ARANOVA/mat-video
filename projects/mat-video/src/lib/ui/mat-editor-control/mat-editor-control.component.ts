@@ -62,19 +62,35 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   @Input() cutType: string | null = null;
 
-  @Input() editorOrderButtons: HashNumber;
+  @Input() editorOrderButtons: HashNumber = {
+    tcinInput: 0,
+    tcinButton: 1,
+    tcoutButton: 2,
+    tcoutInput: 3,
+    typeCutSelector: 4,
+    spacer: 5,
+    addButton: 6,
+    saveButton: 7,
+    removeButton: 8,
+    resetButton: 9
+  };
 
   @Output() currentTimeChanged = new EventEmitter<number>();
 
   @Input() cuts: any = [];
 
-  @Input() selected: string;
+  @Input() selected: string | null | undefined;
 
   @Output() posterChanged = new EventEmitter<string>();
   
   @Output() selectedChanged = new EventEmitter<string | null>();
 
   @Output() cutEvent = new EventEmitter<any>();
+
+  /*
+     * Initial copy of data
+    */
+  public modCuts!: any[];
 
   public selectedCut: {
     tcin: number,
@@ -129,19 +145,19 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     if (changes.defaultCutType || changes.cutType) {
       this.selectedCut.type = this.cutType ? this.cutType : this.defaultCutType;
     }
-    if (changes.select && !changes.select.firstChange) {
-      this.selectCut(null, changes.select.currentValue);
-    }
-    if (changes.selected)
-      if (changes.selected.currentValue !== null) {
+    if (changes.selected) {
+      if (changes.selected.currentValue) {
         this.selectCut(null, changes.selected.currentValue, false);
-      } else {
+      } else if (changes.selected.currentValue === null) {
         this.deselectCut(null, false);
+      }
     }
-    if (changes.cuts && changes.cuts.firstChange) {
-      this.cuts.forEach((cut: any, idx: number) => {
+    if (changes.cuts && changes.cuts.firstChange && changes.cuts.currentValue) {
+      this.modCuts = this.cuts.map((cut: any) => { return { ...cut } });
+
+      this.modCuts.forEach((cut: any, idx: number) => {
         if (!cut.idx) {
-          this.cuts[idx].idx = randomString(8);
+          this.modCuts[idx].idx = randomString(8);
         }
         /*
         TODO
@@ -152,21 +168,28 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
         */
       });
       this.seekVideo(0);
-      this.cuts.sort((a, b) => a.tcin - b.tcin );
+      this.modCuts.sort((a, b) => a.tcin - b.tcin );
     }
   }
 
   setTcIn() {
     this.__askFrame = true;
+    const prevTCin = this.selectedCut.tcin;
     this.selectedCut.tcin = roundFn(this.video.currentTime, 0.04, 0);
     if (this.mode === 'tcin') {
       this.mode = 'tcout';
       this.selectedCut.selected = true;
       if (!this.selectedCut.idx) {
-        this.cuts.push(this.selectedCut);
+        this.modCuts.push(this.selectedCut);
       }
     } else {
       this.mode = 'tc';
+    }
+    if (this.selectedCut.tcout && this.selectedCut.tcout < this.selectedCut.tcin) {
+      this.selectedCut.tcout = this.selectedCut.tcin + prevTCin;
+      if (this.selectedCut.tcout > this.video.duration) {
+        this.selectedCut.tcout = this.video.duration;
+      }
     }
     this.seekVideo(this.selectedCut.tcin / this.video.duration * 100);
   }
@@ -193,12 +216,12 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   private __removeCut(idx: string) {
-    for (let i = this.cuts.length - 1; i >= 0; --i) {
-      if (this.cuts[i].idx === idx) {
-        this.cuts.splice(i, 1);
+    for (let i = this.modCuts.length - 1; i >= 0; --i) {
+      if (this.modCuts[i].idx === idx) {
+        this.modCuts.splice(i, 1);
       }
     }
-    this.cuts.sort((a, b) => a.tcin - b.tcin );
+    this.modCuts.sort((a, b) => a.tcin - b.tcin );
   }
 
   removeCut() {
@@ -217,8 +240,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     }
     this.selectedCut.selected = false;
     this.selectedCut.idx = randomString(8);
-    this.cuts.push({...this.selectedCut});
-    this.cuts.sort((a, b) => a.tcin - b.tcin );
+    this.modCuts.push({...this.selectedCut});
+    this.modCuts.sort((a, b) => a.tcin - b.tcin );
     this.cutEvent.emit({type: 'add', cut: {...this.selectedCut}});
     this.resetCut(false);
   }
@@ -261,21 +284,23 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     if ($event) {
       $event.stopPropagation();
     }
-    this.cuts.forEach((cut: any, i: number) => {
-      cut.selected = cut.idx === idx;
-      if (cut.idx === idx) {
-        this.selectedCut = this.cuts[i];
+    if (this.modCuts) {
+      this.modCuts.forEach((cut: any, i: number) => {
+        cut.selected = cut.idx === idx;
+        if (cut.idx === idx) {
+          this.selectedCut = this.modCuts[i];
+        }
+      });
+      if (this.selectedCut) {
+        if (emit) {
+          this.selectedChanged.emit(idx);
+        }
+        if (!this.selectedCut.thumb) {
+          this.__askFrame = true;
+        }
+        this.mode = 'tc';
+        this.seekVideo(this.selectedCut.tcin / this.video.duration * 100);
       }
-    });
-    if (this.selectedCut) {
-      if (emit) {
-        this.selectedChanged.emit(idx);
-      }
-      if (!this.selectedCut.thumb) {
-        this.__askFrame = true;
-      }
-      this.mode = 'tc';
-      this.seekVideo(this.selectedCut.tcin / this.video.duration * 100);
     }
     // setTimeout(() => this.mode = 'tcin', 200);
   }

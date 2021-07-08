@@ -37,7 +37,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() loop = false;
   @Input() quality = true;
   @Input() fullscreen = true;
-  @Input() editor = true;
+  @Input() editor = false;
   @Input() playsinline = false;
   @Input() showFrameByFrame = false;
   @Input() showVolume = false;
@@ -53,7 +53,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() controlClass = '';
   @Input() headerClass = '';
   @Input() sliderClass = '';
-  @Input() cuts: any;
+  @Input() cuts: any = [];
   @Input() defaultCutType = 'cut';
   @Input() cutType: string | null = null;
   @Input() speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4, 8];
@@ -90,7 +90,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Output() posterChanged = new EventEmitter<string>();
   @Output() selectedChanged = new EventEmitter<string | null>();
 
-  @Input() selected: number | null | undefined;
+  @Input() selected: string | null | undefined;
 
   @Input()
   get time() {
