@@ -111,8 +111,11 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   public mode = 'tcin';
   private __askFrame = true;
   private __videoSize: {w: number, h: number};
-
+  private __focused: any;
+  
   @ViewChild('trimmerBar') trimmerBar;
+  @ViewChild('tcinInput') tcinInput;
+  @ViewChild('tcoutInput') tcoutInput;
   
   constructor(
     private renderer: Renderer2,
@@ -172,10 +175,12 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     }
   }
 
-  setTcIn() {
+  setTcIn(update: boolean = true) {
     this.__askFrame = true;
     const prevTCin = this.selectedCut.tcin;
-    this.selectedCut.tcin = roundFn(this.video.currentTime, 0.04, 0);
+    if (update) {
+      this.selectedCut.tcin = roundFn(this.video.currentTime, 0.04, 0);
+    }
     if (this.mode === 'tcin') {
       this.mode = 'tcout';
       this.selectedCut.selected = true;
@@ -185,13 +190,15 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     } else {
       this.mode = 'tc';
     }
-    if (this.selectedCut.tcout && this.selectedCut.tcout < this.selectedCut.tcin) {
-      this.selectedCut.tcout = this.selectedCut.tcin + prevTCin;
-      if (this.selectedCut.tcout > this.video.duration) {
-        this.selectedCut.tcout = this.video.duration;
+    if (update) {
+      if (this.selectedCut.tcout && this.selectedCut.tcout < this.selectedCut.tcin) {
+        this.selectedCut.tcout = this.selectedCut.tcin + prevTCin;
+        if (this.selectedCut.tcout > this.video.duration) {
+          this.selectedCut.tcout = this.video.duration;
+        }
       }
+      this.seekVideo(this.selectedCut.tcin / this.video.duration * 100);
     }
-    this.seekVideo(this.selectedCut.tcin / this.video.duration * 100);
   }
 
   setTcOut() {
@@ -244,6 +251,11 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     this.modCuts.sort((a, b) => a.tcin - b.tcin );
     this.cutEvent.emit({type: 'add', cut: {...this.selectedCut}});
     this.resetCut(false);
+    this.selectedCut.tcin = this.selectedCut.tcout = 
+        this.tcinInput.nativeElement.value = roundFn(this.currentTime, 0.04, 0);
+    setTimeout(() => {
+      this.tcinInput.nativeElement.select();
+    }, 300);
   }
 
   getClassCut(cut) {
@@ -376,6 +388,33 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   updateTime(emitter: EventEmitter<number>, time: number): number {
     emitter.emit(time);
     return (time / this.video.duration) * 100;
+  }
+
+  keyup(input: string, event: KeyboardEvent) {
+    if (this.__focused) {
+      clearTimeout(this.__focused);
+    }
+    if (event.key === 'Enter') { // Solo numérico
+      if (input === 'tcin') {
+        this.seekVideo(this.selectedCut[input as 'tcin' | 'tcout'] / this.video.duration * 100);
+        this.setTcIn();
+        this.tcoutInput.nativeElement.focus();
+        setTimeout(() => this.tcoutInput.nativeElement.select(), 100);
+      } else {
+        if (this.mode !== 'tcout') {
+          this.setTcIn(false);
+        }
+        this.seekVideo(this.selectedCut[input as 'tcin' | 'tcout'] / this.video.duration * 100);
+        this.setTcOut();
+      }
+    } else {
+      if (this.selectedCut[input as 'tcin' | 'tcout'] > 0) {
+        this.__focused = setTimeout(() => {
+            this.seekVideo(this.selectedCut.tcin / this.video.duration * 100);
+          }
+        , 300);
+      }
+    }
   }
 
 }

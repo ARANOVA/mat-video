@@ -13,7 +13,10 @@
         <div class="inline-small px-2" [style.order]="editorOrderButtons.tcinInput" [ngClass]="{'pl-0': editorOrderButtons.tcinInput == 0, 'pr-0': editorOrderButtons.tcinInput == 9}">
             <mat-form-field color="primary" [style.width.px]="60">
                 <mat-label>TcIn</mat-label>
-                <input matInput placeholder="0" type="number" min="0" [step]="1/fps" [(ngModel)]="selectedCut.tcin" />
+                <input matInput placeholder="0" type="number" min="0" [step]="1/fps" [(ngModel)]="selectedCut.tcin"
+                #tcinInput (click)="tcinInput.select()"
+                (keyup)="keyup('tcin', $event)"
+                />
             </mat-form-field>
         </div>
         <button mat-icon-button (click)="setTcIn()" [style.order]="editorOrderButtons.tcinButton"
@@ -27,7 +30,9 @@
         <div class="inline-small px-2" [style.order]="editorOrderButtons.tcoutInput" [ngClass]="{'pl-0': editorOrderButtons.tcoutInput == 0, 'pr-0': editorOrderButtons.tcoutInput == 9}">
             <mat-form-field color="primary" [style.width.px]="60">
                 <mat-label>TcOut</mat-label>
-                <input matInput placeholder="0" type="number" min="0" [step]="1/fps" [(ngModel)]="selectedCut.tcout" />
+                <input matInput placeholder="0" type="number" min="0" [step]="1/fps" [(ngModel)]="selectedCut.tcout"
+                #tcoutInput (click)="tcoutInput.select()"
+                (keyup)="keyup('tcout', $event)" />
             </mat-form-field>
         </div>
 

@@ -1,3 +1,10 @@
+# 2.12.6 (2021-07-09)
+
+### Features:
+
+- **video-editor:** Better support for keyboard in cuts
+
+
 # 2.12.5 (2021-07-07)
 
 ### Features:
