@@ -410,7 +410,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     } else {
       if (this.selectedCut[input as 'tcin' | 'tcout'] > 0) {
         this.__focused = setTimeout(() => {
-            this.seekVideo(this.selectedCut.tcin / this.video.duration * 100);
+            this.seekVideo(this.selectedCut[input as 'tcin' | 'tcout'] / this.video.duration * 100);
           }
         , 300);
       }
