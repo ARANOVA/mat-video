@@ -200,7 +200,7 @@
         [showSpeed]="showSpeed"
         [showFrameByFrame]="showFrameByFrame"
         [(time)]="currentTime"
-        [cuts]="initialcuts"
+        [cuts]="cuts"
         [speedScale]="speedScale"
         [speedIndex]="speedIndex"
         [defaultCutType]="defaultCutType"
@@ -235,6 +235,7 @@
         <li *ngFor="let cut of cuts">
           <img *ngIf="cut.thumb" [src]="cut.thumb" style="width: 240px;height: 135px"/>
           {{ cut.tcin }} - {{ cut.tcout}} ({{ cut.idx }}) {{cut.selected}}
+          <button (click)="deleteClip(cut.idx)">Borrar</button>
         </li>
       </ul>
     </div>

@@ -107,7 +107,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   };
 
   private events: EventHandler[];
-  private fullWidth = 0;
+  public fullWidth = 0;
   public mode = 'tcin';
   private __askFrame = true;
   private __videoSize: {w: number, h: number};
@@ -142,6 +142,11 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     ];
     this.fullWidth = this.trimmerBar.nativeElement.offsetWidth;
     this.evt.addEvents(this.renderer, this.events);
+    // 
+    setTimeout(()=> {
+      this.modCuts = this.cuts.map((cut: any) => { return { ...cut } });
+      this.modCuts.sort((a, b) => a.tcin - b.tcin );
+    }, 0);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -156,22 +161,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       }
     }
     if (changes.cuts && changes.cuts.firstChange && changes.cuts.currentValue) {
-      this.modCuts = this.cuts.map((cut: any) => { return { ...cut } });
-
-      this.modCuts.forEach((cut: any, idx: number) => {
-        if (!cut.idx) {
-          this.modCuts[idx].idx = randomString(8);
-        }
-        /*
-        TODO
-        if (!cut.thumb) {
-          this.seekVideo(cut.tcin / this.video.duration * 100);
-          this.cuts[idx].thumb = this.getFrame(cut.tcin);
-        }
-        */
-      });
-      this.seekVideo(0);
-      this.modCuts.sort((a, b) => a.tcin - b.tcin );
+    //   this.seekVideo(0);
     }
   }
 
@@ -223,22 +213,30 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   private __removeCut(idx: string) {
+    /*
     for (let i = this.modCuts.length - 1; i >= 0; --i) {
       if (this.modCuts[i].idx === idx) {
         this.modCuts.splice(i, 1);
       }
     }
     this.modCuts.sort((a, b) => a.tcin - b.tcin );
+    */
+
   }
 
   removeCut() {
     if (this.selectedCut.idx) {
       this.cutEvent.emit({type: 'remove', cut: {...this.selectedCut}});
-      this.__removeCut(this.selectedCut.idx);
+      this.__removeCut(this.selectedCut.idx); // <- esto lo hace el padre
     }
     this.resetCut(true);
     this.mode = 'tc';
     this.selectedCut.tcin = 0;
+  }
+
+  private __addCut() {
+    // this.modCuts.push({...this.selectedCut});
+    // this.modCuts.sort((a, b) => a.tcin - b.tcin );
   }
 
   addCut() {
@@ -247,9 +245,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     }
     this.selectedCut.selected = false;
     this.selectedCut.idx = randomString(8);
-    this.modCuts.push({...this.selectedCut});
-    this.modCuts.sort((a, b) => a.tcin - b.tcin );
     this.cutEvent.emit({type: 'add', cut: {...this.selectedCut}});
+    this.__addCut(); // <- esto lo hace el padre
     this.resetCut(false);
     this.selectedCut.tcin = this.selectedCut.tcout = 
         this.tcinInput.nativeElement.value = roundFn(this.currentTime, 0.04, 0);
@@ -292,21 +289,15 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     }
   }
 
-  selectCut($event: MouseEvent, idx: string = '', emit: boolean = true) {
-    if ($event) {
-      $event.stopPropagation();
-    }
-    if (this.modCuts) {
-      this.modCuts.forEach((cut: any, i: number) => {
-        cut.selected = cut.idx === idx;
+  private __selectCut(idx: string | null = null): void {
+    if (this.cuts) {
+      this.cuts.forEach((cut: any, i: number) => {
+        // cut.selected = cut.idx === idx; <-- esto lo hace el padre
         if (cut.idx === idx) {
           this.selectedCut = this.modCuts[i];
         }
       });
       if (this.selectedCut) {
-        if (emit) {
-          this.selectedChanged.emit(idx);
-        }
         if (!this.selectedCut.thumb) {
           this.__askFrame = true;
         }
@@ -317,8 +308,16 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     // setTimeout(() => this.mode = 'tcin', 200);
   }
 
+  selectCut($event: MouseEvent, idx: string | null = null, emit: boolean = true) {
+    if ($event) {
+      $event.stopPropagation();
+    }
+    setTimeout(() => this.selectedChanged.emit(idx), 0);
+    this.__selectCut(idx); // <-- esto lo hace el padre
+  }
+
   getStartCut(tcin: number): number {
-    if (tcin > 0) {
+    if (tcin > 0 && this.fullWidth && this.video.duration) {
       const l = (tcin / this.video.duration) * this.fullWidth;
       return l;
     }

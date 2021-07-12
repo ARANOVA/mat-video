@@ -64,8 +64,8 @@ export class AppComponent {
   }
 
   cuts = [
-      {tcin: 45, tcout: 50, type: 'cut', idx: '1', selected: false},
       {tcin: 20, tcout: 40, type: 'invalid', idx: '2', selected: false},
+      {tcin: 45, tcout: 50, type: 'cut', idx: '1', selected: false}
   ];
 
   initialcuts = this.cuts.map((cut: any) => { return {...cut} });
@@ -85,13 +85,28 @@ export class AppComponent {
     this.poster = $event;
   }
 
-  selectedChanged($event: string | null) {
+  deleteClip(cutidx: string): void {
+    console.log("deleteClip", cutidx)
+    if (cutidx) {
+        const idx = this.cuts.findIndex((cut: any) => {
+            return cut.idx === cutidx;
+        });
+        if (idx > -1) {
+            this.cuts.splice(idx, 1);
+        }
+        console.log(idx, this.cuts);
+    }
+  }
+
+  selectedChanged($event: string | null, update: boolean = false) {
     console.log("selectedChanged");
     this.cuts.forEach((cut: any, i: number) => {
       console.log("selectedChanged", $event, cut.idx, cut.idx == $event);
       if (cut.idx == $event) {
         this.cuts[i].selected = true;
-        this.selected = i;
+        if (update) {
+          this.selected = i;
+        }
       } else {
         cut.selected = false;
       }
@@ -99,12 +114,11 @@ export class AppComponent {
   }
 
   selectCut($event: MouseEvent, idx: number) {
-    this.cuts.forEach((cut: any) => {
-      cut.selected = false;
+    this.cuts.forEach((cut: any, i: number) => {
+      cut.selected = idx === i;
     });
-    this.cuts[idx].selected = true;
     // "Emit" selected
-    this.selected = this.cuts[idx].idx;
+    setTimeout(() => this.selected = this.cuts[idx].idx, 0);
   }
 
   checkCutOrNot($: any) {
@@ -123,12 +137,12 @@ export class AppComponent {
 
   getVideoTitle(video: any, force: boolean = false) {
       if (!video.title || video.title.startsWith('gen:') || force) {
-          video.title = `gen:${video.type == 'cut' ? 'Corte' : 'Descarte'} de ` +
+          return `${video.type == 'cut' ? 'Corte' : 'Descarte'} de ` +
               `${formatNumber(video.tcin, 'es', '2.2-2')} a ` +
               `${formatNumber(video.tcout, 'es', '2.2-2')} ` +
               `(${formatNumber(this.getDuration(video), 'es', '0.0-2')} segundos)`;
       }
-      return video.title.startsWith('gen:') ? video.title.substr(4) : video.title;
+      return video.title;
   }
 
 }
