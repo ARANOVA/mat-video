@@ -144,9 +144,11 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     this.evt.addEvents(this.renderer, this.events);
     // 
     setTimeout(()=> {
-      this.modCuts = this.cuts.map((cut: any) => { return { ...cut } });
-      this.modCuts.sort((a, b) => a.tcin - b.tcin );
-      this.cuts.sort((a, b) => a.tcin - b.tcin );
+      if (this.cuts) {
+        this.modCuts = this.cuts.map((cut: any) => { return { ...cut } });
+        this.modCuts.sort((a, b) => a.tcin - b.tcin );
+        this.cuts.sort((a, b) => a.tcin - b.tcin );
+      }
     }, 0);
   }
 
