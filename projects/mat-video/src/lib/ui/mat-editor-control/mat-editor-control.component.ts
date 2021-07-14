@@ -146,6 +146,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     setTimeout(()=> {
       this.modCuts = this.cuts.map((cut: any) => { return { ...cut } });
       this.modCuts.sort((a, b) => a.tcin - b.tcin );
+      this.cuts.sort((a, b) => a.tcin - b.tcin );
     }, 0);
   }
 
@@ -175,7 +176,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       this.mode = 'tcout';
       this.selectedCut.selected = true;
       if (!this.selectedCut.idx) {
-        this.modCuts.push(this.selectedCut);
+        this.cuts.push(this.selectedCut);
       }
     } else {
       this.mode = 'tc';
@@ -294,7 +295,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       this.cuts.forEach((cut: any, i: number) => {
         // cut.selected = cut.idx === idx; <-- esto lo hace el padre
         if (cut.idx === idx) {
-          this.selectedCut = this.modCuts[i];
+          this.selectedCut = this.cuts[i];
         }
       });
       if (this.selectedCut) {
