@@ -129,7 +129,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
           event => {
             const aux = this.getFrame(this.video.currentTime);
             if (aux) {
-              if (this.selectedCut && this.selectedCut.tcin !== 0 && this.selectedCut.tcout !== 0) {
+              if (this.selectedCut && this.selectedCut.idx) {
                 this.selectedCut.thumb = aux;
               } else {
                 this.posterChanged.emit(aux);
@@ -148,6 +148,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
         this.modCuts = this.cuts.map((cut: any) => { return { ...cut } });
         this.modCuts.sort((a, b) => a.tcin - b.tcin );
         this.cuts.sort((a, b) => a.tcin - b.tcin );
+      } else {
+        this.cuts = [];
       }
     }, 0);
   }
@@ -179,6 +181,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       this.selectedCut.selected = true;
       if (!this.selectedCut.idx) {
         this.cuts.push(this.selectedCut);
+        this.selectedCut.idx = randomString(8);
       }
     } else {
       this.mode = 'tc';

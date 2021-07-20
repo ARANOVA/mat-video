@@ -1,3 +1,10 @@
+# 2.12.7 (2021-07-20)
+
+### Features:
+
+- **angular:** added support for Angular 12.1
+
+
 # 2.12.6 (2021-07-09)
 
 ### Features:
