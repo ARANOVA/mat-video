@@ -1,10 +1,10 @@
 {
   "name": "mat-video-app",
-  "version": "2.12.7",
+  "version": "2.12.8",
   "description": "",
   "scripts": {
     "ng": "ng",
-    "start": "npx ng serve mat-video-app",
+    "start": "npx ng serve mat-video-app --configuration development",
     "build": "npx ng build mat-video-app",
     "build:lib": "npx ng build mat-video && copy README.md .\\dist\\mat-video\\README.md && copy CHANGELOG.md .\\dist\\mat-video\\CHANGELOG.md && copy LICENSE .\\dist\\mat-video\\LICENSE",
     "build:lib:linux": "npx ng build mat-video && cp README.md ./dist/mat-video/README.md && cp CHANGELOG.md ./dist/mat-video/CHANGELOG.md && cp LICENSE ./dist/mat-video/LICENSE",

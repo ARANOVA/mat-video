@@ -1,3 +1,10 @@
+# 2.12.8 (2021-07-27)
+
+### Features:
+
+- **video-editor:** hability to hide buttons
+
+
 # 2.12.7 (2021-07-20)
 
 ### Features:

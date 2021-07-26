@@ -48,7 +48,20 @@ interface HashNumber {
 })
 export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDestroy {
 
+  /**
+   * Current time percent
+   */
   curTimePercent = 0;
+
+  /**
+   * Current time min percent
+   */
+  curMinPercent = 0;
+
+  /**
+   * Current time max percent
+   */
+  curMaxPercent = 100;
 
   @Input() video: HTMLVideoElement = null;
 
@@ -61,6 +74,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   @Input() defaultCutType = 'cut';
 
   @Input() cutType: string | null = null;
+
+  @Input() editorButtons: boolean = false;
 
   @Input() editorOrderButtons: HashNumber = {
     tcinInput: 0,
@@ -93,19 +108,16 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   public modCuts!: any[];
 
   public selectedCut: {
-    tcin: number,
-    tcout: number,
-    type: string,
-    idx: string,
+    tcin?: number,
+    tcout?: number,
+    type?: string,
+    idx?: string,
     selected?: boolean,
     thumb?: string
-  } = {
-    tcin: 0,
-    tcout: 0,
-    type: this.cutType ? this.cutType : this.defaultCutType,
-    idx: ''
-  };
+  } | null = null;
 
+  public inposition: number = 0;
+  public outposition: number = 0;
   private events: EventHandler[];
   public fullWidth = 0;
   public mode = 'tcin';
@@ -155,9 +167,9 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.defaultCutType || changes.cutType) {
+    /*if (changes.defaultCutType || changes.cutType) {
       this.selectedCut.type = this.cutType ? this.cutType : this.defaultCutType;
-    }
+    }*/
     if (changes.selected) {
       if (changes.selected.currentValue) {
         this.selectCut(null, changes.selected.currentValue, false);
@@ -172,7 +184,16 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   setTcIn(update: boolean = true) {
     this.__askFrame = true;
-    const prevTCin = this.selectedCut.tcin;
+    const prevTCin = this.inposition;
+    if (!this.selectedCut) {
+      this.selectedCut = {
+        tcin: this.inposition,
+        tcout: this.inposition,
+        type: this.cutType ? this.cutType : this.defaultCutType,
+        selected: true,
+        idx: ''
+      };
+    }
     if (update) {
       this.selectedCut.tcin = roundFn(this.video.currentTime, 0.04, 0);
     }
@@ -286,12 +307,24 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     if (emit) {
       this.selectedChanged.emit(null);
     }
+    
+    this.curMinPercent = 0;
+    this.curMaxPercent = 100;
+    this.mode = 'tcin';
+    this.selectedCut = null;
+
     if (this.mode !== 'tcin' && this.mode !== 'tcout') {
+      // Select & zoom
+      console.log("this.currentTime", this.currentTime)
+      /* TEST
       this.selectedCut.selected = false;
       const tcin = this.selectedCut.tcin;
       this.resetCut();
       this.selectedCut.tcin = tcin;
       this.mode = 'tcin';
+      */
+      //this.curTimePercent = this.updateTime(this.currentTimeChanged, this.currentTime);
+
     }
   }
 
@@ -346,6 +379,16 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     const percentage = value / 100;
     const newTime = this.video.duration * percentage;
     this.video.currentTime = newTime;
+    const roundedTime = roundFn(this.video.currentTime, 0.04, 0);
+    if (!this.selectedCut) {
+      console.log("this.mode", this.mode)
+      if (this.mode === 'tcin') {
+        this.inposition = roundedTime;
+      } else if (this.mode === 'tcout') {
+        this.outposition = roundedTime;
+      }
+      return;
+    }
     if (this.mode === 'tcin') {
       this.selectedCut.tcin = roundFn(this.video.currentTime, 0.04, 0);
     } else if (this.mode === 'tcout') {

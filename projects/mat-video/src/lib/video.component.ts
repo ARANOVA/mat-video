@@ -38,6 +38,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() quality = true;
   @Input() fullscreen = true;
   @Input() editor = false;
+  @Input() editorButtons = false;
   @Input() playsinline = false;
   @Input() showFrameByFrame = false;
   @Input() showVolume = false;

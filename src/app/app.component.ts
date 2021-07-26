@@ -39,6 +39,7 @@ export class AppComponent {
   showSpeed = true;
   showVolume = false;
   editor = true;
+  editorButtons = true;
   orderConfiguration = {
     playButton: 0,
     frameByFrameControl: 1,

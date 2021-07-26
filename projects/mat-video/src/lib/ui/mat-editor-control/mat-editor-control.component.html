@@ -1,4 +1,4 @@
-<mat-slider [color]="color" min="0" max="100" step="0.1" [value]="curTimePercent" (input)="seekVideo($event.value)">
+<mat-slider [color]="color" [min]="curMinPercent" [max]="curMaxPercent" step="0.1" [value]="curTimePercent" (input)="seekVideo($event.value)">
 </mat-slider>
 <div class="cut-bar" #trimmerBar (click)="deselectCut($event)">
     <div *ngIf="video.duration && cuts">
@@ -10,12 +10,12 @@
     </div>
 </div>
 
-<div class="menu">
+<div class="menu" *ngIf="editorButtons">
     <div class="buttons">
         <div class="inline-small px-2" [style.order]="editorOrderButtons.tcinInput" [ngClass]="{'pl-0': editorOrderButtons.tcinInput == 0, 'pr-0': editorOrderButtons.tcinInput == 9}">
             <mat-form-field color="primary" [style.width.px]="60">
                 <mat-label>TcIn</mat-label>
-                <input matInput placeholder="0" type="number" min="0" [step]="1/fps" [(ngModel)]="selectedCut.tcin"
+                <input matInput placeholder="0" type="number" min="0" [step]="1/fps" [(ngModel)]="inposition"
                 #tcinInput (click)="tcinInput.select()"
                 (keyup)="keyup('tcin', $event)"
                 />
@@ -32,7 +32,7 @@
         <div class="inline-small px-2" [style.order]="editorOrderButtons.tcoutInput" [ngClass]="{'pl-0': editorOrderButtons.tcoutInput == 0, 'pr-0': editorOrderButtons.tcoutInput == 9}">
             <mat-form-field color="primary" [style.width.px]="60">
                 <mat-label>TcOut</mat-label>
-                <input matInput placeholder="0" type="number" min="0" [step]="1/fps" [(ngModel)]="selectedCut.tcout"
+                <input matInput placeholder="0" type="number" min="0" [step]="1/fps" [(ngModel)]="outposition"
                 #tcoutInput (click)="tcoutInput.select()"
                 (keyup)="keyup('tcout', $event)" />
             </mat-form-field>
@@ -46,17 +46,17 @@
 
         <div style="flex: 1" [style.order]="editorOrderButtons.spacer"></div>
 
-        <button mat-icon-button aria-label="Crear zona" *ngIf="!selectedCut.idx && mode === 'tc'" (click)="addCut()" [style.order]="editorOrderButtons.addButton">
+        <button mat-icon-button aria-label="Crear zona" *ngIf="!selectedCut?.idx && mode === 'tc'" (click)="addCut()" [style.order]="editorOrderButtons.addButton">
             <mat-icon>add_circle_outline</mat-icon>
         </button>
-        <button mat-icon-button aria-label="Guardar zona" *ngIf="selectedCut.idx" (click)="editCut()" [style.order]="editorOrderButtons.saveButton">
+        <button mat-icon-button aria-label="Guardar zona" *ngIf="selectedCut?.idx" (click)="editCut()" [style.order]="editorOrderButtons.saveButton">
             <mat-icon>save</mat-icon>
         </button>
-        <button mat-icon-button aria-label="Eliminar zona" *ngIf="selectedCut.idx" (click)="removeCut()"
+        <button mat-icon-button aria-label="Eliminar zona" *ngIf="selectedCut?.idx" (click)="removeCut()"
             [style.order]="editorOrderButtons.removeButton">
             <mat-icon>remove_circle_outline</mat-icon>
         </button>
-        <button mat-icon-button aria-label="Eliminar zona" *ngIf="!selectedCut.idx && mode !== 'tcin'" (click)="resetCut()"
+        <button mat-icon-button aria-label="Eliminar zona" *ngIf="!selectedCut?.idx && mode !== 'tcin'" (click)="resetCut()"
             [style.order]="editorOrderButtons.resetButton">
             <mat-icon>clear</mat-icon>
         </button>
