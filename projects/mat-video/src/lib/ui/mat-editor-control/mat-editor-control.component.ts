@@ -227,7 +227,6 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   restart() {
-    console.log("restart")
     this.selectedCut = null;
     this.cuts.pop();
     this.mode = 'tcin';
@@ -327,7 +326,6 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
     if (this.mode !== 'tcin' && this.mode !== 'tcout') {
       // Select & zoom
-      console.log("this.currentTime", this.currentTime)
       /* TEST
       this.selectedCut.selected = false;
       const tcin = this.selectedCut.tcin;
@@ -419,14 +417,12 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       if (this.mode === 'tcin') {
         this.selectedCut.tcin = roundFn(this.video.currentTime, 0.04, 0);
       } else if (this.mode === 'tcout') {
-        console.log(this.selectedCut.tcin, '>',  this.video.currentTime);
         if (this.selectedCut.tcin > this.video.currentTime) {
           if (!this.selectedCut.tcout) {
             this.selectedCut.tcout = this.selectedCut.tcin;
           }
           this.selectedCut.tcin = roundFn(this.video.currentTime, 0.04, 0);
         } else {
-          console.log("OUT", roundFn(this.video.currentTime, 0.04, 0))
           this.selectedCut.tcout = roundFn(this.video.currentTime, 0.04, 0);
         }
       }

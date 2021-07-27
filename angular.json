@@ -143,7 +143,7 @@
       "prefix": "mat",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/mat-video/tsconfig.lib.json",
             "project": "projects/mat-video/ng-package.json"
