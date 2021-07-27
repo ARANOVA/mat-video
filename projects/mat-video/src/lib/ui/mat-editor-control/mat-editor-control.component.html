@@ -45,7 +45,6 @@
         </mat-radio-group>
 
         <div style="flex: 1" [style.order]="editorOrderButtons.spacer"></div>
-{{selectedCut?.idx }} {{ mode}}
         <button mat-icon-button aria-label="Crear zona" *ngIf="!selectedCut?.idx && mode === 'tc'" (click)="addCut()" [style.order]="editorOrderButtons.addButton">
             <mat-icon>add_circle_outline</mat-icon>
         </button>
