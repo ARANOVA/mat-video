@@ -65,8 +65,8 @@ export class AppComponent {
   }
 
   cuts = [
-      {tcin: 20, tcout: 40, type: 'invalid', idx: '2', selected: false},
-      {tcin: 45, tcout: 50, type: 'cut', idx: '1', selected: false}
+      {tcin: 20, tcout: 43, type: 'invalid', idx: '2', selected: false},
+      // {tcin: 45, tcout: 50, type: 'cut', idx: '1', selected: false}
   ];
 
   initialcuts = this.cuts.map((cut: any) => { return {...cut} });

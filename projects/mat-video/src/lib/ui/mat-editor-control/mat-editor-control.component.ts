@@ -342,6 +342,10 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
         }
         this.mode = 'tc';
         this.seekVideo(this.selectedCut.tcin / this.video.duration * 100);
+
+        // Test zoom
+        this.curMinPercent = 25;
+        this.curMaxPercent = 75;
       }
     }
     // setTimeout(() => this.mode = 'tcin', 200);
@@ -358,7 +362,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   getStartCut(tcin: number): number {
     if (tcin > 0 && this.fullWidth && this.video.duration) {
       const l = (tcin / this.video.duration) * this.fullWidth;
-      return l;
+      return l / (100 / (this.curMaxPercent - this.curMinPercent));
     }
   }
 
@@ -366,7 +370,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     if (tcout < this.video.duration) {
       const w = (tcout / this.video.duration) * this.fullWidth;
       const l = (tcin / this.video.duration) * this.fullWidth;
-      return Math.max(2, w - l);
+      return Math.max(2, (w - l) * (100 / (this.curMaxPercent - this.curMinPercent)));
     }
     return 2;
   }
