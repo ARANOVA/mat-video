@@ -86,6 +86,10 @@ export class AppComponent {
     this.poster = $event;
   }
 
+  durationChanged($event: number) {
+    console.log("DURATION:", $event);
+  }
+
   deleteClip(cutidx: string): void {
     console.log("deleteClip", cutidx)
     if (cutidx) {

@@ -1,7 +1,8 @@
-# 2.12.8 (2021-07-27)
+# 2.12.8 (2021-07-20)
 
 ### Features:
 
+- **video:** add video duration event emitter
 - **video-editor:** hability to hide buttons
 
 

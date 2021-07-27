@@ -91,6 +91,8 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Output() posterChanged = new EventEmitter<string>();
   @Output() selectedChanged = new EventEmitter<string | null>();
 
+  @Output() durationChanged = new EventEmitter<number>();
+
   @Input() selected: string | null | undefined;
 
   @Input()
@@ -173,6 +175,12 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
         element: this.player.nativeElement,
         name: 'mousemove',
         callback: event => this.evMouseMove(event),
+        dispose: null
+      },
+      {
+        element: this.video.nativeElement,
+        name: 'durationchange',
+        callback: event => (this.durationChanged.emit(this.video.nativeElement.duration)),
         dispose: null
       }
     ];
