@@ -198,7 +198,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   setTcIn(update: boolean = true) {
     this.__askFrame = true;
-    const prevTCin = this.inposition;
+    const prevTCin = this.currentTime;
+    this.inposition = roundFn(this.currentTime, 0.04, 0);
     const prev = !!this.selectedCut;
     if (!this.selectedCut) {
       this.selectedCut = {
@@ -416,7 +417,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
         } else {
           this.selectedCut.tcout = roundedTime;
         }
-        console.log(1)
+        console.log(1, this.selectedCut)
         if (!this.__focused) {
           this.outposition = roundFn(this.selectedCut.tcout, 0.04, 0);
         }
