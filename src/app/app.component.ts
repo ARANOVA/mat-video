@@ -38,6 +38,7 @@ export class AppComponent {
   muted = false;
   showSpeed = true;
   showVolume = false;
+  playingState = false;
   editor = true;
   editorButtons = true;
   orderConfiguration = {
@@ -142,6 +143,10 @@ export class AppComponent {
     });
     // "Emit" selected
     setTimeout(() => this.selected = this.cuts[idx].idx, 0);
+  }
+
+  playEvent($event: boolean) {
+    this.playingState = $event;
   }
 
   checkCutOrNot($: any) {

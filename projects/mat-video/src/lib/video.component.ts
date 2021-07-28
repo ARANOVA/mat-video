@@ -59,6 +59,14 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() cutType: string | null = null;
   @Input() speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4, 8];
   @Input() speedIndex = 2;
+  @Input()
+  get playingState(): boolean {
+    return this.playing;
+  }
+  set playingState(val: boolean) {
+    this.playing = val;
+    this.playChange.emit(val);
+  }
 
   @Input() orderConfiguration: HashNumber = {
     playButton: 0,
@@ -92,6 +100,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Output() selectedChanged = new EventEmitter<string | null>();
 
   @Output() durationChanged = new EventEmitter<number>();
+  @Output() playChange = new EventEmitter<boolean>();
 
   @Input() selected: string | null | undefined;
 
@@ -112,7 +121,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
       if (Math.abs(val - video.currentTime) > 0.0001) {
         video.currentTime = val;
       }
-      if (Math.abs(this.lastTime - video.currentTime) > 0.0001) {
+      if (!this.lastTime || Math.abs(this.lastTime - video.currentTime) > 0.0001) {
         setTimeout(() => this.timeChange.emit(video.currentTime), 0);
         this.lastTime = video.currentTime;
       }

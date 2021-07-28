@@ -31,9 +31,10 @@
     <div class="menu">
       <div class="buttons">
         <mat-play-button
-          (playChanged)="playing = $event"
+          (playChanged)="playing = $event; playingState = $event"
           [video]="video"
           [keyboard]="keyboard"
+          [(play)]="playingState"
           [style.order]="orderConfiguration.playButton"
         > </mat-play-button>
 

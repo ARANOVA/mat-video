@@ -207,6 +207,8 @@
         [defaultCutType]="defaultCutType"
         [selected]="selected"
         [cutType]="cutType"
+        [playingState]="playingState"
+        (playChange)="playEvent($event)"
         (cutEvent)="cutEvent($event)"
         (posterChanged)="posterChanged($event)"
         (selectedChanged)="selectedChanged($event)"
@@ -214,6 +216,7 @@
       >
       </mat-video>
 
+      {{ currentTime }}
       <div class="w-full flex-1 pt-4 pb-4 overflow-x-auto overflow-y-auto" *ngIf="cuts && cuts.length > 0">
           <div class="slider" #sliderItems>
               <div *ngFor="let video of cuts; let idx=index;" class="videofull" (click)="selectCut($event, idx)" [title]="video.title">
@@ -243,6 +246,10 @@
     </div>
 
     <button (click)="deSelect()">Deseleccionar</button>
+
+    {{ playingState }}
+    <button (click)="playingState = !playingState">Play / Pause</button>
+
 
     <div class="mat-toolbar mat-primary mat-toolbar-single-row footer">
       <div class="version">Version {{ appversion }}</div>

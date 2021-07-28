@@ -1,3 +1,16 @@
+# 2.12.11 (2021-07-28)
+
+### Features:
+
+- **video:** play external and state
+
+
+# 2.12.10 (2021-07-28)
+
+### Features:
+
+- **video:** bug time update
+
 # 2.12.9 (2021-07-28)
 
 ### Features:

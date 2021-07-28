@@ -169,30 +169,12 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    /*if (changes.defaultCutType || changes.cutType) {
-      this.selectedCut.type = this.cutType ? this.cutType : this.defaultCutType;
-    }*/
     if (changes.selected) {
-      console.log("select", changes.selected.currentValue)
       if (changes.selected.currentValue) {
         this.selectCut(null, changes.selected.currentValue, false);
-        /*
-        if (!this.selectedCut) {
-          this.selectedCut = {
-            tcin: this.inposition,
-            tcout: this.inposition,
-            type: this.cutType ? this.cutType : this.defaultCutType,
-            selected: true,
-            idx: changes.select.currentValue
-          };
-        }*/
-
       } else if (changes.selected.currentValue === null) {
         this.deselectCut(null, false);
       }
-    }
-    if (changes.cuts && changes.cuts.firstChange && changes.cuts.currentValue) {
-      //   this.seekVideo(0);
     }
   }
 
@@ -394,16 +376,6 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     const newTime = this.video.duration * percentage;
     this.video.currentTime = newTime;
     const roundedTime = roundFn(this.video.currentTime, 0.04, 0);
-    /*
-    if (this.selectedCut) {
-      console.log("this.mode", this.mode)
-      if (this.mode === 'tcin') {
-        this.inposition = roundedTime;
-      } else if (this.mode === 'tcout') {
-        this.outposition = roundedTime;
-      }
-      return;
-    }*/
     if (this.selectedCut) {
       if (this.mode === 'tcin') {
         this.selectedCut.tcin = roundedTime;
@@ -423,6 +395,9 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
         }
       }
       
+    } else {
+      // Actualizar tcin
+      this.inposition = roundFn(this.video.currentTime, 0.04, 0);
     }
   }
 

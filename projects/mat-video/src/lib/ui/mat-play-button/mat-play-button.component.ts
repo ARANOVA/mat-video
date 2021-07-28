@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnDestroy, Output, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, Renderer2, SimpleChanges } from '@angular/core';
 
 import { EventHandler } from '../../interfaces/event-handler.interface';
 import { EventService } from '../../services/event.service';
@@ -11,7 +11,14 @@ import { EventService } from '../../services/event.service';
 export class MatPlayButtonComponent implements AfterViewInit, OnDestroy {
   @Input() video: HTMLVideoElement;
 
-  @Input() play = false;
+  @Input()
+  get play() {
+    return !this.video.paused;
+  }
+
+  set play(val: boolean) {
+    val ? this.video.play() : this.video.pause();
+  }
 
   @Output() playChanged = new EventEmitter<boolean>();
 
@@ -20,6 +27,7 @@ export class MatPlayButtonComponent implements AfterViewInit, OnDestroy {
   private events: EventHandler[];
 
   constructor(private renderer: Renderer2, private evt: EventService) {}
+  
 
   ngAfterViewInit(): void {
     this.events = [
