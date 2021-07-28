@@ -45,7 +45,7 @@
         </mat-radio-group>
 
         <div style="flex: 1" [style.order]="editorOrderButtons.spacer"></div>
-        <button mat-icon-button aria-label="Crear zona" *ngIf="!selectedCut?.idx && mode === 'tc'" (click)="addCut()" [style.order]="editorOrderButtons.addButton">
+        <button mat-icon-button aria-label="Crear zona" *ngIf="selectedCut && !selectedCut.idx && mode === 'tc'" (click)="addCut()" [style.order]="editorOrderButtons.addButton">
             <mat-icon>add_circle_outline</mat-icon>
         </button>
         <button mat-icon-button aria-label="Guardar zona" *ngIf="selectedCut?.idx" (click)="editCut()" [style.order]="editorOrderButtons.saveButton">
@@ -55,7 +55,7 @@
             [style.order]="editorOrderButtons.removeButton">
             <mat-icon>remove_circle_outline</mat-icon>
         </button>
-        <button mat-icon-button aria-label="Resetear zona" *ngIf="!selectedCut?.idx && mode !== 'tcin'" (click)="restart()"
+        <button mat-icon-button aria-label="Resetear zona" *ngIf="selectedCut && !selectedCut.idx && mode !== 'tcin'" (click)="restart()"
             [style.order]="editorOrderButtons.resetButton">
             <mat-icon>clear</mat-icon>
         </button>

@@ -80,6 +80,17 @@ export class AppComponent {
 
   cutEvent($event: any) {
     console.log('CUT EVENT', $event);
+    if ($event.type === 'add') {
+      this.cuts.sort((a, b) => a.tcin - b.tcin);
+    } else if ($event.type === 'remove') {
+      const index = this.cuts.findIndex((cut: any) => cut.idx == $event.cut.idx);
+      if (index > -1) {
+        this.cuts.splice(index, 1);
+        this.selected = null;
+      }
+    } else if ($event.type === 'edit') {
+
+    }
   }
 
   posterChanged($event: string) {
@@ -115,6 +126,13 @@ export class AppComponent {
       } else {
         cut.selected = false;
       }
+    });
+  }
+
+  deSelect() {
+    this.selected = null;
+    this.cuts.forEach((cut: any) => {
+      cut.selected = false;
     });
   }
 
