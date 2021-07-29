@@ -14,16 +14,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { MatVideoModule } from 'projects/mat-video/src/public-api';
+import { MatSelectModule } from '@angular/material/select';
 
 import { MatSliderModule } from '@angular/material/slider'; 
 import { LOCALE_ID } from '@angular/core';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { TestFormComponent } from './form/test-form/test-form.component';
 registerLocaleData(localeEs);
-
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, TestFormComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -38,7 +42,10 @@ registerLocaleData(localeEs);
     MatTooltipModule,
     MatRadioModule,
     MatVideoModule,
-    MatSliderModule
+    MatSliderModule,
+    MatButtonToggleModule,
+    MatSelectModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-ES' }

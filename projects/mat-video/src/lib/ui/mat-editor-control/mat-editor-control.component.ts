@@ -289,7 +289,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   
   getClassCut(cut: CutInterface, forceCls?: string) {
-    const cls = [forceCls ? forceCls : cut.type];
+    const cls = [forceCls ? forceCls : (cut.type === 'mark' ? 'cut' : cut.type)];
     if (cut.selected) {
       cls.push('selected');
     }
@@ -387,11 +387,15 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     this.__selectMark(idx);
   }
 
-  getStartCut(tcin: number): number {
+  getStartCut(tcin: number, tcout?: number): number {
     if (!this.trimmerBar) {
-      return;
+      return 0;
     }
     this.fullWidth = this.trimmerBar.nativeElement.offsetWidth;
+    if (tcout) {
+      // Hacer media
+      tcin = tcin + (tcout - tcin) / 2;
+    }
     if (tcin > 0 && this.fullWidth && this.video.duration) {
       const l = (tcin / this.video.duration) * this.fullWidth;
       return Math.round(l / (100 / (this.curMaxPercent - this.curMinPercent)));

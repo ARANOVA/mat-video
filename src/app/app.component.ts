@@ -1,5 +1,6 @@
 import { formatNumber } from '@angular/common';
 import { Component, VERSION } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import buildInfo from './../../package.json';
 
 @Component({
@@ -67,11 +68,13 @@ export class AppComponent {
 
   marks = [
     {tcin: 10, tcout: 20, type: 'mark', idx: '222', selected: false},
-    {tcin: 25, type: 'mark', idx: '2222', selected: false},
+    {tcin: 25, type: 'mark', idx: '22222222', selected: false},
   ];
 
   cuts = [
-      {tcin: 20, tcout: 43, type: 'invalid', idx: '2', selected: false},
+      {tcin: 10, tcout: 20, type: 'invalid', idx: '2', selected: false},
+      {tcin: 25, tcout: 27, type: 'mark', idx: '2222', selected: false},
+      {tcin: 55, tcout: 58, type: 'audio', idx: '22222', selected: false},
       // {tcin: 45, tcout: 50, type: 'cut', idx: '1', selected: false}
   ];
 
@@ -84,6 +87,30 @@ export class AppComponent {
   selectedMark = null;
   speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 3, 5, 6];
   speedIndex: number = 0;
+
+  form: FormGroup;
+
+  errors: [];
+
+  editing;
+  constructor() {
+    this.editing = {
+      match: {
+        localTeam: {
+          name: 'test'
+        },
+        visitorTeam: {
+          name: 'test2'
+        }
+      }
+    };
+    this.form = new FormGroup({
+      metadata: new FormGroup({
+        type: new FormControl(),
+        initiatingTeam: new FormControl(),
+      })
+    });
+  }
 
   cutEvent($event: any) {
     console.log('CUT EVENT', $event);

@@ -1,4 +1,5 @@
 $primary: #4d4d4d;
+$secondary: #999999;
 $warn: #f44336;
 $accent: #ed5b08;
 
@@ -29,11 +30,13 @@ $accent: #ed5b08;
 .buttons {
     margin-top: 8px;
 }
-.invalid {
+.invalid, .cut, .mark, .audio {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 0;
+    cursor: pointer;
+}
+.invalid {
     background: repeating-linear-gradient(
         -45deg,
         rgba(0, 0, 0, 0) 5px,
@@ -42,20 +45,17 @@ $accent: #ed5b08;
         $accent 15px
     );
 }
-.cut.selected, .invalid.selected {
+.cut.selected, .invalid.selected, .audio.selected {
     border: 2px solid #fff;
 }
 .cut.editing, .invalid.editing {
     border: 2px solid $warn;
 }
-.cut, .mark {
-    position: absolute;
-    top: 0;
-    bottom: 0;
+.audio {
+    background-color: $secondary;
 }
 .cut {
     background-color: $accent;
-    cursor: pointer;
 }
 
 .mark {

@@ -292,7 +292,6 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   emitSelectedMarkChange($event: string | null) {
-    console.log("emitSelectedMarkChange", $event)
     this.selectedMarkChanged.emit($event)
   }
 }

@@ -1,0 +1,55 @@
+<div *ngIf="form">
+<form class="form-horizontal flex-1 flex flex-col" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="max-h-sidebar w-full relative">
+
+        <div *ngIf="errors">
+            <div *ngFor="let error of errors" class="p-2 mb-4 text-white alert alert-warning" role="alert">
+                <strong>{{ error }}</strong>
+            </div>
+        </div>
+
+        <fieldset formGroupName="metadata">
+            <input type="hidden" formControlName="version" />
+
+            <!--
+            <div class="form-group flex flex-row">
+                <div class="w-1/5">{{match.localTeam.name}}</div>
+                <input matInput class="w-24 form-control" formControlName="goalsLocal" type="number" required
+                    [readonly]="disabled" (focus)="focus(true)" (blur)="focus(false)">
+                <strong> - </strong>
+                <input matInput class="w-24 form-control" formControlName="goalsVisitor" type="number" required
+                    [readonly]="disabled" (focus)="focus(true)" (blur)="focus(false)">
+                <div class="w-1/5">{{match.visitorTeam.name}}</div>
+            </div>
+            -->
+            <div class="form-group flex flex-wrap">
+                <div class="w-1/3">
+                    <h3 class="mb-1 text-xl font-medium">Acción</h3>
+                    <mat-form-field color="primary" class="ext-label w-full mr-2">
+                        <mat-label>Tipo de evento</mat-label>
+                        <mat-select #typeSelect panelClass="selector-panel"
+                            formControlName="type" class="w-full" (keydown)="selectTypeByKey($event)"
+                            (focus)="focus(true)" (blur)="focus(false)">
+                            <mat-option *ngFor="let action of typeOptions" [value]="action.value"><span
+                                    *ngIf="action.key">[{{
+                                    action.key |
+                                    uppercase }}] </span>{{ action.text }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="w-2/3">
+                    <h3 class="mb-1 text-xl font-medium ml-2">Equipos</h3>
+                    <mat-button-toggle-group class="flex flex-row rounded-full w-full ml-2"
+                        formControlName="initiatingTeam" (change)="updatePlayerList(); updateControlsStatus()">
+                        <mat-button-toggle class="w-1/2" value="local">{{ editing.match?.localTeam?.name }}
+                        </mat-button-toggle>
+                        <mat-button-toggle class="w-1/2" value="visitor">{{ editing.match?.visitorTeam?.name }}
+                        </mat-button-toggle>
+                    </mat-button-toggle-group>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+</div>
