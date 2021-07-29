@@ -65,6 +65,11 @@ export class AppComponent {
     resetButton: 9
   }
 
+  marks = [
+    {tcin: 10, type: 'mark', idx: '222', selected: false},
+    {tcin: 25, type: 'mark', idx: '2222', selected: false},
+  ];
+
   cuts = [
       {tcin: 20, tcout: 43, type: 'invalid', idx: '2', selected: false},
       // {tcin: 45, tcout: 50, type: 'cut', idx: '1', selected: false}
@@ -76,6 +81,7 @@ export class AppComponent {
   cutType = 'cut';
 
   selected = null;
+  selectedMark = null;
   speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 3, 5, 6];
   speedIndex: number = 0;
 
@@ -130,6 +136,21 @@ export class AppComponent {
     });
   }
 
+  selectedMarkChanged($event: string | null, update: boolean = false) {
+    console.log("selectedMarkChanged APP");
+    this.marks.forEach((cut: any, i: number) => {
+      console.log("selectedMarkChanged", $event, cut.idx, cut.idx == $event);
+      if (cut.idx == $event) {
+        this.cuts[i].selected = true;
+        if (update) {
+          this.selectedMark = i;
+        }
+      } else {
+        cut.selected = false;
+      }
+    });
+  }
+
   deSelect() {
     this.selected = null;
     this.cuts.forEach((cut: any) => {
@@ -143,6 +164,14 @@ export class AppComponent {
     });
     // "Emit" selected
     setTimeout(() => this.selected = this.cuts[idx].idx, 0);
+  }
+
+  selectMark($event: MouseEvent, idx: number) {
+    this.marks.forEach((cut: any, i: number) => {
+      cut.selected = idx === i;
+    });
+    // "Emit" selected
+    setTimeout(() => this.selectedMark = this.marks[idx].idx, 0);
   }
 
   playEvent($event: boolean) {

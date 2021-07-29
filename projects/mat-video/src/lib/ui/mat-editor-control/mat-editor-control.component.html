@@ -1,11 +1,18 @@
 <mat-slider [color]="color" [min]="curMinPercent" [max]="curMaxPercent" step="0.1" [value]="curTimePercent" (input)="seekVideo($event.value)">
 </mat-slider>
-<div class="cut-bar" #trimmerBar (click)="deselectCut($event)">
-    <div *ngIf="video.duration && cuts">
+<div #trimmerBar (click)="deselectCut($event)" class="cut-bar-wrapper">
+    <div *ngIf="video.duration && cuts" class="cut-bar">
         <ng-container *ngFor="let cut of cuts; let idx=index">
         <div (click)="selectCut($event, cut.idx)" [ngClass]="getClassCut(cut)"
             [ngStyle]="{'left.px': getStartCut(cut.tcin), 'width.px': getWidthCut(cut.tcin, cut.tcout)}">
         </div>
+        </ng-container>
+
+        <ng-container *ngFor="let mark of marks; let idx=index">
+            <div [ngStyle]="{'left.px': getStartCut(mark.tcin) - 5, 'width.px': getWidthCut(mark.tcin, mark.tcout) + 7}" [ngClass]="getClassCut(mark)">
+                <div class="line"></div>
+                <div class="ball" (click)="selectMark($event, mark.idx)"></div>
+            </div>
         </ng-container>
     </div>
 </div>

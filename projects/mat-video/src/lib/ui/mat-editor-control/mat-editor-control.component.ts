@@ -16,6 +16,15 @@ import { ThemePalette } from '@angular/material/core';
 import { EventHandler } from '../../interfaces/event-handler.interface';
 import { EventService } from '../../services/event.service';
 
+interface CutInterface {
+    tcin?: number;
+    tcout?: number;
+    type?: string;
+    idx?: string;
+    selected?: boolean;
+    thumb?: string;
+};
+
 const countDecimals = (value) => {
   if (Math.floor(value) === value) {
     return 0;
@@ -94,11 +103,16 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   @Input() cuts: any = [];
 
+  @Input() marks: any = [];
+
   @Input() selected: string | null | undefined;
+  @Input() selectedMarker: string | null | undefined;
 
   @Output() posterChanged = new EventEmitter<string>();
 
   @Output() selectedChanged = new EventEmitter<string | null>();
+
+  @Output() selectedMarkChanged = new EventEmitter<string | null>();
 
   @Output() cutEvent = new EventEmitter<any>();
 
@@ -107,14 +121,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     */
   public modCuts!: any[];
 
-  public selectedCut: {
-    tcin?: number,
-    tcout?: number,
-    type?: string,
-    idx?: string,
-    selected?: boolean,
-    thumb?: string
-  } | null = null;
+  public selectedMark: CutInterface | null = null;
+  public selectedCut: CutInterface | null = null;
 
   public inposition: number = 0;
   public outposition: number = 0;
@@ -174,6 +182,13 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
         this.selectCut(null, changes.selected.currentValue, false);
       } else if (changes.selected.currentValue === null) {
         this.deselectCut(null, false);
+      }
+    }
+    if (changes.selectedMarker) {
+      if (changes.selectedMarker.currentValue) {
+        this.selectMark(null, changes.selectedMarker.currentValue, false);
+      } else if (changes.selectedMarker.currentValue === null) {
+        this.deselectMark(null, false);
       }
     }
   }
@@ -331,6 +346,17 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     // setTimeout(() => this.mode = 'tcin', 200);
   }
 
+  private __selectMark(idx: string | null = null): void {
+    if (this.marks) {
+      const index = this.marks.findIndex((mark: any) => mark.idx === idx);
+      if (index > -1) {
+        this.selectedMark = this.marks[index];
+        this.seekVideo(this.selectedMark.tcin / this.video.duration * 100);
+      }
+    }
+    // setTimeout(() => this.mode = 'tcin', 200);
+  }
+
   selectCut($event: MouseEvent, idx: string | null = null, emit: boolean = true) {
     if ($event) {
       $event.stopPropagation();
@@ -341,6 +367,25 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     this.__selectCut(idx);
   }
 
+  deselectMark($event?: MouseEvent, emit: boolean = true) {
+    if ($event) {
+      $event.stopPropagation();
+    }
+    if (emit) {
+      this.selectedMarkChanged.emit(null);
+    }
+  }
+
+  selectMark($event: MouseEvent, idx: string | null = null, emit: boolean = true) {
+    if ($event) {
+      $event.stopPropagation();
+    }
+    if (emit) {
+      setTimeout(() => this.selectedMarkChanged.emit(idx), 0);
+    }
+    this.__selectMark(idx);
+  }
+
   getStartCut(tcin: number): number {
     if (!this.trimmerBar) {
       return;
@@ -348,13 +393,16 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     this.fullWidth = this.trimmerBar.nativeElement.offsetWidth;
     if (tcin > 0 && this.fullWidth && this.video.duration) {
       const l = (tcin / this.video.duration) * this.fullWidth;
-      return l / (100 / (this.curMaxPercent - this.curMinPercent));
+      return Math.round(l / (100 / (this.curMaxPercent - this.curMinPercent)));
     }
   }
 
-  getWidthCut(tcin: number, tcout: number): number {
+  getWidthCut(tcin: number, tcout?: number): number {
     if (!this.trimmerBar) {
-      return;
+      return 0;
+    }
+    if (!tcout) {
+      return 2;
     }
     this.fullWidth = this.trimmerBar.nativeElement.offsetWidth;
     const max = Math.min(tcout, this.video.duration);
@@ -363,7 +411,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     }
     const w = (max / this.video.duration) * this.fullWidth;
     const l = (tcin / this.video.duration) * this.fullWidth;
-    return Math.max(2, (w - l) * (100 / (this.curMaxPercent - this.curMinPercent)));
+    return Math.round(Math.max(2, (w - l) * (100 / (this.curMaxPercent - this.curMinPercent))));
 
   }
 

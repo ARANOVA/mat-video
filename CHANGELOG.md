@@ -1,3 +1,9 @@
+# 2.12.12 (2021-07-29)
+
+### Features:
+
+- **video-editor:** add marks in cut-bar
+
 # 2.12.11 (2021-07-28)
 
 ### Features:

@@ -17,11 +17,14 @@ $accent: #ed5b08;
         }
     }
 }
-.cut-bar {
-    height: 32px;
-    background-color: $primary;
-    border-radius: 4px;
-    position: relative;
+.cut-bar-wrapper {
+    height: 50px;
+    .cut-bar {
+        height: 32px;
+        background-color: $primary;
+        border-radius: 4px;
+        position: relative;
+    }
 }
 .buttons {
     margin-top: 8px;
@@ -45,12 +48,33 @@ $accent: #ed5b08;
 .cut.editing, .invalid.editing {
     border: 2px solid $warn;
 }
-.cut {
+.cut, .mark {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 20;
+}
+.cut {
     background-color: $accent;
+    cursor: pointer;
+}
+
+.mark {
+    bottom: -20px;
+    height: 100%;
+    & > .line {
+        margin: 5px auto;
+        width: 1px;
+        height: calc(100% - 10px);
+        background-color: white;
+    }
+    & > .ball {
+        border-radius: 9999px;
+        width: 9px;
+        height: 9px;
+        background-color: $accent;
+        margin-top: 9px;
+        cursor: pointer;
+    }
 }
 .marr-16 {
     margin-right: 16px;

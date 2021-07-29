@@ -97,15 +97,18 @@
         [color]="color"
         [video]="video"
         [cuts]="cuts"
+        [marks]="marks"
         [currentTime]="time"
         [editorButtons]="editorButtons"
         [defaultCutType]="defaultCutType"
         [cutType]="cutType"
         [editorOrderButtons]="editorOrderButtons"
         [selected]="selected"
+        [selectedMarker]="selectedMarker"
         (cutEvent)="emitCutEvent($event)"
         (posterChanged)="emitPosterChange($event)"
         (selectedChanged)="emitSelectedChange($event)"
+        (selectedMarkChanged)="emitSelectedMarkChange($event)"
       ></mat-editor-control>
     </div>
   </div>

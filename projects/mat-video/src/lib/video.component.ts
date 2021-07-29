@@ -55,6 +55,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() headerClass = '';
   @Input() sliderClass = '';
   @Input() cuts: any = [];
+  @Input() marks: any = [];
   @Input() defaultCutType = 'cut';
   @Input() cutType: string | null = null;
   @Input() speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4, 8];
@@ -98,11 +99,13 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Output() cutEvent = new EventEmitter<any>();
   @Output() posterChanged = new EventEmitter<string>();
   @Output() selectedChanged = new EventEmitter<string | null>();
+  @Output() selectedMarkChanged = new EventEmitter<string | null>();
 
   @Output() durationChanged = new EventEmitter<number>();
   @Output() playChange = new EventEmitter<boolean>();
 
   @Input() selected: string | null | undefined;
+  @Input() selectedMarker: string | null | undefined;
 
   @Input()
   get time() {
@@ -286,5 +289,10 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   emitSelectedChange($event: string | null) {
     this.selectedChanged.emit($event)
+  }
+
+  emitSelectedMarkChange($event: string | null) {
+    console.log("emitSelectedMarkChange", $event)
+    this.selectedMarkChanged.emit($event)
   }
 }

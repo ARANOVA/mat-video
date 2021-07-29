@@ -202,16 +202,19 @@
         [showFrameByFrame]="showFrameByFrame"
         [(time)]="currentTime"
         [cuts]="cuts"
+        [marks]="marks"
         [speedScale]="speedScale"
         [speedIndex]="speedIndex"
         [defaultCutType]="defaultCutType"
         [selected]="selected"
+        [selectedMarker]="selectedMark"
         [cutType]="cutType"
         [playingState]="playingState"
         (playChange)="playEvent($event)"
         (cutEvent)="cutEvent($event)"
         (posterChanged)="posterChanged($event)"
         (selectedChanged)="selectedChanged($event)"
+        (selectedMarkChanged)="selectedMarkChanged($event)"
         (durationChanged)="durationChanged($event)"
       >
       </mat-video>
@@ -241,6 +244,12 @@
           <img *ngIf="cut.thumb" [src]="cut.thumb" style="width: 240px;height: 135px"/>
           {{ cut.tcin }} - {{ cut.tcout}} ({{ cut.idx }}) {{cut.selected}}
           <button (click)="deleteClip(cut.idx)">Borrar</button>
+        </li>
+      </ul>
+
+      <ul>
+        <li *ngFor="let cut of marks; let idx=index" (click)="selectMark($event, idx)" >
+          {{ cut.tcin }} - ({{ cut.idx }}) {{cut.selected}}
         </li>
       </ul>
     </div>
