@@ -66,7 +66,7 @@ export class AppComponent {
   }
 
   marks = [
-    {tcin: 10, type: 'mark', idx: '222', selected: false},
+    {tcin: 10, tcout: 20, type: 'mark', idx: '222', selected: false},
     {tcin: 25, type: 'mark', idx: '2222', selected: false},
   ];
 
@@ -141,7 +141,7 @@ export class AppComponent {
     this.marks.forEach((cut: any, i: number) => {
       console.log("selectedMarkChanged", $event, cut.idx, cut.idx == $event);
       if (cut.idx == $event) {
-        this.cuts[i].selected = true;
+        this.marks[i].selected = true;
         if (update) {
           this.selectedMark = i;
         }

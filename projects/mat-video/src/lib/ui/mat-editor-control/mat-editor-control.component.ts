@@ -287,12 +287,13 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     */
   }
 
-  getClassCut(cut) {
-    const cls = [cut.type];
+  
+  getClassCut(cut: CutInterface, forceCls?: string) {
+    const cls = [forceCls ? forceCls : cut.type];
     if (cut.selected) {
       cls.push('selected');
     }
-    if (cut.idx === -1) {
+    if (!cut.idx) {
       cls.push('editing');
     }
     return cls;

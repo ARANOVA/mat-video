@@ -9,7 +9,7 @@
         </ng-container>
 
         <ng-container *ngFor="let mark of marks; let idx=index">
-            <div [ngStyle]="{'left.px': getStartCut(mark.tcin) - 5, 'width.px': getWidthCut(mark.tcin, mark.tcout) + 7}" [ngClass]="getClassCut(mark)">
+            <div [ngStyle]="{'left.px': getStartCut(mark.tcin) - 5, 'width.px': getWidthCut(mark.tcin) + 7}" [ngClass]="getClassCut(mark, 'mark')">
                 <div class="line"></div>
                 <div class="ball" (click)="selectMark($event, mark.idx)"></div>
             </div>
