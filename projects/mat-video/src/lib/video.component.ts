@@ -97,7 +97,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Output() timeChange = new EventEmitter<number>();
 
   @Output() cutEvent = new EventEmitter<any>();
-  @Output() posterChanged = new EventEmitter<string>();
+  @Output() posterChanged = new EventEmitter<{thumb: string; idx: string | null}>();
   @Output() selectedChanged = new EventEmitter<string | null>();
   @Output() selectedMarkChanged = new EventEmitter<string | null>();
 
@@ -106,6 +106,16 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   @Input() selected: string | null | undefined;
   @Input() selectedMarker: string | null | undefined;
+
+  private __selectedCut: string | null = null;
+  @Input()
+  get selectCut(): string | null {
+    return this.__selectedCut;
+  }
+
+  set selectCut(idx: string | null) {
+    this.__selectedCut = idx;
+  }
 
   @Input()
   get time() {
@@ -283,7 +293,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.cutEvent.emit($event)
   }
 
-  emitPosterChange($event: string) {
+  emitPosterChange($event: {thumb: string; idx: string | null}) {
     this.posterChanged.emit($event)
   }
 

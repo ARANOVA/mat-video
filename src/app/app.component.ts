@@ -67,14 +67,14 @@ export class AppComponent {
   }
 
   marks = [
-    {tcin: 10, tcout: 20, type: 'mark', idx: '222', selected: false},
-    {tcin: 25, type: 'mark', idx: '22222222', selected: false},
+    {tcin: 10, tcout: 20, type: 'mark', idx: '222', selected: false, thumb: undefined},
+    {tcin: 25, type: 'mark', idx: '22222222', selected: false, thumb: undefined},
   ];
 
   cuts = [
-      {tcin: 10, tcout: 20, type: 'invalid', idx: '2', selected: false},
-      {tcin: 25, tcout: 27, type: 'mark', idx: '2222', selected: false},
-      {tcin: 55, tcout: 58, type: 'audio', idx: '22222', selected: false},
+      {tcin: 10, tcout: 20, type: 'invalid', idx: '2', selected: false, thumb: undefined},
+      {tcin: 25, tcout: 27, type: 'mark', idx: '2222', selected: false, thumb: undefined},
+      {tcin: 55, tcout: 58, type: 'audio', idx: '22222', selected: false, thumb: undefined},
       // {tcin: 45, tcout: 50, type: 'cut', idx: '1', selected: false}
   ];
 
@@ -112,14 +112,26 @@ export class AppComponent {
     });
   }
 
+  private __remove(idx: string): boolean {
+    const index = this.cuts.findIndex((cut: any) => cut.idx === idx);
+    if (index > -1) {
+      this.cuts.splice(index, 1);
+    }
+    return (index > -1);
+  }
+
   cutEvent($event: any) {
     console.log('CUT EVENT', $event);
     if ($event.type === 'add') {
+      this.cuts.push({...$event.cut});
       this.cuts.sort((a, b) => a.tcin - b.tcin);
+    } else if ($event.type === 'tcin') {
+      //this.cuts.push({...$event.cut});
+    } else if ($event.type === 'restart') {
+      // Eliminar el que no tenga id
+      this.__remove('');
     } else if ($event.type === 'remove') {
-      const index = this.cuts.findIndex((cut: any) => cut.idx == $event.cut.idx);
-      if (index > -1) {
-        this.cuts.splice(index, 1);
+      if (this.__remove($event.cut.idx)) {
         this.selected = null;
       }
     } else if ($event.type === 'edit') {
@@ -127,8 +139,19 @@ export class AppComponent {
     }
   }
 
-  posterChanged($event: string) {
-    this.poster = $event;
+  posterChanged($event: {thumb: string, idx: string | null}) {
+    console.log("posterChanged", $event.idx)
+    if ($event.idx === null) {
+      this.poster = $event.thumb;
+    } else if ($event.idx === '') {
+      //this.selected
+    } else {
+      // Es un cut
+      const found = this.cuts.find((c) => c.idx === $event.idx)
+      if (found) {
+        found.thumb = $event.thumb;
+      }
+    }
   }
 
   durationChanged($event: number) {
@@ -221,7 +244,7 @@ export class AppComponent {
 
   getVideoTitle(video: any, force: boolean = false) {
       if (!video.title || video.title.startsWith('gen:') || force) {
-          return `${video.type == 'cut' ? 'Corte' : 'Descarte'} de ` +
+          return `${video.type == 'cut' ? 'Corte' : video.type == 'audio' ? 'Narración' : 'Descarte'} de ` +
               `${formatNumber(video.tcin, 'es', '2.2-2')} a ` +
               `${formatNumber(video.tcout, 'es', '2.2-2')} ` +
               `(${formatNumber(this.getDuration(video), 'es', '0.0-2')} segundos)`;
