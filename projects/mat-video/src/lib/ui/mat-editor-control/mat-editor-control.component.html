@@ -25,7 +25,6 @@
 </div>
 
 <div class="menu" *ngIf="editorButtons">
-    {{selectedCut|json}}
     <div class="buttons">
         <div class="inline-small px-2" [style.order]="editorOrderButtons.tcinInput" [ngClass]="{'pl-0': editorOrderButtons.tcinInput == 0, 'pr-0': editorOrderButtons.tcinInput == 9}">
             <mat-form-field color="primary" [style.width.px]="60">
