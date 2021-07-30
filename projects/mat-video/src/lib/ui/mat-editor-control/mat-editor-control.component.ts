@@ -54,7 +54,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   private __askFrame = true;
   private __videoSize: { w: number, h: number };
   private __focused: any;
-  private __lastthumb: {thumb: string; idx: string | null} | null = { thumb: '', idx: null };
+  private __lastthumb: { thumb: string; idx: string | null } | null = { thumb: '', idx: null };
 
   @Input() video: HTMLVideoElement = null;
 
@@ -93,7 +93,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   @Output() currentTimeChanged = new EventEmitter<number>();
 
-  @Output() posterChanged = new EventEmitter<{thumb: string; idx: string | null}>();
+  @Output() posterChanged = new EventEmitter<{ thumb: string; idx: string | null }>();
 
   @Output() selectedChanged = new EventEmitter<string | null>();
 
@@ -110,12 +110,12 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
    * Current time min percent
    */
   curMinPercent = 0;
- 
+
   /**
    * Current time max percent
    */
   curMaxPercent = 100;
- 
+
   /**
    * Selected mark
    */
@@ -135,12 +135,12 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
    * NgModel for tc output
    */
   public outposition: number = 0;
-  
+
   /**
    * Editing mode
    */
   public mode = 'tcin';  // Valida are 'tcin', 'tcout' and 'tc'
-  
+
   @ViewChild('trimmerBar') trimmerBar;
   @ViewChild('tcinInput') tcinInput;
   @ViewChild('tcoutInput') tcoutInput;
@@ -152,28 +152,28 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   ngAfterViewInit(): void {
     this.__events = [
-      { element: this.video, name: 'seeking', callback:
-          () => {
-            // return this.updateCurrentTime(this.video.currentTime);
-          }, dispose: null
-      },
-      {
-        element: this.video, name: 'seeked', callback:
-          () => {
-            // Test
-            this.updateCurrentTime(this.video.currentTime);
-            const aux = this.getFrame(this.video.currentTime);
-            if (aux) {
-              if (this.selectedCut) {
-                // TODO: No modificar entrada this.selectedCut.thumb = aux;
-                this.posterChanged.emit({thumb: aux, idx: this.selectedCut.idx});
-              } else {
-                this.__lastthumb.thumb = aux;
-                this.posterChanged.emit(this.__lastthumb);
-              }
-            }
-          }, dispose: null
-      },
+      // { element: this.video, name: 'seeking', callback:
+      //     () => {
+      //       return this.updateCurrentTime(this.video.currentTime);
+      //     }, dispose: null
+      // },
+      // {
+      //   element: this.video, name: 'seeked', callback:
+      //     () => {
+      //       // Test
+      //       this.updateCurrentTime(this.video.currentTime);
+      //       const aux = this.getFrame(this.video.currentTime);
+      //       if (aux) {
+      //         if (this.selectedCut) {
+      //           // TODO: No modificar entrada this.selectedCut.thumb = aux;
+      //           this.posterChanged.emit({ thumb: aux, idx: this.selectedCut.idx });
+      //         } else {
+      //           this.__lastthumb.thumb = aux;
+      //           this.posterChanged.emit(this.__lastthumb);
+      //         }
+      //       }
+      //     }, dispose: null
+      // },
       { element: this.video, name: 'timeupdate', callback: () => this.updateCurrentTime(this.video.currentTime), dispose: null },
       { element: this.video, name: 'loadeddata', callback: event => this.getVideoSize(event), dispose: null }
     ];
