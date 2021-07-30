@@ -480,6 +480,11 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   updateTime(emitter: EventEmitter<number>, time: number): number {
     emitter.emit(time);
+    if (this.mode == 'tcout') {
+      this.outposition = roundFn(time, 0.04, 0);
+    } else if (this.mode == 'tcin') {
+      this.inposition = roundFn(time, 0.04, 0);
+    }
     return (time / this.video.duration) * 100;
   }
 
