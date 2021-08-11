@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 
 @Component({
   selector: 'mat-speed-control',
@@ -9,6 +9,7 @@ export class MatSpeedControlComponent {
   @Input() video: HTMLVideoElement;
   @Input() speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4, 8];
   @Input() speedIndex = 2;
+  @Input() keyboard = true;
 
   constructor() {}
 
@@ -25,5 +26,21 @@ export class MatSpeedControlComponent {
 
   get speed(): number {
     return this.speedScale[this.speedIndex];
+  }
+
+  @HostListener('document:keyup.+', ['$event'])
+  onIncSpeedKey(event: KeyboardEvent) {
+    if (this.keyboard) {
+      this.speedControl(1);
+      event.preventDefault();
+    }
+  }
+
+  @HostListener('document:keyup.-', ['$event'])
+  onDecSpeedKey(event: KeyboardEvent) {
+    if (this.keyboard) {
+      this.speedControl(-1);
+      event.preventDefault();
+    }
   }
 }

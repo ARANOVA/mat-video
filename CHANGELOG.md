@@ -1,3 +1,12 @@
+# 2.12.14 (2021-08-11)
+
+### Features:
+
+- **video-editor:** frames
+- **video-editor:** background style for marks
+- **video-editor:** click & drag (with control key)
+- **speed-control:** use '+' or '-' to increase / decrease speed
+
 # 2.12.13 (2021-07-29)
 
 ### Features:

@@ -1,20 +1,25 @@
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   Renderer2,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
+import { repeat, skipUntil, takeUntil } from 'rxjs/operators';
 
 import { EventHandler } from '../../interfaces/event-handler.interface';
 import { ClipInterface } from '../../interfaces/clip.interface';
 import { EventService } from '../../services/event.service';
+import { fromEvent } from 'rxjs';
 
 
 const countDecimals = (value) => {
@@ -47,7 +52,7 @@ interface HashNumber {
   templateUrl: './mat-editor-control.component.html',
   styleUrls: ['./mat-editor-control.component.scss']
 })
-export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDestroy {
+export class MatEditorControlComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 
   private __events: EventHandler[];
   private __barWidth = 0;
@@ -145,10 +150,50 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   @ViewChild('tcinInput') tcinInput;
   @ViewChild('tcoutInput') tcoutInput;
 
+  /* Click and drag: https://stackblitz.com/edit/angular-mousemove-after-mouse-down?file=app%2Fmouse-events%2Fmouse-events.component.ts */
+  mouseup$: any;
+  mousedown$: any;
+  mousemove$: any;
+  mousehold$: any;
+  keyboard$: any;
+  x: number;
+  y: number;
+  private _sub: any;
+  private _sub2: any;
+  ctrlKey: boolean = false;
+
   constructor(
     private renderer: Renderer2,
-    private evt: EventService
+    private evt: EventService,
+    private _el: ElementRef
   ) { }
+
+
+  private __register() {
+    this._sub = this.mousehold$.subscribe((e) => {
+      if (!this.ctrlKey) {
+        return;
+      }
+      this.x = e.x;
+      this.y = e.y;
+
+      if (this.selectedCut) {
+        this.selectedCut.selected = true;
+        var rect = this.trimmerBar.nativeElement.getBoundingClientRect();
+        this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
+        const tcout = this.video.duration * (this.x - rect.left) / this.__barWidth;
+        this.currentTime = roundFn(tcout, 0.04, 0);
+        this.video.currentTime = this.currentTime;
+        this.outposition = this.currentTime;
+        this.selectedCut.tcout = this.currentTime;
+      }
+    });
+    this._sub2 = this.mouseup$.subscribe((e) => {
+      this.__unsub();
+      this.mode = 'tc';
+      //this.addCut();
+    });
+  }
 
   ngAfterViewInit(): void {
     this.__events = [
@@ -157,29 +202,68 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       //       return this.updateCurrentTime(this.video.currentTime);
       //     }, dispose: null
       // },
-      // {
-      //   element: this.video, name: 'seeked', callback:
-      //     () => {
-      //       // Test
-      //       this.updateCurrentTime(this.video.currentTime);
-      //       const aux = this.getFrame(this.video.currentTime);
-      //       if (aux) {
-      //         if (this.selectedCut) {
-      //           // TODO: No modificar entrada this.selectedCut.thumb = aux;
-      //           this.posterChanged.emit({ thumb: aux, idx: this.selectedCut.idx });
-      //         } else {
-      //           this.__lastthumb.thumb = aux;
-      //           this.posterChanged.emit(this.__lastthumb);
-      //         }
-      //       }
-      //     }, dispose: null
-      // },
+      {
+        element: this.video, name: 'seeked', callback:
+          () => {
+            // Test
+            this.updateCurrentTime(this.video.currentTime);
+            const aux = this.getFrame(this.video.currentTime);
+            if (aux) {
+              if (this.selectedCut) {
+                this.posterChanged.emit({ thumb: aux, idx: this.selectedCut.idx });
+              } else {
+                this.__lastthumb.thumb = aux;
+                this.posterChanged.emit(this.__lastthumb);
+              }
+            }
+          }, dispose: null
+      },
       { element: this.video, name: 'timeupdate', callback: () => this.updateCurrentTime(this.video.currentTime), dispose: null },
       { element: this.video, name: 'loadeddata', callback: event => this.getVideoSize(event), dispose: null }
     ];
     this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
     this.evt.addEvents(this.renderer, this.__events);
+    // }
+
+    // ngOnInit() {
+
+    this.mousedown$ = fromEvent(this.trimmerBar.nativeElement, 'mousedown');
+    this.mousedown$.subscribe((e) => {
+      console.log("DOWN", this.ctrlKey)
+      if (!this.ctrlKey) {
+        return;
+      }
+
+      this.__register();
+      this.x = e.x;
+      this.y = e.y;
+      var rect = this.trimmerBar.nativeElement.getBoundingClientRect();
+      this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
+      const tcin = this.video.duration * (this.x - rect.left) / this.__barWidth;
+      this.setTcIn(true, roundFn(tcin, 0.04, 0));
+    })
+    this.mousemove$ = fromEvent(this.trimmerBar.nativeElement, 'mousemove');
+    this.mouseup$ = fromEvent(this.trimmerBar.nativeElement, 'mouseup');
+
+    this.mousehold$ = this.mousemove$.pipe(
+      skipUntil(this.mousedown$),
+      takeUntil(this.mouseup$),
+      repeat()
+    );
+    this.__register();
   }
+
+  @HostListener('window:keyup.control', ['$event'])
+  up($event: any) {
+    this.ctrlKey = false;
+  }
+
+  @HostListener('window:keydown.control', ['$event'])
+  down($event: any) {
+    this.ctrlKey = true;
+  }
+
+  ngOnInit() { }
 
   /**
    * To update interface
@@ -193,6 +277,16 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     }
     if (changes.selectedMarker) {
       this.selectClip(null, changes.selectedMarker.currentValue, this.marks, false);
+    }
+  }
+
+
+
+  private __unsub() {
+    if (this._sub) {
+      this._sub.unsubscribe();
+      this._sub2.unsubscribe();
+      this._sub = null;
     }
   }
 
@@ -229,21 +323,22 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
    * 
    * @param {boolean} update    if the selected value cut must be update
    */
-  setTcIn(update: boolean = true) {
+  setTcIn(update: boolean = true, tcin?: number) {
+    console.log("setTcIn")
     const prevTCin = this.currentTime;
-    this.inposition = roundFn(this.currentTime, 0.04, 0);
+    this.inposition = tcin || roundFn(this.currentTime, 0.04, 0);
     if (!this.selectedCut) {
       this.selectedCut = this.__createEmptyCut();
-      this.outposition = roundFn(this.currentTime, 0.04, 0);
+      this.outposition = tcin || roundFn(this.currentTime, 0.04, 0);
     } else if (update) {
-      this.selectedCut.tcin = roundFn(this.video.currentTime, 0.04, 0);
+      this.selectedCut.tcin = tcin || roundFn(this.video.currentTime, 0.04, 0);
       if (this.selectedCut.tcout && this.selectedCut.tcout < this.selectedCut.tcin) {
         this.selectedCut.tcout = this.selectedCut.tcin + prevTCin;
         if (this.selectedCut.tcout > this.video.duration) {
           this.selectedCut.tcout = this.video.duration;
         }
       }
-      this.outposition = roundFn(this.currentTime, 0.04, 0);
+      this.outposition = tcin || roundFn(this.currentTime, 0.04, 0);
       this.__lastthumb.idx = this.selectedCut.idx;
       this.posterChanged.emit(this.__lastthumb);
       this.seekVideo(this.selectedCut.tcin / this.video.duration * 100, this.cuts);
@@ -345,7 +440,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     if ($event) {
       $event.stopPropagation();
     }
-    if (!collection) {
+    if (!collection || this.ctrlKey) {
       return;
     }
     this.__select(idx, collection);
@@ -405,6 +500,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
    * Destroy component
    */
   ngOnDestroy(): void {
+    this.__unsub();
     this.evt.removeEvents(this.__events);
   }
 

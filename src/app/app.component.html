@@ -192,7 +192,7 @@
       </div>
 
       <div class="flex flex-row w-full">
-        {{ currentTime }}
+        {{ currentTime }} {{marks|json}}
         <div class="w-1/2 pt-4 pb-4 overflow-x-auto overflow-y-auto" *ngIf="cuts && cuts.length > 0">
           <div class="slider" #sliderItems>
             <div *ngFor="let video of cuts; let idx=index;" class="videofull" (click)="selectCut($event, idx)"

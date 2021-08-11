@@ -67,7 +67,7 @@ export class AppComponent {
   }
 
   marks = [
-    {tcin: 10, tcout: 20, type: 'mark', idx: '222', selected: false, thumb: undefined},
+    {tcin: 1, tcout: 20, type: 'mark', idx: '222', selected: false, thumb: undefined},
     {tcin: 25, type: 'mark', idx: '22222222', selected: false, thumb: undefined},
   ];
 

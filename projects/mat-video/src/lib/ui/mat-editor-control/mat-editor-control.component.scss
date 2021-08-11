@@ -49,7 +49,7 @@ $accent: #ed5b08;
     border: 2px solid #fff;
 }
 .cut.editing, .invalid.editing {
-    border: 2px solid $warn;
+    border: 2px solid rgba(255, 255, 255, 0.5);
 }
 .audio {
     background-color: $secondary;
@@ -61,19 +61,32 @@ $accent: #ed5b08;
 .mark {
     bottom: -20px;
     height: 100%;
-    & > .line {
-        margin: 5px auto;
-        width: 1px;
-        height: calc(100% - 10px);
-        background-color: white;
-    }
-    & > .ball {
-        border-radius: 9999px;
-        width: 9px;
-        height: 9px;
-        background-color: $accent;
-        margin-top: 9px;
-        cursor: pointer;
+    border-left: 1px dotted #fff;
+    border-right: 1px dotted #fff;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0) 5px,
+        rgba(255, 255, 255, 0) 10px,
+        rgba(255, 255, 255, 0.2) 5px,
+        rgba(255, 255, 255, 0.2) 15px
+    );
+    & > div {
+        height: 100%;
+
+        & > .line {
+            margin: 5px auto;
+            width: 1px;
+            height: calc(100% - 10px);
+            background-color: white;
+        }
+        & > .ball {
+            border-radius: 9999px;
+            width: 9px;
+            height: 9px;
+            background-color: $accent;
+            margin: 9px auto 0 auto;
+            cursor: pointer;
+        }
     }
 }
 .marr-16 {
