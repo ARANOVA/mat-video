@@ -42,6 +42,7 @@
           *ngIf="showFrameByFrame"
           [video]="video"
           [fps]="fps"
+          [keyboard]="keyboard"
           [style.order]="orderConfiguration.frameByFrameControl"
         ></mat-frame-by-frame-control>
 
@@ -99,6 +100,7 @@
         [video]="video"
         [cuts]="cuts"
         [marks]="marks"
+        [fps]="fps"
         [currentTime]="time"
         [editorButtons]="editorButtons"
         [defaultCutType]="defaultCutType"

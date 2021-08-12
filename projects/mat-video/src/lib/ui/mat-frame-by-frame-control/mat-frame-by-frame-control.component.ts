@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'mat-frame-by-frame-control',
@@ -13,17 +13,20 @@ export class MatFrameByFrameControlComponent {
   private _interval: any;
   private _bigPrevJump = false;
   public mult = false;
+  @Input() keyboard = true;
 
   constructor() {}
 
-  seekFrames(nbFrames: number) {
+  seekFrames(nbFrames: number, absolute: boolean = false) {
     let difference: number = this._diffLimit;
-    this.mult = true;
     if (this._lastClick) {
       const endTime: number = (new Date()).getTime();
       difference = endTime - this._lastClick;
     }
-    this._lastClick = (new Date()).getTime();
+    if (!absolute) {
+      this.mult = true;
+      this._lastClick = (new Date()).getTime();
+    }
     if (this._interval) {
       clearInterval(this._interval);
     }
@@ -33,7 +36,7 @@ export class MatFrameByFrameControlComponent {
       this.video.pause();
     }
 
-    if (difference < this._diffLimit) {
+    if (!absolute && difference < this._diffLimit) {
       nbFrames = nbFrames * this.fps - (this._bigPrevJump ? 0 : nbFrames);
       this._bigPrevJump = true;
     } else {
@@ -43,5 +46,21 @@ export class MatFrameByFrameControlComponent {
     const newPos = (currentFrames + nbFrames) / this.fps + 0.00001;
 
     this.video.currentTime = newPos;
+  }
+
+  @HostListener('document:keyup.arrowleft', ['$event'])
+  onRewKey(event: KeyboardEvent) {
+    if (this.keyboard) {
+      this.seekFrames(-this.fps, true);
+      event.preventDefault();
+    }
+  }
+
+  @HostListener('document:keyup.arrowright', ['$event'])
+  onFfKey(event: KeyboardEvent) {
+    if (this.keyboard) {
+      this.seekFrames(this.fps, true);
+      event.preventDefault();
+    }
   }
 }

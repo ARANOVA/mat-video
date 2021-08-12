@@ -11,7 +11,7 @@ export class MatSpeedControlComponent {
   @Input() speedIndex = 2;
   @Input() keyboard = true;
 
-  constructor() {}
+  constructor() { }
 
   speedControl(direction: number) {
     this.speedIndex += direction;

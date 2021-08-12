@@ -6,6 +6,7 @@
 - **video-editor:** background style for marks
 - **video-editor:** click & drag (with control key)
 - **speed-control:** use '+' or '-' to increase / decrease speed
+- **frame-by-frame-control:** use left-arrow or right-arrow to rewind or fast forward (1s)
 
 # 2.12.13 (2021-07-29)
 
