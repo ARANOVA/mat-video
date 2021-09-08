@@ -2,6 +2,7 @@ import { formatNumber } from '@angular/common';
 import { Component, VERSION } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import buildInfo from './../../package.json';
+import { MatInputTimeFormatDirective } from 'projects/mat-video/src/lib/directives/mat-time-format.directive';
 
 @Component({
   selector: 'app-root',
@@ -108,6 +109,7 @@ export class AppComponent {
       metadata: new FormGroup({
         type: new FormControl(),
         initiatingTeam: new FormControl(),
+        tcin: new FormControl(),
       })
     });
   }

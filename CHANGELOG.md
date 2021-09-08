@@ -1,3 +1,9 @@
+# 2.12.15 (2021-08-23)
+
+### Features:
+- **video-editor:** small video frames to fit < 1MB
+
+
 # 2.12.14 (2021-08-11)
 
 ### Features:

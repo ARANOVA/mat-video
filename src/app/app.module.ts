@@ -25,9 +25,10 @@ import localeEs from '@angular/common/locales/es';
 import { TestFormComponent } from './form/test-form/test-form.component';
 registerLocaleData(localeEs);
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputTimeFormatDirective } from 'projects/mat-video/src/lib/directives/mat-time-format.directive';
 
 @NgModule({
-  declarations: [AppComponent, TestFormComponent],
+  declarations: [AppComponent, TestFormComponent, MatInputTimeFormatDirective],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

@@ -539,10 +539,10 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   getFrame(time: number): string | null {
     if (this.__askFrame) {
       const canvas = document.createElement('canvas');
-      const w = 240;
-      let h = 135; // 16:9
+      const w = 127;
+      let h = 76; // 16:9
       if (this.__videoSize) {
-        h = Math.round(this.__videoSize.h * 240 / this.__videoSize.w);
+        h = Math.round(this.__videoSize.h * w / this.__videoSize.w);
       }
       canvas.width = w;
       canvas.height = h;

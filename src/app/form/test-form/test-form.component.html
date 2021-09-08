@@ -48,6 +48,22 @@
                         </mat-button-toggle>
                     </mat-button-toggle-group>
                 </div>
+
+                <div class="form-group flex flex-wrap">
+                    <div class="w-full">
+                        <mat-form-field color="primary" class="ext-label w-full mr-2">
+                            <mat-label>Prueba time</mat-label>
+    
+        
+        <input matInput
+        matInputTimeFormat
+         formControlName="tcin" 
+         [value]="10"
+         type="number" step="0.04" min="0" max="20" />
+                            </mat-form-field>
+                    </div>
+                </div>
+
             </div>
         </fieldset>
     </div>
