@@ -62,7 +62,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   @Input() video: HTMLVideoElement = null;
 
-  @Input() fps = 25;
+  @Input() fps: number = 25;
 
   @Input() color: ThemePalette = 'accent';
 
@@ -94,6 +94,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   @Input() selected: string | null | undefined;
 
   @Input() selectedMarker: string | null | undefined;
+
+  @Input() keyboard = true;
 
   @Output() currentTimeChanged = new EventEmitter<number>();
 
@@ -145,6 +147,16 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
    */
   public mode = 'tcin';  // Valida are 'tcin', 'tcout' and 'tc'
 
+  /**
+   * Trimming mode
+   */
+  public editing = '';  // Para trimado con Ctrl
+
+  /**
+   * Emitted when a fcus event
+   */
+  @Output() focused = new EventEmitter<boolean>();
+
   @ViewChild('trimmerBar') trimmerBar;
   @ViewChild('tcinInput') tcinInput;
   @ViewChild('tcoutInput') tcoutInput;
@@ -160,6 +172,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   private _sub: any;
   private _sub2: any;
   ctrlKey: boolean = false;
+  private __seek: any;
 
   constructor(
     private renderer: Renderer2,
@@ -167,6 +180,14 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     private _el: ElementRef
   ) { }
 
+  private __delaySeek() {
+    if (this.__seek) {
+      clearTimeout(this.__seek);
+    }
+    this.__seek = setTimeout(() => {
+      this.video.currentTime = this.currentTime;
+    }, 250);
+  }
 
   private __register() {
     this._sub = this.mousehold$.subscribe((e) => {
@@ -175,22 +196,28 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       }
       this.x = e.x;
       this.y = e.y;
-
+console.log("hold")
       if (this.selectedCut) {
         this.selectedCut.selected = true;
         var rect = this.trimmerBar.nativeElement.getBoundingClientRect();
         this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
-        const tcout = this.video.duration * (this.x - rect.left) / this.__barWidth;
-        this.currentTime = roundFn(tcout, 1 / this.fps, 0);
-        this.video.currentTime = this.currentTime;
-        this.outposition = this.currentTime;
-        this.selectedCut.tcout = this.currentTime;
+        const tc = this.video.duration * (this.x - rect.left) / this.__barWidth;
+        this.currentTime = roundFn(tc, 1 / this.fps, 0);
+        this.__delaySeek();
+        if (this.editing === '' || this.editing === 'out') {
+          this.outposition = this.currentTime;
+          this.selectedCut.tcout = this.currentTime;
+        } else if (this.editing === 'in') {
+          this.inposition = this.currentTime;
+          this.selectedCut.tcin = this.currentTime;
+        }
       }
     });
     this._sub2 = this.mouseup$.subscribe((e) => {
       this.__unsub();
       this.mode = 'tc';
-      //this.addCut();
+      this.editing = '';
+      // this.addCut();
     });
   }
 
@@ -202,11 +229,12 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       //     }, dispose: null
       // },
       {
-        element: this.video, name: 'seeked', callback:
+        element: this.video, name: 'seeked2', callback:
           () => {
             // Test
             this.updateCurrentTime(this.video.currentTime);
             const aux = this.getFrame(this.video.currentTime);
+            // TODO: limitar a no edición
             if (aux) {
               if (this.selectedCut) {
                 this.posterChanged.emit({ thumb: aux, idx: this.selectedCut.idx });
@@ -228,14 +256,33 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       if (!this.ctrlKey) {
         return;
       }
-
+      console.log("MOUSE DOWN", e.x, e.y, this.trimmerBar.nativeElement.getBoundingClientRect())
       this.__register();
       this.x = e.x;
       this.y = e.y;
       var rect = this.trimmerBar.nativeElement.getBoundingClientRect();
       this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
-      const tcin = this.video.duration * (this.x - rect.left) / this.__barWidth;
-      this.setTcIn(true, roundFn(tcin, 1 / this.fps, 0));
+      const tc = this.video.duration * (this.x - rect.left) / this.__barWidth;
+
+      if (this.selectedCut && this.mode !== 'tcin') {
+        // Es una "edición"
+        const duration = this.selectedCut.tcout - this.selectedCut.tcin;
+        console.log("IN", tc, '<', this.selectedCut.tcin + duration / 2)
+        if (tc < this.selectedCut.tcin + duration / 2) {
+          // Edita entrada
+          this.editing = 'in';
+          this.setTcIn(true, roundFn(tc, 1 / this.fps, 0));
+        } else {
+          this.editing = 'out';
+          console.log("UPDATE SALIDA")
+          // Edita salida
+          this.setTcOut(true, roundFn(tc, 1 / this.fps, 0), 'tcout');
+        }
+        console.log(this.selectedCut)
+      } else {
+        this.setTcIn(true, roundFn(tc, 1 / this.fps, 0));
+      }
+      
     })
     this.mousemove$ = fromEvent(this.trimmerBar.nativeElement, 'mousemove');
     this.mouseup$ = fromEvent(this.trimmerBar.nativeElement, 'mouseup');
@@ -245,6 +292,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       takeUntil(this.mouseup$),
       repeat()
     );
+
+    this.mousemove$.subscribe(_ => { });
     this.__register();
   }
 
@@ -256,6 +305,19 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   @HostListener('window:keydown.control', ['$event'])
   down($event: any) {
     this.ctrlKey = true;
+  }
+
+  @HostListener('window:keydown.delete', ['$event'])
+  delete($event: any) {
+    console.log(!this.keyboard, !this.selectedCut, !this.selectedCut.idx)
+    if (!this.keyboard || !this.selectedCut) {
+      return;
+    }
+    if (this.mode !== 'tcin' && !this.selectedCut.idx) {
+      this.restart();
+    } else if (this.selectedCut.idx) {
+      this.removeCut();
+    }
   }
 
   /**
@@ -316,7 +378,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
    * 
    * @param {boolean} update    if the selected value cut must be update
    */
-  setTcIn(update: boolean = true, tcin?: number) {
+  setTcIn(update: boolean = true, tcin?: number, mode?: string) {
     const prevTCin = this.currentTime;
     this.inposition = tcin || roundFn(this.currentTime, 1 / this.fps, 0);
     if (!this.selectedCut) {
@@ -325,33 +387,44 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     } else if (update) {
       this.selectedCut.tcin = tcin || roundFn(this.video.currentTime, 1 / this.fps, 0);
       if (this.selectedCut.tcout && this.selectedCut.tcout < this.selectedCut.tcin) {
+        console.log("UPDATE1")
         this.selectedCut.tcout = this.selectedCut.tcin + prevTCin;
         if (this.selectedCut.tcout > this.video.duration) {
           this.selectedCut.tcout = this.video.duration;
         }
       }
-      this.outposition = tcin || roundFn(this.currentTime, 1 / this.fps, 0);
-      this.__lastthumb.idx = this.selectedCut.idx;
-      this.posterChanged.emit(this.__lastthumb);
-      this.seekVideo(this.selectedCut.tcin / this.video.duration * 100, this.cuts);
-    }
-    if (this.mode === 'tcin') {
-      this.mode = 'tcout';
-      this.selectedCut.selected = true;
-      if (!this.selectedCut.idx) {
-        this.cutEvent.emit({ type: 'tcin', cut: { ...this.selectedCut } });
+      if (!tcin) {
+        console.log("UPDATE2")
+        this.outposition = roundFn(this.currentTime, 1 / this.fps, 0);
+        this.__lastthumb.idx = this.selectedCut.idx;
+        this.posterChanged.emit(this.__lastthumb);
       }
-    } else {
-      this.mode = 'tc';
+      this.seekVideo(this.selectedCut.tcin / this.video.duration * 100, this.cuts, !!!tcin);
     }
+    if (!tcin) {
+      console.log("1")
+      if (this.mode === 'tcin') {
+        mode = mode ? mode : 'tcout';
+        this.selectedCut.selected = true;
+        if (!this.selectedCut.idx) {
+          this.cutEvent.emit({ type: 'tcin', cut: { ...this.selectedCut } });
+        }
+      }
+    }
+    this.mode = mode ? mode : 'tc';
   }
 
   /**
    * Sets the tc output point
    */
-  setTcOut() {
-    this.selectedCut.tcout = roundFn(this.video.currentTime, 1 / this.fps, 0);
-    this.mode = 'tc';
+  setTcOut(update: boolean = false, tcout?: number, mode?: string) {
+    console.log("setTcOut")
+    this.outposition = tcout || roundFn(this.currentTime, 1 / this.fps, 0);
+    this.selectedCut.tcout = tcout || roundFn(this.video.currentTime, 1 / this.fps, 0);
+    this.mode = mode ? mode : 'tc';
+    if (update) {
+      this.seekVideo(this.selectedCut.tcout / this.video.duration * 100, this.cuts);
+    }
   }
 
   /**
@@ -497,17 +570,35 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   /**
+   * Emit the focus signal
+   * 
+   * @param {boolean} value focus value
+   */
+  public focus(value: boolean): void {
+    this.focused.emit(value);
+  }
+
+  /**
    * Seek video position (in seconds)
    * 
    * @param value 
    */
-  seekVideo(value: number, collection: ClipInterface[]): void {
+  seekVideo(value: number, collection: ClipInterface[], update: boolean = true): void {
+    if (isNaN(value)) {
+      return;
+    }
     const percentage = value / 100;
     const newTime = this.video.duration * percentage;
+    if (newTime === this.currentTime) {
+      return;
+    }
     if (!this.__lastthumb.thumb && collection == this.cuts) {
       this.__askFrame = true;
     }
     this.video.currentTime = newTime;
+    if (!update) {
+      return;
+    }
     const roundedTime = roundFn(this.video.currentTime, 1 / this.fps, 0);
     if (this.selectedCut && collection === this.cuts) {
       if (this.mode === 'tcin') {
@@ -576,10 +667,12 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     return (time / this.video.duration) * 100;
   }
 
-  /* TEMP */
   keyup(input: string, event: KeyboardEvent) {
     if (this.__focused) {
       clearTimeout(this.__focused);
+    }
+    if (!this.keyboard) {
+      return;
     }
     if (event.key === 'Enter') { // Solo numérico
       if (input === 'tcin') {
@@ -598,8 +691,25 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     } else {
       this.__focused = setTimeout(() => {
         this.seekVideo((input == 'tcin' ? this.inposition : this.outposition) / this.video.duration * 100, this.cuts);
+      }, 300);
+    }
+  }
+
+  incr(input: string) {
+    if (input === 'tcin') {
+      this.inposition = roundFn(this.inposition + 1/this.fps, 1/this.fps, 0);
+      if (this.inposition > this.video.duration) {
+        this.inposition = this.video.duration;
       }
-        , 300);
+    }
+  }
+
+  decr(input: string) {
+    if (input === 'tcin') {
+      this.inposition = roundFn(this.inposition - 1/this.fps, 1/this.fps, 0);
+      if (this.inposition < 0) {
+        this.inposition = 0;
+      }
     }
   }
 

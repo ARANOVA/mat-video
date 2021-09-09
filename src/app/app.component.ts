@@ -2,7 +2,6 @@ import { formatNumber } from '@angular/common';
 import { Component, VERSION } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import buildInfo from './../../package.json';
-import { MatInputTimeFormatDirective } from 'projects/mat-video/src/lib/directives/mat-time-format.directive';
 
 @Component({
   selector: 'app-root',
@@ -112,6 +111,7 @@ export class AppComponent {
         tcin: new FormControl(),
       })
     });
+    this.form.patchValue({metadata: { tcin: 10.4 } })
   }
 
   private __remove(idx: string): boolean {

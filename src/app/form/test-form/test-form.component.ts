@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MatInputTimeFormatDirective } from 'projects/mat-video/src/lib/directives/mat-time-format.directive';
 
 @Component({
   selector: 'app-test-form',

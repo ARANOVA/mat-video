@@ -2,7 +2,7 @@ import { Directive, Input, forwardRef } from '@angular/core'
 import { NG_VALIDATORS, Validator, AbstractControl, Validators } from '@angular/forms'
 
 @Directive({
-  selector: '[min]',
+  selector: 'input[min]',
   providers: [{ provide: NG_VALIDATORS, useExisting: MinDirective, multi: true }]
 })
 export class MinDirective implements Validator {

@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
-import { MatRadioModule } from '@angular/material/radio'; 
+import { MatRadioModule } from '@angular/material/radio';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -30,6 +30,7 @@ import { MatVolumeControlComponent } from './ui/mat-volume-control/mat-volume-co
 import { MatSpeedControlComponent } from './ui/mat-speed-control/mat-speed-control.component';
 import { MatEditorControlComponent } from './ui/mat-editor-control/mat-editor-control.component';
 import { MatVideoComponent } from './video.component';
+import { MatInputTimeFormatDirective } from './directives/mat-time-format.directive';
 
 @NgModule({
   declarations: [
@@ -50,10 +51,27 @@ import { MatVideoComponent } from './video.component';
     MaxDirective,
     MatFrameByFrameControlComponent,
     MatSpeedControlComponent,
-    MatEditorControlComponent
+    MatEditorControlComponent,
+    MatInputTimeFormatDirective
   ],
-  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule, MatSliderModule, MatInputModule, MatRadioModule, MatMenuModule, MatMenuModule, MatBadgeModule],
-  exports: [MatVideoComponent, MatVideoSourceDirective, MatVideoTrackDirective],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSliderModule,
+    MatInputModule,
+    MatRadioModule,
+    MatMenuModule,
+    MatMenuModule,
+    MatBadgeModule
+  ],
+  exports: [
+    MatVideoComponent,
+    MatVideoSourceDirective,
+    MatVideoTrackDirective,
+    MatInputTimeFormatDirective
+  ],
   providers: [FullscreenService, EventService]
 })
-export class MatVideoModule {}
+export class MatVideoModule { }

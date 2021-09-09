@@ -43,7 +43,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() showFrameByFrame = false;
   @Input() showVolume = false;
   @Input() showSpeed = false;
-  @Input() fps = 25;
+  @Input() fps: number = 25;
   @Input() download = false;
   @Input() color: ThemePalette = 'accent';
   @Input() spinner = 'spin';
@@ -150,6 +150,8 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   lastTime: number;
 
   videoLoaded = false;
+
+  focused: boolean = false;
 
   private srcObjectURL: string;
 
@@ -304,4 +306,9 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   emitSelectedMarkChange($event: string | null) {
     this.selectedMarkChanged.emit($event)
   }
+
+  emitFocus($event: boolean | null) {
+    this.focused = $event;
+  }
+
 }

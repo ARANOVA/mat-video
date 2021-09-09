@@ -1,3 +1,13 @@
+# 2.12.16 (2021-09-09)
+
+### Features:
+- **video-editor:** format TCIn / TCOut form fields
+- **video-editor:** enabled trimming of input/output
+- **video-editor:** disabled video-frames
+- **video:** use keyboard shortcuts only when no input form is focused
+- **video:** use input fps to calculate values
+
+
 # 2.12.15 (2021-08-23)
 
 ### Features:
