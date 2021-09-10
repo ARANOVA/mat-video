@@ -173,6 +173,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   private _sub2: any;
   ctrlKey: boolean = false;
   private __seek: any;
+  private __interval: any;
 
   constructor(
     private renderer: Renderer2,
@@ -196,7 +197,6 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       }
       this.x = e.x;
       this.y = e.y;
-console.log("hold")
       if (this.selectedCut) {
         this.selectedCut.selected = true;
         var rect = this.trimmerBar.nativeElement.getBoundingClientRect();
@@ -229,10 +229,11 @@ console.log("hold")
       //     }, dispose: null
       // },
       {
-        element: this.video, name: 'seeked2', callback:
+        element: this.video, name: 'seeked', callback:
           () => {
             // Test
             this.updateCurrentTime(this.video.currentTime);
+            return;
             const aux = this.getFrame(this.video.currentTime);
             // TODO: limitar a no edición
             if (aux) {
@@ -359,6 +360,9 @@ console.log("hold")
     if (idx && collection) {
       const index = collection.findIndex((cut: any) => cut.idx === idx);
       if (index > -1) {
+        if (this.__interval) {
+          clearInterval(this.__interval);
+        }
         if (collection === this.cuts) {
           this.selectedCut = collection[index];
           this.mode = 'tc';
@@ -492,6 +496,33 @@ console.log("hold")
       cls.push('editing');
     }
     return cls;
+  }
+
+  /**
+   * Play current cut
+   * 
+   * @param $event 
+   * @param idx 
+   * @param emit 
+   */
+  doubleClick($event: MouseEvent, idx: string | null = null, collection: ClipInterface[], emit: boolean = true) {
+    if ($event) {
+      $event.stopPropagation();
+    }
+    if (!collection || this.ctrlKey) {
+      return;
+    }
+    if (this.__select(idx, collection)) {
+      this.video.play();
+      const cut = collection.find((cut: any) => cut.idx === idx);
+      this.__interval = setInterval(() => {
+        if (this.currentTime >= cut.tcout) {
+          this.video.pause();
+          clearInterval(this.__interval);
+          this.__interval = null;
+        }
+      }, 40);
+    }
   }
 
   /**

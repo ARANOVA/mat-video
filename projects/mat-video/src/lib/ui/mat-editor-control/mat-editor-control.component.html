@@ -9,7 +9,7 @@
         </ng-container>
 
         <ng-container *ngIf="selectedCut">
-            <div (click)="selectClip($event, selectedCut.idx, cuts)" [ngClass]="getClassCut(selectedCut)"
+            <div (click)="selectClip($event, selectedCut.idx, cuts)" (dblclick)="doubleClick($event, selectedCut.idx, cuts)" [ngClass]="getClassCut(selectedCut)"
                 [ngStyle]="{'left.px': getStartCut(selectedCut.tcin), 'width.px': getWidthCut(selectedCut.tcin, selectedCut.tcout)}">
             </div>
             </ng-container>
@@ -19,7 +19,7 @@
             <div [ngStyle]="{'left.px': getStartCut(mark.tcin), 'width.px': getWidthCut(mark.tcin, mark.tcout)}" [ngClass]="getClassCut(mark, 'mark')">
                 <div> <!-- [ngStyle]="{'left.px': getStartCut(mark.tcin, mark.tcout) - 5, 'width.px': getWidthCut(mark.tcin) + 7}"> -->
                     <div class="line"></div>
-                    <div class="ball" (click)="selectClip($event, mark.idx, marks)"></div>
+                    <div class="ball" (click)="selectClip($event, mark.idx, marks)" (dblclick)="doubleClick($event, mark.idx, marks)"></div>
                 </div>
             </div>
         </ng-container>

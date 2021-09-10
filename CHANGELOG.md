@@ -1,3 +1,8 @@
+# 2.12.17 (2021-09-10)
+
+### Features:
+- **video-editor:** Double click in cuts to play them between tcin and tcout
+
 # 2.12.16 (2021-09-09)
 
 ### Features:
