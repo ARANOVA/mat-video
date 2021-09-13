@@ -59,6 +59,22 @@ $accent: #ed5b08;
     background-color: $accent;
 }
 
+.textIn, .textOut {
+    bottom: -20px;
+    height: 100%;
+    width: 50%;
+    float: left;
+    .l {
+        height: 100%;
+    }
+    .text {
+        font-size: 10px;
+        margin-top: 2px;
+    }
+}
+.textOut {
+    text-align: right;
+}
 .mark {
     bottom: -20px;
     height: 100%;

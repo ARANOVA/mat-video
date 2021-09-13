@@ -538,33 +538,35 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       return;
     }
     this.__select(idx, collection);
+    if (collection === this.cuts) {
+      const index = collection.findIndex((cut: any) => cut.idx === idx);
+      if (index > -1) {
+        const tcin = collection[index].tcin;
+        const tcout = collection[index].tcout;
+        if (tcin > 0 && this.video.duration) {
+          const min = Math.round(tcin * 100 / this.video.duration) - 10;
+          if (min < 0) {
+            this.curMinPercent = 0;
+          } else {
+            this.curMinPercent = min;
+          }
+        }
+        if (tcout < this.video.duration) {
+          const max = Math.round(tcout * 100 / this.video.duration) + 10;
+          if (max > 100) {
+            this.curMaxPercent = 100;
+            //this.curMinPercent = (100 - max)
+          } else {
+            this.curMaxPercent = max;
+          }
+        }
+      } else {
+        this.curMaxPercent = 100;
+        this.curMinPercent = 0;
+      }
+    }
     if (emit) {
       if (collection === this.cuts) {
-        const index = collection.findIndex((cut: any) => cut.idx === idx);
-        if (index > -1) {
-          const tcin = collection[index].tcin;
-          const tcout = collection[index].tcout;
-          if (tcin > 0 && this.video.duration) {
-            const min = Math.round(tcin * 100 / this.video.duration) - 10;
-            if (min < 0) {
-              this.curMinPercent = 0;
-            } else {
-              this.curMinPercent = min;
-            }
-          }
-          if (tcout < this.video.duration) {
-            const max = Math.round(tcout * 100 / this.video.duration) + 10;
-            if (max > 100) {
-              this.curMaxPercent = 100;
-              //this.curMinPercent = (100 - max)
-            } else {
-              this.curMaxPercent = max;
-            }
-          }
-        } else {
-          this.curMaxPercent = 100;
-          this.curMinPercent = 0;
-        }
         setTimeout(() => this.selectedChanged.emit(idx), 0);
       } else {
         setTimeout(() => this.selectedMarkChanged.emit(idx), 0);

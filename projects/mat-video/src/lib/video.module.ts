@@ -16,6 +16,7 @@ import { MinDirective } from './directives/min.directive';
 import { MaxDirective } from './directives/max.directive';
 import { MatSliderProgressBarComponent } from './internal/mat-slider-progress-bar/mat-slider-progress-bar.component';
 import { SecondsToTimePipe } from './pipes/seconds-to-time.pipe';
+import { PercentToTimePipe } from './pipes/percent-to-time.pipe';
 import { EventService } from './services/event.service';
 import { FullscreenService } from './services/fullscreen.service';
 import { MatDownloadButtonComponent } from './ui/mat-download-button/mat-download-button.component';
@@ -35,6 +36,7 @@ import { MatInputTimeFormatDirective } from './directives/mat-time-format.direct
 @NgModule({
   declarations: [
     SecondsToTimePipe,
+    PercentToTimePipe,
     MatVideoComponent,
     MatSliderProgressBarComponent,
     MatPlayButtonComponent,
