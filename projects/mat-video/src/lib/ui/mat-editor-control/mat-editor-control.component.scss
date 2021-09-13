@@ -20,6 +20,7 @@ $accent: #ed5b08;
 }
 .cut-bar-wrapper {
     height: 50px;
+    overflow: hidden;
     .cut-bar {
         height: 32px;
         background-color: $primary;

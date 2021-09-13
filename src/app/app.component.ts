@@ -75,7 +75,7 @@ export class AppComponent {
       {tcin: 10, tcout: 20, type: 'invalid', idx: '2', selected: false, thumb: undefined},
       {tcin: 25, tcout: 27, type: 'mark', idx: '2222', selected: false, thumb: undefined},
       {tcin: 55, tcout: 58, type: 'audio', idx: '22222', selected: false, thumb: undefined},
-      // {tcin: 45, tcout: 50, type: 'cut', idx: '1', selected: false}
+      {tcin: 45, tcout: 50, type: 'cut', idx: '1', selected: false}
   ];
 
   initialcuts = this.cuts.map((cut: any) => { return {...cut} });
@@ -85,6 +85,7 @@ export class AppComponent {
 
   selected = null;
   selectedMark = null;
+  playCut = null;
   speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 3, 5, 6];
   speedIndex: number = 0;
 
@@ -224,6 +225,27 @@ export class AppComponent {
     });
     // "Emit" selected
     setTimeout(() => this.selectedMark = this.marks[idx].idx, 0);
+  }
+
+
+  /**
+   * Play current cut
+   * 
+   * @param $event 
+   * @param idx 
+   * @param emit 
+   */
+   doubleClick($event: MouseEvent, cutidx: string | null = null) {
+    if ($event) {
+      $event.stopPropagation();
+    }
+    const idx = this.cuts.findIndex((cut: any) => {
+      return cut.idx === cutidx;
+    });
+    if (idx > -1) {
+      // "Emit" double click
+      setTimeout(() => this.playCut = this.cuts[idx].idx, 0);
+    }
   }
 
   playEvent($event: boolean) {

@@ -178,6 +178,7 @@
           [playsinline]="playsinline" [showFrameByFrame]="showFrameByFrame" [showVolume]="showVolume"
           [showSpeed]="showSpeed" [showFrameByFrame]="showFrameByFrame" [(time)]="currentTime" [cuts]="cuts"
           [marks]="marks" [speedScale]="speedScale" [speedIndex]="speedIndex" [defaultCutType]="defaultCutType"
+          [playCut]="playCut"
           [selected]="selected" [selectedMarker]="selectedMark" [cutType]="cutType" [playingState]="playingState"
           (playChange)="playEvent($event)" (cutEvent)="cutEvent($event)" (posterChanged)="posterChanged($event)"
           (selectedChanged)="selectedChanged($event)" (selectedMarkChanged)="selectedMarkChanged($event)"
@@ -198,6 +199,7 @@
         <div class="w-1/2 pt-4 pb-4 overflow-x-auto overflow-y-auto" *ngIf="cuts && cuts.length > 0">
           <div class="slider" #sliderItems>
             <div *ngFor="let video of cuts; let idx=index;" class="videofull" (click)="selectCut($event, idx)"
+              (dblclick)="doubleClick($event, video.idx)"
               [title]="video.title">
               <div [ngClass]="video.selected ? 'selected': 'none'">
                 <img *ngIf="video.thumb" class="w-16/9 h-9/16" [src]="video.thumb" />

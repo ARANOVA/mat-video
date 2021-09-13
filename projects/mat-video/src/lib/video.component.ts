@@ -106,6 +106,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   @Input() selected: string | null | undefined;
   @Input() selectedMarker: string | null | undefined;
+  @Input() playCut: string | null | undefined;
 
   private __selectedCut: string | null = null;
   @Input()

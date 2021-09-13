@@ -1,3 +1,10 @@
+# 2.12.18 (2021-09-13)
+
+### Features:
+- **video:** Double click event to play cut between tcin and tcout
+- **video-editor:** Scale to selected cut
+
+
 # 2.12.17 (2021-09-10)
 
 ### Features:
