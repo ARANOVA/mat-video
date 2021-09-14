@@ -2,7 +2,7 @@
 </mat-slider>
 <div #trimmerBar class="cut-bar-wrapper" (click)="selectClip($event, null, cuts)">
     <div *ngIf="video.duration" class="cut-bar">
-        <div *ngIf="curMinPercent > 0" class="textIn">
+        <div *ngIf="curMinPercent > 0 || curMaxPercent < 100" class="textIn">
             <div class="l"></div>
             <div class="text">{{ curMinPercent | percentToTime:video.duration }}</div>
         </div>
@@ -28,7 +28,7 @@
             </div>
         </ng-container>
 
-        <div *ngIf="curMaxPercent < 100" class="textOut">
+        <div *ngIf="curMinPercent > 0 || curMaxPercent < 100" class="textOut">
             <div class="l"></div>
             <div class="text">{{ curMaxPercent | percentToTime:video.duration }}</div>
         </div>

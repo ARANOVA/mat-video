@@ -25,7 +25,7 @@ export class AppComponent {
   loop = false;
   quality = false;
   download = false;
-  fullscreen = false;
+  fullscreen = true;
   playsinline = false;
   showFrameByFrame = true;
   controlClass = 'no-float';
@@ -38,7 +38,7 @@ export class AppComponent {
   overlay = true;
   muted = false;
   showSpeed = true;
-  showVolume = false;
+  showVolume = true;
   playingState = false;
   editor = true;
   editorButtons = true;
