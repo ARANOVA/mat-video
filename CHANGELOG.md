@@ -1,3 +1,9 @@
+# 2.12.19 (2021-09-28)
+
+### Features:
+- **video-editor:** Show timed scale left and right values
+
+
 # 2.12.18 (2021-09-13)
 
 ### Features:

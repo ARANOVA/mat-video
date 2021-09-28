@@ -1,6 +1,6 @@
 {
   "name": "mat-video-app",
-  "version": "2.12.18",
+  "version": "2.12.19",
   "description": "",
   "scripts": {
     "ng": "ng",
