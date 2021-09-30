@@ -2,6 +2,7 @@
 
 ### Features:
 - **video-editor:** Show timed scale left and right values
+- **video:** Fullscreen with 'a' key
 
 
 # 2.12.18 (2021-09-13)
