@@ -1,3 +1,8 @@
+# 2.13.0 (2021-09-30)
+
+### Features:
+- **video-editor:** Format tc in / out as mm:ss
+
 # 2.12.19 (2021-09-28)
 
 ### Features:

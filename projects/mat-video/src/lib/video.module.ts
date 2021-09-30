@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,6 +32,7 @@ import { MatSpeedControlComponent } from './ui/mat-speed-control/mat-speed-contr
 import { MatEditorControlComponent } from './ui/mat-editor-control/mat-editor-control.component';
 import { MatVideoComponent } from './video.component';
 import { MatInputTimeFormatDirective } from './directives/mat-time-format.directive';
+import { TcInputComponent } from './ui/tc-input/tc-input.component';
 
 @NgModule({
   declarations: [
@@ -54,11 +55,13 @@ import { MatInputTimeFormatDirective } from './directives/mat-time-format.direct
     MatFrameByFrameControlComponent,
     MatSpeedControlComponent,
     MatEditorControlComponent,
-    MatInputTimeFormatDirective
+    MatInputTimeFormatDirective,
+    TcInputComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     MatIconModule,
     MatButtonModule,
     MatSliderModule,
@@ -72,7 +75,8 @@ import { MatInputTimeFormatDirective } from './directives/mat-time-format.direct
     MatVideoComponent,
     MatVideoSourceDirective,
     MatVideoTrackDirective,
-    MatInputTimeFormatDirective
+    MatInputTimeFormatDirective,
+    TcInputComponent
   ],
   providers: [FullscreenService, EventService]
 })
