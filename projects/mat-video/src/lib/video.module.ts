@@ -75,8 +75,7 @@ import { TcInputComponent } from './ui/tc-input/tc-input.component';
     MatVideoComponent,
     MatVideoSourceDirective,
     MatVideoTrackDirective,
-    MatInputTimeFormatDirective,
-    TcInputComponent
+    MatInputTimeFormatDirective
   ],
   providers: [FullscreenService, EventService]
 })

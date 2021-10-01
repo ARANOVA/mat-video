@@ -118,7 +118,7 @@ export class TcInputComponent
       const {
         value: { mm, ss }
       } = this.parts;
-      return mm * 60 + ss;
+      return parseInt(mm) * 60 + parseInt(ss);
     }
     return null;
   }
