@@ -1,0 +1,25 @@
+<div role="group"
+    class="tc-input-container"
+    [formGroup]="parts"
+    [attr.aria-labelledby]="_formField?.getLabelId()"
+    (focusin)="onFocusIn($event)"
+    (focusout)="onFocusOut($event)">
+  <input class="tc-input-element"
+        [style.width.px]="22"
+        formControlName="mm"
+        size="2"
+        maxLength="2"
+        aria-label="minutes"
+        (keyup.enter)="_handleInput(parts.controls.mm, ss)"
+        (input)="_handleInput(parts.controls.mm, ss)"
+        #mm>
+  <span class="tc-input-spacer">:</span>
+  <input class="tc-input-element"
+        [style.width.px]="22"
+        formControlName="ss"
+        maxLength="2"
+        size="2"
+        aria-label="seconds"
+        (keyup.backspace)="autoFocusPrev(parts.controls.ss, mm)"
+        #ss>
+</div>

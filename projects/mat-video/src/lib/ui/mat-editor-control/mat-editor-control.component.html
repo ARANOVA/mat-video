@@ -38,12 +38,15 @@
 <div class="menu" *ngIf="editorButtons">
     <div class="buttons">
         <div class="inline-small px-2" [style.order]="editorOrderButtons.tcinInput" [ngClass]="{'pl-0': editorOrderButtons.tcinInput == 0, 'pr-0': editorOrderButtons.tcinInput == 9}">
-            <mat-form-field color="primary" [style.width.px]="60">
+            <mat-form-field color="primary" [style.width.px]="50">
                 <mat-label>TcIn</mat-label>
                 <!-- <input matInput placeholder="0" type="number" min="0" [step]="1/fps" [(ngModel)]="inposition" -->
-                <input matInput matInputTimeFormat placeholder="0" type="text" [(ngModel)]="inposition"
+                <!-- <input matInput matInputTimeFormat placeholder="0" type="text" [(ngModel)]="inposition"
                     #tcinInput (click)="tcinInput.select()" (keyup)="keyup('tcin', $event)"
-                    (focus)="focus(true)" (blur)="focus(false)" />
+                    (focus)="focus(true)" (blur)="focus(false)" /> -->
+                <tc-input [(value)]="inposition" placeholder="00:00" required
+                    #tcinInput (focus)="focus(true)" (blur)="focus(false)"
+                ></tc-input>
             </mat-form-field>
             <!--
             <button mat-button matSuffix mat-icon-button (click)="incr('tcin')">
@@ -63,12 +66,15 @@
             <mat-icon>skip_next</mat-icon>
         </button>
         <div class="inline-small px-2" [style.order]="editorOrderButtons.tcoutInput" [ngClass]="{'pl-0': editorOrderButtons.tcoutInput == 0, 'pr-0': editorOrderButtons.tcoutInput == 9}">
-            <mat-form-field color="primary" [style.width.px]="60">
+            <mat-form-field color="primary" [style.width.px]="50">
                 <mat-label>TcOut</mat-label>
                 <!-- <input matInput placeholder="0" type="number" min="0" [step]="1/fps" [(ngModel)]="outposition" -->
-                <input matInput matInputTimeFormat placeholder="0" type="text" [(ngModel)]="outposition"
+                <!-- <input matInput matInputTimeFormat placeholder="0" type="text" [(ngModel)]="outposition"
                     #tcoutInput (click)="tcoutInput.select()" (keyup)="keyup('tcout', $event)"
-                    (focus)="focus(true)" (blur)="focus(false)"/>
+                    (focus)="focus(true)" (blur)="focus(false)"/> -->
+                <tc-input [(value)]="outposition" placeholder="00:00" required
+                    #tcoutInput (focus)="focus(true)" (blur)="focus(false)"
+                ></tc-input>
             </mat-form-field>
         </div>
 
