@@ -20,16 +20,6 @@ import { EventHandler } from '../../interfaces/event-handler.interface';
 import { ClipInterface } from '../../interfaces/clip.interface';
 import { EventService } from '../../services/event.service';
 
-import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '@angular/material/form-field';
-
-/** Data structure for holding telephone number. */
-export class MyTel {
-  constructor(
-    public area: string,
-    public exchange: string,
-    public subscriber: string
-  ) {}
-}
 
 const countDecimals = (value) => {
   if (Math.floor(value) === value) {
@@ -309,14 +299,24 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     this.__register();
   }
 
+  // @HostListener('window:keydown', ['$event'])
+  // keyEvent(event: KeyboardEvent) {
+  //   console.log("KEY", event);
+  // }
+
   @HostListener('window:keyup.control', ['$event'])
-  up($event: any) {
-    this.ctrlKey = false;
+  up($event: KeyboardEvent) {
+    if ($event.key === 'Control' || $event.key === 'Meta') {
+      this.ctrlKey = false;
+    }
+    
   }
 
-  @HostListener('window:keydown.control', ['$event'])
-  down($event: any) {
-    this.ctrlKey = true;
+  @HostListener('window:keydown', ['$event'])
+  down($event: KeyboardEvent) {
+    if ($event.key === 'Control' || $event.key === 'Meta') {
+      this.ctrlKey = true;
+    }
   }
 
   @HostListener('window:keydown.delete', ['$event'])

@@ -1,3 +1,9 @@
+# 2.13.1 (2021-10-04)
+
+### Features:
+- **video-editor:** Use "Cmd" in Mac for clip selector
+
+
 # 2.13.0 (2021-09-30)
 
 ### Features:
