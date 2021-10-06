@@ -1,3 +1,10 @@
+# 2.13.2 (2021-10-06)
+
+### Features:
+- **video-editor:** use keyboard shortcuts only when no input form is focused
+- **video-editor:** use keyboard shortcuts for set tc in (i) and tc out (o)
+
+
 # 2.13.1 (2021-10-04)
 
 ### Features:

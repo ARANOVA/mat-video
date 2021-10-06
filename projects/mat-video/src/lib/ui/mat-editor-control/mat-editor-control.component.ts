@@ -319,6 +319,22 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     }
   }
 
+  @HostListener('window:keydown.i', ['$event'])
+  keyTcin($event: any) {
+    if (!this.keyboard) {
+      return;
+    }
+    this.setTcIn();
+  }
+
+  @HostListener('window:keydown.o', ['$event'])
+  keyTcout($event: any) {
+    if (!this.keyboard) {
+      return;
+    }
+    this.setTcOut();
+  }
+
   @HostListener('window:keydown.delete', ['$event'])
   delete($event: any) {
     // console.log(!this.keyboard, !this.selectedCut, !this.selectedCut.idx)
