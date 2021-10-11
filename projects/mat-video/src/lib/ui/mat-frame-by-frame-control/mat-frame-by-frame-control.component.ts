@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 
 @Component({
   selector: 'mat-frame-by-frame-control',
@@ -44,6 +44,7 @@ export class MatFrameByFrameControlComponent {
     }
     const currentFrames = this.video.currentTime * this.fps;
     const newPos = (currentFrames + nbFrames) / this.fps + 0.00001;
+    // console.log("newPos", newPos)
 
     this.video.currentTime = newPos;
   }
@@ -51,6 +52,7 @@ export class MatFrameByFrameControlComponent {
   @HostListener('document:keyup.arrowleft', ['$event'])
   onRewKey(event: KeyboardEvent) {
     if (this.keyboard) {
+      // console.log("onRewKey");
       this.seekFrames(-this.fps, true);
       event.preventDefault();
     }
@@ -58,6 +60,7 @@ export class MatFrameByFrameControlComponent {
 
   @HostListener('document:keyup.arrowright', ['$event'])
   onFfKey(event: KeyboardEvent) {
+    // console.log("onFfKey");
     if (this.keyboard) {
       this.seekFrames(this.fps, true);
       event.preventDefault();

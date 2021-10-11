@@ -324,7 +324,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     if (!this.keyboard) {
       return;
     }
-    this.setTcIn();
+    const cur = roundFn(this.currentTime, 1 / this.fps, 0);
+    this.setTcIn(true, cur);
   }
 
   @HostListener('window:keydown.o', ['$event'])
@@ -332,7 +333,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     if (!this.keyboard) {
       return;
     }
-    this.setTcOut();
+    const cur = roundFn(this.currentTime, 1 / this.fps, 0);
+    this.setTcOut(true, cur);
   }
 
   @HostListener('window:keydown.delete', ['$event'])
@@ -414,8 +416,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     const prevTCin = this.currentTime;
     const cur = roundFn(this.currentTime, 1 / this.fps, 0);
     const inposition = this.tcinInput.value;
-    this.inposition = tcin || inposition;
-    console.log("tcin", tcin, this.inposition, cur, inposition, this.inposition, this.inposition !== prevTCin)
+    this.inposition = tcin || cur || inposition;
+    // console.log("tcin", tcin, this.inposition, cur, inposition, this.inposition, this.inposition !== prevTCin)
     if (!this.selectedCut) {
       this.selectedCut = this.__createEmptyCut();
       this.outposition = tcin || roundFn(this.currentTime, 1 / this.fps, 0);
@@ -432,7 +434,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
         this.__lastthumb.idx = this.selectedCut.idx;
         this.posterChanged.emit(this.__lastthumb);
       }
-      console.log("prevTCin", prevTCin, tcin, this.selectedCut.tcin)
+      // console.log("prevTCin", prevTCin, tcin, this.selectedCut.tcin)
       this.seekVideo(this.selectedCut.tcin / this.video.duration * 100, this.cuts, !!!tcin || this.inposition !== prevTCin);
     }
     if (!tcin) {
@@ -668,7 +670,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
    * @param value 
    */
   seekVideo(value: number, collection: ClipInterface[], update: boolean = true): void {
-    console.log("newTime", value)
+    // console.log("newTime", value)
     if (isNaN(value)) {
       return;
     }
@@ -680,7 +682,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     if (!this.__lastthumb.thumb && collection == this.cuts) {
       this.__askFrame = true;
     }
-    console.log("newTime", newTime)
+    // console.log("newTime", newTime)
     this.video.currentTime = newTime;
     if (!update) {
       return;
@@ -762,8 +764,9 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     }
     if (event.key === 'Enter') { // Solo numérico
       if (input === 'tcin') {
-        this.seekVideo(this.inposition / this.video.duration * 100, this.cuts);
-        this.setTcIn();
+        const inposition = this.tcinInput.value;
+        this.seekVideo(inposition / this.video.duration * 100, this.cuts);
+        this.setTcIn(true, inposition);
         this.tcoutInput.nativeElement.focus();
         setTimeout(() => this.tcoutInput.nativeElement.select(), 100);
         this.outposition = roundFn(this.video.currentTime, 1 / this.fps, 0);
