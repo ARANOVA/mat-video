@@ -57,15 +57,31 @@ export class MatPlayButtonComponent implements AfterViewInit, OnDestroy {
   }
 
   updateVideoPlayback(): void {
-    this.play ? this.video.play() : this.video.pause();
+    if (this.play) {
+      var playPromise = this.video.play();
+      if (playPromise !== undefined) {
+        playPromise.then(_ => {
+          // Automatic playback started!
+          // Show playing UI.
+        })
+        .catch(error => {
+          // Auto-play was prevented
+          // Show paused UI.
+        });
+      }
+    } else {
+      this.video.pause();
+    }
     this.playChanged.emit(this.play);
   }
 
   @HostListener('document:keyup.space', ['$event'])
   onPlayKey(event: KeyboardEvent) {
     if (this.keyboard) {
-      this.toggleVideoPlayback();
       event.preventDefault();
+      event.stopPropagation();
+      this.toggleVideoPlayback();
+      return false;
     }
   }
 }

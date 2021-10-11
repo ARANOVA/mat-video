@@ -93,6 +93,25 @@ export class AppComponent {
 
   errors: [];
 
+  /**
+     * Executed when de form change the current Time
+     * 
+     * @return {number}
+     */
+   public get currentTimeChange(): number {
+    return this.currentTime;
+  }
+
+  /**
+   * Executed when de video updates the current time
+   * 
+   * @param {number} $event 
+   */
+  public set currentTimeChange($event: number) {
+      console.log("CHANGE TIME")
+      this.currentTime = $event;
+  }
+
   editing;
   constructor() {
     this.editing = {

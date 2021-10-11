@@ -176,7 +176,7 @@
           [overlay]="overlay" [controlClass]="controlClass" [sliderClass]="sliderClass" [headerClass]="headerClass"
           [orderConfiguration]="orderConfiguration" [editorOrderButtons]="editorOrderButtons" [(muted)]="muted"
           [playsinline]="playsinline" [showFrameByFrame]="showFrameByFrame" [showVolume]="showVolume"
-          [showSpeed]="showSpeed" [showFrameByFrame]="showFrameByFrame" [(time)]="currentTime" [cuts]="cuts"
+          [showSpeed]="showSpeed" [showFrameByFrame]="showFrameByFrame" [(time)]="currentTimeChange" [cuts]="cuts"
           [marks]="marks" [speedScale]="speedScale" [speedIndex]="speedIndex" [defaultCutType]="defaultCutType"
           [playCut]="playCut"
           [selected]="selected" [selectedMarker]="selectedMark" [cutType]="cutType" [playingState]="playingState"
@@ -195,7 +195,7 @@
       </div>
 
       <div class="flex flex-row w-full">
-        {{ currentTime }} {{marks|json}}
+        {{ currentTime }} {{selected}} {{cuts|json}}
         <div class="w-1/2 pt-4 pb-4 overflow-x-auto overflow-y-auto" *ngIf="cuts && cuts.length > 0">
           <div class="slider" #sliderItems>
             <div *ngFor="let video of cuts; let idx=index;" class="videofull" (click)="selectCut($event, idx)"

@@ -1,3 +1,10 @@
+# 2.13.3 (2021-10-06)
+
+### Features:
+- **video-play-botton:** asyncronous play
+- **mat-seek-progress-control:** time update event
+
+
 # 2.13.2 (2021-10-06)
 
 ### Features:

@@ -412,12 +412,15 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
    */
   setTcIn(update: boolean = true, tcin?: number, mode?: string) {
     const prevTCin = this.currentTime;
-    this.inposition = tcin || roundFn(this.currentTime, 1 / this.fps, 0);
+    const cur = roundFn(this.currentTime, 1 / this.fps, 0);
+    const inposition = this.tcinInput.value;
+    this.inposition = tcin || inposition;
+    console.log("tcin", tcin, this.inposition, cur, inposition, this.inposition, this.inposition !== prevTCin)
     if (!this.selectedCut) {
       this.selectedCut = this.__createEmptyCut();
       this.outposition = tcin || roundFn(this.currentTime, 1 / this.fps, 0);
     } else if (update) {
-      this.selectedCut.tcin = tcin || roundFn(this.video.currentTime, 1 / this.fps, 0);
+      this.selectedCut.tcin = tcin || inposition;
       if (this.selectedCut.tcout && this.selectedCut.tcout < this.selectedCut.tcin) {
         this.selectedCut.tcout = this.selectedCut.tcin + prevTCin;
         if (this.selectedCut.tcout > this.video.duration) {
@@ -429,7 +432,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
         this.__lastthumb.idx = this.selectedCut.idx;
         this.posterChanged.emit(this.__lastthumb);
       }
-      this.seekVideo(this.selectedCut.tcin / this.video.duration * 100, this.cuts, !!!tcin);
+      console.log("prevTCin", prevTCin, tcin, this.selectedCut.tcin)
+      this.seekVideo(this.selectedCut.tcin / this.video.duration * 100, this.cuts, !!!tcin || this.inposition !== prevTCin);
     }
     if (!tcin) {
       if (this.mode === 'tcin') {
@@ -664,6 +668,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
    * @param value 
    */
   seekVideo(value: number, collection: ClipInterface[], update: boolean = true): void {
+    console.log("newTime", value)
     if (isNaN(value)) {
       return;
     }
@@ -675,6 +680,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     if (!this.__lastthumb.thumb && collection == this.cuts) {
       this.__askFrame = true;
     }
+    console.log("newTime", newTime)
     this.video.currentTime = newTime;
     if (!update) {
       return;

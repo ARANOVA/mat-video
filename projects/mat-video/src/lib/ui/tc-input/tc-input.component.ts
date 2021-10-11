@@ -209,7 +209,9 @@ export class TcInputComponent
   }
 
   onContainerClick($event) {
-    $event.target.select();
+    if ($event?.target) {
+      $event.target.select();
+    }
     /*
     if (this.parts.controls.mm.valid) {
       this._focusMonitor.focusVia(this.ssInput, 'program');

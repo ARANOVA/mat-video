@@ -17,6 +17,8 @@ export class MatSeekProgressControlComponent implements AfterViewInit, OnDestroy
 
   @Input() color: ThemePalette = 'primary';
 
+  @Input() fps: number = 25;
+
   @Input() currentTime = 0;
 
   @Output() currentTimeChanged = new EventEmitter<number>();
@@ -31,7 +33,14 @@ export class MatSeekProgressControlComponent implements AfterViewInit, OnDestroy
 
   ngAfterViewInit(): void {
     this.events = [
-      { element: this.video, name: 'seeking', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
+      {
+        element: this.video, name: 'seeked', callback:
+          () => {
+            // Test
+            this.updateCurrentTime(this.video.currentTime);
+          }, dispose: null
+      },
+      // { element: this.video, name: 'seeked', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
       { element: this.video, name: 'canplaythrough', callback: event => this.updateBufferedTime(), dispose: null },
       { element: this.video, name: 'timeupdate', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
       { element: this.video, name: 'progress', callback: event => this.updateBufferedTime(), dispose: null }
