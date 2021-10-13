@@ -1,15 +1,14 @@
-import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output, SimpleChanges } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
-import { EventService } from '../../services/event.service';
+import { BaseUiComponent } from '../base/base.component';
 
 @Component({
   selector: 'mat-volume-control',
   templateUrl: './mat-volume-control.component.html',
   styleUrls: ['./mat-volume-control.component.scss']
 })
-export class MatVolumeControlComponent implements AfterViewInit, OnChanges {
-  @Input() video: HTMLVideoElement = null;
+export class MatVolumeControlComponent extends BaseUiComponent {
 
   @Input() color: ThemePalette = 'primary';
 
@@ -20,10 +19,6 @@ export class MatVolumeControlComponent implements AfterViewInit, OnChanges {
   @Input() muted = false;
 
   @Output() mutedChanged = new EventEmitter<boolean>();
-
-  @Input() keyboard = true;
-
-  constructor(private evt: EventService) {}
 
   ngAfterViewInit(): void {
     this.updateMuted(false);

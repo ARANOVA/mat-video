@@ -312,4 +312,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.focused = $event;
   }
 
+  print($event) {
+    console.log($event)
+  }
 }

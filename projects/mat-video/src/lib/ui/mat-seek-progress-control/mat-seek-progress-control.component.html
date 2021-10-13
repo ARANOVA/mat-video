@@ -7,7 +7,15 @@
   (input)="seekVideo($event.value)"
 ></mat-slider-progress-bar>
 -->
-
+<!--
+<mat-progress-bar
+  mode="determinate"
+  [color]="color"
+  step="0.01"
+  [value]="curTimePercent"
+  [bufferValue]="bufTimePercent"
+></mat-progress-bar>
+-->
 <mat-slider
   [color]="color"
   min="0"
@@ -16,5 +24,4 @@
   [value]="curTimePercent"
   (input)="seekVideo($event.value)"
 >
-
 </mat-slider>

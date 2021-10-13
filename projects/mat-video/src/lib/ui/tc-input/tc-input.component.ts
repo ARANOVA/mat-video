@@ -10,7 +10,8 @@ import {
   Optional,
   Output,
   Self,
-  ViewChild
+  ViewChild,
+  forwardRef
 } from '@angular/core';
 import {
   AbstractControl,
@@ -18,8 +19,10 @@ import {
   FormBuilder,
   FormGroup,
   NgControl,
-  Validators
+  Validators,
+  NG_VALUE_ACCESSOR
 } from '@angular/forms';
+
 import { MAT_FORM_FIELD, MatFormField, MatFormFieldControl } from '@angular/material/form-field';
 import { Subject } from 'rxjs';
 
@@ -42,7 +45,14 @@ const pad = (n: any, width: number = 2, z: string = '0'): string => {
   selector: 'tc-input',
   templateUrl: 'tc-input.component.html',
   styleUrls: ['tc-input.component.scss'],
-  providers: [{ provide: MatFormFieldControl, useExisting: TcInputComponent }],
+  providers: [
+    { provide: MatFormFieldControl, useExisting: TcInputComponent },
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TcInputComponent),
+      multi: true
+    }
+  ],
   host: {
     '[class.input-floating]': 'shouldLabelFloat',
     '[id]': 'id',
@@ -209,7 +219,7 @@ export class TcInputComponent
   }
 
   onContainerClick($event) {
-    if ($event?.target) {
+    if ($event?.target && $event.target.select) {
       $event.target.select();
     }
     /*

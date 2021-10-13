@@ -5,7 +5,6 @@
 
   <div class="videoaspect">
     <video
-      crossorigin="*"
       #video
       class="video"
       [attr.autoplay]="autoplay ? true : null"
@@ -21,22 +20,23 @@
   </div>
 
   <div class="controls" *ngIf="videoLoaded" [ngClass]="getOverlayClass('visible ' + controlClass, 'hidden')">
+
     <div class="progress" [ngClass]="sliderClass">
+      <!-- [currentTime]="time" -->
       <mat-seek-progress-control
         [color]="color"
         [video]="video"
         [fps]="fps"
-        [currentTime]="time"
       ></mat-seek-progress-control>
     </div>
 
     <div class="menu">
       <div class="buttons">
+<!--           (playChanged)="playing = $event; playingState = $event" -->
         <mat-play-button
-          (playChanged)="playing = $event; playingState = $event"
           [video]="video"
           [keyboard]="keyboard && !focused"
-          [(play)]="playingState"
+          [play]="playingState"
           [style.order]="orderConfiguration.playButton"
         > </mat-play-button>
 
@@ -50,10 +50,10 @@
 
         <mat-volume-control
           *ngIf="showVolume"
+          [video]="video"
           [muted]="muted"
           (mutedChanged)="muted = $event; mutedChange.emit(muted)"
           [color]="color"
-          [video]="video"
           [keyboard]="keyboard && !focused"
           [style.order]="orderConfiguration.volumeControl"
         >
@@ -63,6 +63,7 @@
           [video]="video"
           [style.order]="orderConfiguration.timeControl"
         ></mat-time-control>
+        
         <mat-speed-control
           *ngIf="showSpeed"
           [video]="video"
@@ -71,7 +72,8 @@
           [speedIndex]="speedIndex"
           [style.order]="orderConfiguration.speedControl"
         ></mat-speed-control>
-        <div style="flex: 1" [style.order]="orderConfiguration.spacer"></div>
+        
+          <div style="flex: 1" [style.order]="orderConfiguration.spacer"></div>
 
         <mat-quality-control
           *ngIf="quality"
@@ -93,6 +95,7 @@
           [keyboard]="keyboard && !focused"
           [style.order]="orderConfiguration.fullscreenButton"
         ></mat-fullscreen-button>
+
       </div>
     </div>
 
@@ -100,24 +103,30 @@
       <mat-editor-control
         [color]="color"
         [video]="video"
-        [cuts]="cuts"
-        [marks]="marks"
         [fps]="fps"
         [keyboard]="keyboard && !focused"
-        [currentTime]="time"
         [editorButtons]="editorButtons"
+        [editorOrderButtons]="editorOrderButtons"
         [defaultCutType]="defaultCutType"
         [cutType]="cutType"
-        [editorOrderButtons]="editorOrderButtons"
+        [cuts]="cuts"
+        (cutEvent)="emitCutEvent($event)"
+        (focused)="emitFocus($event)"
         [selected]="selected"
+        (selectedChanged)="emitSelectedChange($event)"
+      ></mat-editor-control>
+      <!-- 
+        
+        
+        [marks]="marks"
         [selectedMarker]="selectedMarker"
         [playCut]="playCut"
-        (cutEvent)="emitCutEvent($event)"
+        
         (posterChanged)="emitPosterChange($event)"
-        (selectedChanged)="emitSelectedChange($event)"
-        (focused)="emitFocus($event)"
+        
+        
         (selectedMarkChanged)="emitSelectedMarkChange($event)"
-      ></mat-editor-control>
+      -->
     </div>
   </div>
 

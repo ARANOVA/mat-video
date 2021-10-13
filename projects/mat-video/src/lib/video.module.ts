@@ -9,12 +9,12 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { MatVideoSourceDirective } from './directives/mat-video-source.directive';
 import { MatVideoTrackDirective } from './directives/mat-video-track.directive';
 import { MinDirective } from './directives/min.directive';
 import { MaxDirective } from './directives/max.directive';
-import { MatSliderProgressBarComponent } from './internal/mat-slider-progress-bar/mat-slider-progress-bar.component';
 import { SecondsToTimePipe } from './pipes/seconds-to-time.pipe';
 import { PercentToTimePipe } from './pipes/percent-to-time.pipe';
 import { EventService } from './services/event.service';
@@ -39,7 +39,6 @@ import { TcInputComponent } from './ui/tc-input/tc-input.component';
     SecondsToTimePipe,
     PercentToTimePipe,
     MatVideoComponent,
-    MatSliderProgressBarComponent,
     MatPlayButtonComponent,
     MatVolumeControlComponent,
     MatDownloadButtonComponent,
@@ -69,7 +68,8 @@ import { TcInputComponent } from './ui/tc-input/tc-input.component';
     MatRadioModule,
     MatMenuModule,
     MatMenuModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatProgressBarModule
   ],
   exports: [
     MatVideoComponent,

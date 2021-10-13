@@ -1,5 +1,13 @@
-<mat-slider [color]="color" [min]="curMinPercent" [max]="curMaxPercent" step="0.1" [value]="curTimePercent" (input)="seekVideo($event.value, cuts)">
+<mat-slider
+    [color]="color"
+    [min]="curMinPercent"
+    [max]="curMaxPercent"
+    step="0.1"
+    [value]="curTimePercent"
+    (input)="seekVideo($event.value)"
+>
 </mat-slider>
+{{selected}}
 <div #trimmerBar class="cut-bar-wrapper" (click)="selectClip($event, null, cuts)">
     <div *ngIf="video.duration" class="cut-bar">
         <div *ngIf="curMinPercent > 0 || curMaxPercent < 100" class="textIn">
@@ -57,7 +65,10 @@
             </button>
             -->
         </div>
-        <button mat-icon-button (click)="setTcIn()" [style.order]="editorOrderButtons.tcinButton"
+        <button
+            mat-icon-button
+            (click)="setTcIn()"
+            [style.order]="editorOrderButtons.tcinButton"
             [disabled]="mode === 'tcout'">
             <mat-icon>skip_previous</mat-icon>
         </button>
@@ -78,7 +89,7 @@
             </mat-form-field>
         </div>
 
-        <mat-radio-group aria-label="Tipo de corte" [(ngModel)]="selectedCut.type" *ngIf="!cutType"
+        <mat-radio-group aria-label="Tipo de corte" [(ngModel)]="selectedCut.type" *ngIf="!defaultCutType"
             [style.order]="editorOrderButtons.typeCutSelector" class="px-2" [ngClass]="{'pl-0': editorOrderButtons.typeCutSelector == 0, 'pr-0': editorOrderButtons.typeCutSelector == 9}">
             <mat-radio-button [value]="'cut'" class="marr-16">Corte</mat-radio-button>
             <mat-radio-button [value]="'invalid'">Desechar</mat-radio-button>

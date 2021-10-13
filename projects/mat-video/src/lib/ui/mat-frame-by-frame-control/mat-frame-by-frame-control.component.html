@@ -1,16 +1,7 @@
-<!-- <button mat-icon-button (click)="seekFrames(-5)">
-  <mat-icon>skip_previous</mat-icon>
-</button>
--->
-<button mat-icon-button (click)="seekFrames(-1)" matTooltip="Rewind">
-  <mat-icon matBadge="--" [matBadgeHidden]="!mult" matBadgeColor="accent" matBadgeOverlap="true" matBadgeSize="small" matBadgePosition="above before">arrow_left</mat-icon>
+<button mat-icon-button (click)="seekFrames(-fps)" matTooltip="Rewind">
+  <mat-icon>arrow_left</mat-icon>
 </button>
 
-<button mat-icon-button (click)="seekFrames(1)" matTooltip="Forward">
-  <mat-icon matBadge="++" [matBadgeHidden]="!mult" matBadgeColor="accent" matBadgeOverlap="true" matBadgeSize="small" matBadgePosition="above after">arrow_right</mat-icon>
+<button mat-icon-button (click)="seekFrames(fps)" matTooltip="Forward">
+  <mat-icon>arrow_right</mat-icon>
 </button>
-<!-- 
-<button mat-icon-button (click)="seekFrames(5)">
-  <mat-icon>skip_next</mat-icon>
-</button>
--->

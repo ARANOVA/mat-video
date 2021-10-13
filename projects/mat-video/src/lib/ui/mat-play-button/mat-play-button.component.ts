@@ -1,15 +1,14 @@
-import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, Renderer2, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output, Renderer2, SimpleChanges } from '@angular/core';
 
 import { EventHandler } from '../../interfaces/event-handler.interface';
-import { EventService } from '../../services/event.service';
+import { BaseUiComponent } from '../base/base.component';
 
 @Component({
   selector: 'mat-play-button',
   templateUrl: './mat-play-button.component.html',
   styleUrls: ['./mat-play-button.component.scss']
 })
-export class MatPlayButtonComponent implements AfterViewInit, OnDestroy {
-  @Input() video: HTMLVideoElement;
+export class MatPlayButtonComponent extends BaseUiComponent {
 
   @Input()
   get play() {
@@ -17,33 +16,26 @@ export class MatPlayButtonComponent implements AfterViewInit, OnDestroy {
   }
 
   set play(val: boolean) {
-    val ? this.video.play() : this.video.pause();
+    if (val) {
+      var playPromise = this.video.play();
+      if (playPromise !== undefined) {
+        playPromise.then(_ => {})
+        .catch(error => {});
+      }
+    } else {
+      this.video.pause();
+    }
   }
 
   @Output() playChanged = new EventEmitter<boolean>();
 
-  @Input() keyboard = true;
-
-  private events: EventHandler[];
-
-  constructor(private renderer: Renderer2, private evt: EventService) {}
-  
-
-  ngAfterViewInit(): void {
-    this.events = [
-      { element: this.video, name: 'play', callback: event => this.setVideoPlayback(true), dispose: null },
-      { element: this.video, name: 'pause', callback: event => this.setVideoPlayback(false), dispose: null },
-      { element: this.video, name: 'durationchange', callback: event => this.setVideoPlayback(false), dispose: null },
-      { element: this.video, name: 'ended', callback: event => this.setVideoPlayback(false), dispose: null },
-      { element: this.video, name: 'click', callback: event => this.toggleVideoPlayback(), dispose: null }
-    ];
-
-    this.evt.addEvents(this.renderer, this.events);
-  }
-
-  ngOnDestroy(): void {
-    this.evt.removeEvents(this.events);
-  }
+  protected events: EventHandler[] = [
+    { element: null, name: 'play', callback: event => this.setVideoPlayback(true), dispose: null },
+    { element: null, name: 'pause', callback: event => this.setVideoPlayback(false), dispose: null },
+    { element: null, name: 'durationchange', callback: event => this.setVideoPlayback(false), dispose: null },
+    { element: null, name: 'ended', callback: event => this.setVideoPlayback(false), dispose: null },
+    { element: null, name: 'click', callback: event => this.toggleVideoPlayback(), dispose: null }
+  ]
 
   setVideoPlayback(value: boolean) {
     if (this.play !== value) {
@@ -57,21 +49,6 @@ export class MatPlayButtonComponent implements AfterViewInit, OnDestroy {
   }
 
   updateVideoPlayback(): void {
-    if (this.play) {
-      var playPromise = this.video.play();
-      if (playPromise !== undefined) {
-        playPromise.then(_ => {
-          // Automatic playback started!
-          // Show playing UI.
-        })
-        .catch(error => {
-          // Auto-play was prevented
-          // Show paused UI.
-        });
-      }
-    } else {
-      this.video.pause();
-    }
     this.playChanged.emit(this.play);
   }
 

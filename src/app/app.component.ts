@@ -1,6 +1,7 @@
 import { formatNumber } from '@angular/common';
-import { Component, VERSION } from '@angular/core';
+import { Component, VERSION, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import buildInfo from './../../package.json';
 
 @Component({
@@ -12,10 +13,15 @@ export class AppComponent {
   version = VERSION.full;
   appversion: string = buildInfo.version;
 
+  @ViewChild('video') video!: any;
+
   ngclass = 'mat-video-responsive';
 
-  src = 'assets/NASA.mp4';
-  // src = 'https://firebasestorage.googleapis.com/v0/b/r9---flyfut---dev.appspot.com/o/test-1%2Flow_1622632163798%7C1622632168355%7C1622632172696%7C1622632177082.mp4?alt=media&token=12e71b0f-e735-4f15-b6cc-87935b5e514b';
+  // CDN: 34.117.80.76:80
+
+  // src = 'assets/NASA.mp4';
+  src = 'https://firebasestorage.googleapis.com/v0/b/r9---flyfut---dev.appspot.com/o/test-1%2Flow_1622632163798%7C1622632168355%7C1622632172696%7C1622632177082.mp4?alt=media&token=12e71b0f-e735-4f15-b6cc-87935b5e514b';
+  // src = 'http://34.117.80.76:80/test-1/low_1622632163798%7C1622632168355%7C1622632172696%7C1622632177082.mp4?alt=media&token=12e71b0f-e735-4f15-b6cc-87935b5e514b';
   title = 'NASA Rocket Launch';
   width = 600;
   height = 337.5;
@@ -30,7 +36,7 @@ export class AppComponent {
   showFrameByFrame = true;
   controlClass = 'no-float';
   headerClass = 'nodisplay';
-  sliderClass = 'nodisplay';
+  sliderClass = 'nodisplay2';
   keyboard = true;
   color = 'primary';
   spinner = 'spin';
@@ -66,28 +72,30 @@ export class AppComponent {
     resetButton: 9
   }
 
+  speedManual = 1;
+
   marks = [
     {tcin: 1, tcout: 20, type: 'mark', idx: '222', selected: false, thumb: undefined},
     {tcin: 25, type: 'mark', idx: '22222222', selected: false, thumb: undefined},
   ];
 
   cuts = [
-      {tcin: 10, tcout: 20, type: 'invalid', idx: '2', selected: false, thumb: undefined},
-      {tcin: 25, tcout: 27, type: 'mark', idx: '2222', selected: false, thumb: undefined},
-      {tcin: 55, tcout: 58, type: 'audio', idx: '22222', selected: false, thumb: undefined},
-      {tcin: 45.04, tcout: 50, type: 'cut', idx: '1', selected: false}
+      // {tcin: 10, tcout: 20, type: 'invalid', idx: '2', selected: false, thumb: undefined},
+      // {tcin: 25, tcout: 27, type: 'mark', idx: '2222', selected: false, thumb: undefined},
+      // {tcin: 55, tcout: 58, type: 'audio', idx: '22222', selected: false, thumb: undefined},
+      // {tcin: 45.04, tcout: 50, type: 'cut', idx: '1', selected: false}
   ];
 
   initialcuts = this.cuts.map((cut: any) => { return {...cut} });
 
   defaultCutType = 'invalid';
-  cutType = 'cut';
+  cutType = 'invalid';
 
   selected = null;
   selectedMark = null;
   playCut = null;
-  speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 3, 5, 6];
-  speedIndex: number = 0;
+  speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4, 6, 8];
+  speedIndex: number = 2 ;
 
   form: FormGroup;
 
@@ -111,6 +119,16 @@ export class AppComponent {
       console.log("CHANGE TIME")
       this.currentTime = $event;
   }
+  
+  changeSpeed(speed: MatButtonToggleChange) {
+    console.log("SPEED", speed.value)
+    
+    if (speed.value >= 0.125 && speed.value<=8){
+      this.video.nativeElement.playbackRate = speed.value;
+    }
+
+  }
+
 
   editing;
   constructor() {
@@ -147,6 +165,7 @@ export class AppComponent {
     if ($event.type === 'add') {
       this.cuts.push({...$event.cut});
       this.cuts.sort((a, b) => a.tcin - b.tcin);
+      console.log("this.cuts", this.cuts)
     } else if ($event.type === 'tcin') {
       //this.cuts.push({...$event.cut});
     } else if ($event.type === 'restart') {
@@ -178,6 +197,19 @@ export class AppComponent {
 
   durationChanged($event: number) {
     console.log("DURATION:", $event);
+    const step = $event / 60;
+    for (let i = 0; i < 30; i++) {
+      this.cuts.push(
+        {
+          tcin: i * 2 * step,
+          tcout: i * 2 * step + 30,
+          type: 'cut',
+          idx: i.toString(),
+          selected: false,
+          thumb: undefined
+        }
+      );
+    }
   }
 
   deleteClip(cutidx: string): void {
@@ -195,6 +227,7 @@ export class AppComponent {
 
   selectedChanged($event: string | null, update: boolean = false) {
     console.log("selectedChanged");
+    this.selected = $event;
     this.cuts.forEach((cut: any, i: number) => {
       console.log("selectedChanged", $event, cut.idx, cut.idx == $event);
       if (cut.idx == $event) {

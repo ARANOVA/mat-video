@@ -3,10 +3,8 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'mat-quality-control',
   templateUrl: './mat-quality-control.component.html',
-  styleUrls: ['./mat-quality-control.component.scss']
+  styles: ['.quality{display:inline-block;font-size:12px;padding-left:12px;padding-right:12px;}']
 })
 export class MatQualityControlComponent {
   @Input() video: HTMLVideoElement;
-
-  constructor() {}
 }

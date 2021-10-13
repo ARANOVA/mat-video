@@ -1,57 +1,31 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, Renderer2 } from '@angular/core';
+import { Component, EventEmitter, Input, Output, Renderer2 } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
 import { EventHandler } from '../../interfaces/event-handler.interface';
 import { EventService } from '../../services/event.service';
+import { BaseUiComponent } from '../base/base.component';
 
 @Component({
   selector: 'mat-seek-progress-control',
   templateUrl: './mat-seek-progress-control.component.html',
-  styleUrls: ['./mat-seek-progress-control.component.scss']
+  styles: ['.mat-slider-horizontal {width: 100%;}']
 })
-export class MatSeekProgressControlComponent implements AfterViewInit, OnDestroy {
+export class MatSeekProgressControlComponent extends BaseUiComponent {
   curTimePercent = 0;
   bufTimePercent = 0;
 
-  @Input() video: HTMLVideoElement = null;
-
   @Input() color: ThemePalette = 'primary';
-
-  @Input() fps: number = 25;
 
   @Input() currentTime = 0;
 
-  @Output() currentTimeChanged = new EventEmitter<number>();
-
   @Input() bufferedTime = 0;
 
-  @Output() bufferedTimeChanged = new EventEmitter<number>();
-
-  private events: EventHandler[];
-
-  constructor(private renderer: Renderer2, private evt: EventService) {}
-
-  ngAfterViewInit(): void {
-    this.events = [
-      {
-        element: this.video, name: 'seeked', callback:
-          () => {
-            // Test
-            this.updateCurrentTime(this.video.currentTime);
-          }, dispose: null
-      },
-      // { element: this.video, name: 'seeked', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
-      { element: this.video, name: 'canplaythrough', callback: event => this.updateBufferedTime(), dispose: null },
-      { element: this.video, name: 'timeupdate', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
-      { element: this.video, name: 'progress', callback: event => this.updateBufferedTime(), dispose: null }
-    ];
-
-    this.evt.addEvents(this.renderer, this.events);
-  }
-
-  ngOnDestroy(): void {
-    this.evt.removeEvents(this.events);
-  }
+  protected events: EventHandler[] = [
+    { element: null, name: 'seeked', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null},
+    { element: null, name: 'canplaythrough', callback: event => this.updateBufferedTime(), dispose: null },
+    { element: null, name: 'timeupdate', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
+    { element: null, name: 'progress', callback: event => this.updateBufferedTime(), dispose: null }
+  ];
 
   seekVideo(value: number): void {
     const percentage = value / 100;
@@ -60,8 +34,7 @@ export class MatSeekProgressControlComponent implements AfterViewInit, OnDestroy
   }
 
   updateCurrentTime(time: number): void {
-    this.currentTime = time;
-    this.curTimePercent = this.updateTime(this.currentTimeChanged, this.currentTime);
+    this.curTimePercent = (time / this.video.duration) * 100;
   }
 
   updateBufferedTime(): void {
@@ -76,12 +49,8 @@ export class MatSeekProgressControlComponent implements AfterViewInit, OnDestroy
         }
       }
       this.bufferedTime = largestBufferValue;
-      this.bufTimePercent = this.updateTime(this.bufferedTimeChanged, this.bufferedTime);
+      this.bufTimePercent = (this.bufferedTime / this.video.duration) * 100;
     }
   }
 
-  updateTime(emitter: EventEmitter<number>, time: number): number {
-    emitter.emit(time);
-    return (time / this.video.duration) * 100;
-  }
 }

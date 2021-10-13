@@ -1,14 +1,9 @@
 import {
-  AfterViewInit,
   Component,
-  ElementRef,
   EventEmitter,
   HostListener,
   Input,
-  OnChanges,
-  OnDestroy,
   Output,
-  Renderer2,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
@@ -18,7 +13,7 @@ import { fromEvent } from 'rxjs';
 
 import { EventHandler } from '../../interfaces/event-handler.interface';
 import { ClipInterface } from '../../interfaces/clip.interface';
-import { EventService } from '../../services/event.service';
+import { BaseUiComponent } from '../base/base.component';
 
 
 const countDecimals = (value) => {
@@ -51,18 +46,13 @@ interface HashNumber {
   templateUrl: './mat-editor-control.component.html',
   styleUrls: ['./mat-editor-control.component.scss']
 })
-export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDestroy {
+export class MatEditorControlComponent extends BaseUiComponent {
 
-  private __events: EventHandler[];
   private __barWidth = 0;
   private __askFrame = true;
   private __videoSize: { w: number, h: number };
   private __focused: any;
   private __lastthumb: { thumb: string; idx: string | null } | null = { thumb: '', idx: null };
-
-  @Input() video: HTMLVideoElement = null;
-
-  @Input() fps: number = 25;
 
   @Input() color: ThemePalette = 'accent';
 
@@ -91,6 +81,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
 
   @Input() marks: any = [];
 
+  private _selected: string | null | undefined = null;
   @Input() selected: string | null | undefined;
 
   @Input() selectedMarker: string | null | undefined;
@@ -171,17 +162,19 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   keyboard$: any;
   x: number;
   y: number;
+  disabled: boolean = true;
   private _sub: any;
   private _sub2: any;
   ctrlKey: boolean = false;
   private __seek: any;
   private __interval: any;
 
-  constructor(
-    private renderer: Renderer2,
-    private evt: EventService,
-    private _el: ElementRef
-  ) { }
+  protected events: EventHandler[] = [
+    { element: null, name: 'seeking', callback: () => this.disabled = true, dispose: null },
+    { element: null, name: 'seeked', callback: () => {this.disabled = false; this.updateCurrentTime(this.video.currentTime)}, dispose: null },
+    { element: null, name: 'timeupdate', callback: () => this.updateCurrentTime(this.video.currentTime), dispose: null },
+    { element: null, name: 'loadeddata', callback: event => {this.disabled = false; this.getVideoSize(event)}, dispose: null }
+  ];
 
   private __delaySeek() {
     if (this.__seek) {
@@ -225,36 +218,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   ngAfterViewInit(): void {
-    this.__events = [
-      // { element: this.video, name: 'seeking', callback:
-      //     () => {
-      //       return this.updateCurrentTime(this.video.currentTime);
-      //     }, dispose: null
-      // },
-      {
-        element: this.video, name: 'seeked', callback:
-          () => {
-            // Test
-            this.updateCurrentTime(this.video.currentTime);
-            return;
-            const aux = this.getFrame(this.video.currentTime);
-            // TODO: limitar a no edición
-            if (aux) {
-              if (this.selectedCut) {
-                this.posterChanged.emit({ thumb: aux, idx: this.selectedCut.idx });
-              } else {
-                this.__lastthumb.thumb = aux;
-                this.posterChanged.emit(this.__lastthumb);
-              }
-            }
-          }, dispose: null
-      },
-      { element: this.video, name: 'timeupdate', callback: () => this.updateCurrentTime(this.video.currentTime), dispose: null },
-      { element: this.video, name: 'loadeddata', callback: event => this.getVideoSize(event), dispose: null }
-    ];
+    super.ngAfterViewInit();
     this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
-    this.evt.addEvents(this.renderer, this.__events);
-
     this.mousedown$ = fromEvent(this.trimmerBar.nativeElement, 'mousedown');
     this.mousemove$ = fromEvent(this.trimmerBar.nativeElement, 'mousemove');
     this.mouseup$ = fromEvent(this.trimmerBar.nativeElement, 'mouseup');
@@ -379,7 +344,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   private __createEmptyCut(): ClipInterface {
     return <ClipInterface>{
       tcin: this.inposition,
-      tcout: this.inposition,
+      tcout: this.inposition + 10,
       type: this.cutType ? this.cutType : this.defaultCutType,
       selected: true,
       idx: ''
@@ -387,21 +352,27 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
   }
 
   private __select(idx: string | null = null, collection: ClipInterface[]): boolean {
-    if (idx && collection) {
-      const index = collection.findIndex((cut: any) => cut.idx === idx);
-      if (index > -1) {
-        if (this.__interval) {
-          clearInterval(this.__interval);
+    if (collection) {
+      if (idx) {
+        const index = collection.findIndex((cut: any) => cut.idx === idx);
+        if (index > -1) {
+          if (this.__interval) {
+            clearInterval(this.__interval);
+          }
+          if (collection === this.cuts) {
+            this.selectedCut = collection[index];
+            this.mode = 'tc';
+            this.__askFrame = true;
+          }
+          this.seekVideo(collection[index].tcin / this.video.duration * 100, collection);
+          return true;
         }
-        if (collection === this.cuts) {
-          this.selectedCut = collection[index];
-          this.mode = 'tc';
-          this.__askFrame = true;
-        }
-        this.seekVideo(collection[index].tcin / this.video.duration * 100, collection);
-        return true;
+      } else {
+        collection.forEach((cut: any) => cut.selected = false);
+        this.selected = '';
       }
     }
+
     if (this.selectedCut && collection === this.cuts) {
       this.restart();
     }
@@ -418,11 +389,13 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     const inposition = this.tcinInput.value;
     this.inposition = tcin || cur || inposition;
     // console.log("tcin", tcin, this.inposition, cur, inposition, this.inposition, this.inposition !== prevTCin)
+    let created = false;
     if (!this.selectedCut) {
       this.selectedCut = this.__createEmptyCut();
-      this.outposition = tcin || roundFn(this.currentTime, 1 / this.fps, 0);
-    } else if (update) {
-      this.selectedCut.tcin = tcin || inposition;
+      created = true;
+    }
+    if (update) {
+      this.selectedCut.tcin = this.inposition;
       if (this.selectedCut.tcout && this.selectedCut.tcout < this.selectedCut.tcin) {
         this.selectedCut.tcout = this.selectedCut.tcin + prevTCin;
         if (this.selectedCut.tcout > this.video.duration) {
@@ -430,7 +403,7 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
         }
       }
       if (!tcin) {
-        this.outposition = roundFn(this.currentTime, 1 / this.fps, 0);
+        this.outposition = this.selectedCut.tcout;
         this.__lastthumb.idx = this.selectedCut.idx;
         this.posterChanged.emit(this.__lastthumb);
       }
@@ -447,6 +420,9 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
       }
     }
     this.mode = mode ? mode : 'tc';
+    if (created) {
+      this.setTcOut(false, this.selectedCut.tcout);
+    }
   }
 
   /**
@@ -571,6 +547,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
     }
     this.__select(idx, collection);
     if (collection === this.cuts) {
+      this.curMinPercent = 0;
+      this.curMaxPercent = 100;
       const index = collection.findIndex((cut: any) => cut.idx === idx);
       if (index > -1) {
         const tcin = collection[index].tcin;
@@ -592,9 +570,6 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
             this.curMaxPercent = max;
           }
         }
-      } else {
-        this.curMaxPercent = 100;
-        this.curMinPercent = 0;
       }
     }
     if (emit) {
@@ -651,8 +626,8 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
    * Destroy component
    */
   ngOnDestroy(): void {
+    super.ngOnDestroy();
     this.__unsub();
-    this.evt.removeEvents(this.__events);
   }
 
   /**
@@ -669,24 +644,20 @@ export class MatEditorControlComponent implements OnChanges, AfterViewInit, OnDe
    * 
    * @param value 
    */
-  seekVideo(value: number, collection: ClipInterface[], update: boolean = true): void {
-    // console.log("newTime", value)
+  seekVideo(value: number, collection?: ClipInterface[], update: boolean = true): void {
     if (isNaN(value)) {
       return;
     }
     const percentage = value / 100;
     const newTime = this.video.duration * percentage;
-    if (newTime === this.currentTime) {
-      return;
-    }
+    this.video.currentTime = newTime;
     if (!this.__lastthumb.thumb && collection == this.cuts) {
       this.__askFrame = true;
     }
-    // console.log("newTime", newTime)
-    this.video.currentTime = newTime;
-    if (!update) {
+    if (!update || !collection || collection.length === 0) {
       return;
     }
+    console.log("SEEK", this.selectedCut)
     const roundedTime = roundFn(this.video.currentTime, 1 / this.fps, 0);
     if (this.selectedCut && collection === this.cuts) {
       if (this.mode === 'tcin') {

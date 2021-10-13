@@ -3,11 +3,10 @@ import { Component, OnInit, Input } from '@angular/core';
 @Component({
   selector: 'mat-download-button',
   templateUrl: './mat-download-button.component.html',
-  styleUrls: ['./mat-download-button.component.scss']
+  styles: ['a {color: inherit;text-decoration:none;}']
 })
 export class MatDownloadButtonComponent {
   @Input() video: HTMLVideoElement;
   @Input() title: string;
 
-  constructor() {}
 }
