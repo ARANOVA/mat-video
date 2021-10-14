@@ -33,6 +33,7 @@ import { MatEditorControlComponent } from './ui/mat-editor-control/mat-editor-co
 import { MatVideoComponent } from './video.component';
 import { MatInputTimeFormatDirective } from './directives/mat-time-format.directive';
 import { TcInputComponent } from './ui/tc-input/tc-input.component';
+import { BaseUiComponent } from './ui/base/base.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { TcInputComponent } from './ui/tc-input/tc-input.component';
     MatSpeedControlComponent,
     MatEditorControlComponent,
     MatInputTimeFormatDirective,
-    TcInputComponent
+    TcInputComponent,
+    BaseUiComponent
   ],
   imports: [
     CommonModule,

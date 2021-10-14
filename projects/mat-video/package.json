@@ -1,6 +1,6 @@
 {
   "name": "mat-video",
-  "version": "2.13.4",
+  "version": "2.15.0",
   "description": "mat-video is an Angular 11+ video player using Material",
   "license": "MIT",
   "private": false,

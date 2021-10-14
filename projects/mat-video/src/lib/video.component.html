@@ -114,19 +114,12 @@
         (focused)="emitFocus($event)"
         [selected]="selected"
         (selectedChanged)="emitSelectedChange($event)"
-      ></mat-editor-control>
-      <!-- 
-        
-        
-        [marks]="marks"
-        [selectedMarker]="selectedMarker"
         [playCut]="playCut"
-        
-        (posterChanged)="emitPosterChange($event)"
-        
-        
+        [marks]="marks"         
+        [selectedMarker]="selectedMarker"
         (selectedMarkChanged)="emitSelectedMarkChange($event)"
-      -->
+        (posterChanged)="emitPosterChange($event)"
+      ></mat-editor-control>
     </div>
   </div>
 

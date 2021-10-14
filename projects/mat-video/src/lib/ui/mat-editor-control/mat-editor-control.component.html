@@ -7,7 +7,6 @@
     (input)="seekVideo($event.value)"
 >
 </mat-slider>
-{{selected}}
 <div #trimmerBar class="cut-bar-wrapper" (click)="selectClip($event, null, cuts)">
     <div *ngIf="video.duration" class="cut-bar">
         <div *ngIf="curMinPercent > 0 || curMaxPercent < 100" class="textIn">
@@ -54,6 +53,7 @@
                     (focus)="focus(true)" (blur)="focus(false)" /> -->
                 <tc-input [(value)]="inposition" placeholder="00:00" required
                     #tcinInput (focus)="focus(true)" (blur)="focus(false)"
+                    (keyup)="keyup('tcin', $event)"
                 ></tc-input>
             </mat-form-field>
             <!--
@@ -85,6 +85,7 @@
                     (focus)="focus(true)" (blur)="focus(false)"/> -->
                 <tc-input [(value)]="outposition" placeholder="00:00" required
                     #tcoutInput (focus)="focus(true)" (blur)="focus(false)"
+                    (keyup)="keyup('tcout', $event)"
                 ></tc-input>
             </mat-form-field>
         </div>

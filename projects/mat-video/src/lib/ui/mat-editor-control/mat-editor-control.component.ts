@@ -235,8 +235,6 @@ export class MatEditorControlComponent extends BaseUiComponent {
       if (!this.ctrlKey) {
         return;
       }
-      // console.log("MOUSE DOWN", e.x, e.y, this.trimmerBar.nativeElement.getBoundingClientRect())
-      //this.__register();
       this.x = e.x;
       this.y = e.y;
       const rect = this.trimmerBar.nativeElement.getBoundingClientRect();
@@ -264,13 +262,9 @@ export class MatEditorControlComponent extends BaseUiComponent {
     this.__register();
   }
 
-  // @HostListener('window:keydown', ['$event'])
-  // keyEvent(event: KeyboardEvent) {
-  //   console.log("KEY", event);
-  // }
-
-  @HostListener('window:keyup.control', ['$event'])
+  @HostListener('window:keyup', ['$event'])
   up($event: KeyboardEvent) {
+    // console.log("UP", $event.key)
     if ($event.key === 'Control' || $event.key === 'Meta') {
       this.ctrlKey = false;
     }
@@ -279,6 +273,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
 
   @HostListener('window:keydown', ['$event'])
   down($event: KeyboardEvent) {
+    // console.log("dOWN", $event.key)
     if ($event.key === 'Control' || $event.key === 'Meta') {
       this.ctrlKey = true;
     }
@@ -304,7 +299,19 @@ export class MatEditorControlComponent extends BaseUiComponent {
 
   @HostListener('window:keydown.delete', ['$event'])
   delete($event: any) {
-    // console.log(!this.keyboard, !this.selectedCut, !this.selectedCut.idx)
+    if (!this.keyboard || !this.selectedCut) {
+      return;
+    }
+    if (this.mode !== 'tcin' && !this.selectedCut.idx) {
+      this.restart();
+    } else if (this.selectedCut.idx) {
+      this.removeCut();
+    }
+  }
+
+
+  //@HostListener('window:keydown.enter', ['$event'])
+  add($event: any) {
     if (!this.keyboard || !this.selectedCut) {
       return;
     }
@@ -388,7 +395,6 @@ export class MatEditorControlComponent extends BaseUiComponent {
     const cur = roundFn(this.currentTime, 1 / this.fps, 0);
     const inposition = this.tcinInput.value;
     this.inposition = tcin || cur || inposition;
-    // console.log("tcin", tcin, this.inposition, cur, inposition, this.inposition, this.inposition !== prevTCin)
     let created = false;
     if (!this.selectedCut) {
       this.selectedCut = this.__createEmptyCut();
@@ -407,7 +413,6 @@ export class MatEditorControlComponent extends BaseUiComponent {
         this.__lastthumb.idx = this.selectedCut.idx;
         this.posterChanged.emit(this.__lastthumb);
       }
-      // console.log("prevTCin", prevTCin, tcin, this.selectedCut.tcin)
       this.seekVideo(this.selectedCut.tcin / this.video.duration * 100, this.cuts, !!!tcin || this.inposition !== prevTCin);
     }
     if (!tcin) {
@@ -657,7 +662,6 @@ export class MatEditorControlComponent extends BaseUiComponent {
     if (!update || !collection || collection.length === 0) {
       return;
     }
-    console.log("SEEK", this.selectedCut)
     const roundedTime = roundFn(this.video.currentTime, 1 / this.fps, 0);
     if (this.selectedCut && collection === this.cuts) {
       if (this.mode === 'tcin') {
@@ -730,23 +734,26 @@ export class MatEditorControlComponent extends BaseUiComponent {
     if (this.__focused) {
       clearTimeout(this.__focused);
     }
-    if (!this.keyboard) {
-      return;
-    }
+    // console.log("UP", event.key, input, this.tcoutInput.value)
+    // if (!this.keyboard) {
+    //   return;
+    // }
     if (event.key === 'Enter') { // Solo numérico
       if (input === 'tcin') {
         const inposition = this.tcinInput.value;
         this.seekVideo(inposition / this.video.duration * 100, this.cuts);
         this.setTcIn(true, inposition);
-        this.tcoutInput.nativeElement.focus();
-        setTimeout(() => this.tcoutInput.nativeElement.select(), 100);
+        this.tcoutInput.focused = true;
+        setTimeout(() => this.tcoutInput.mmInput.nativeElement.select(), 100);
         this.outposition = roundFn(this.video.currentTime, 1 / this.fps, 0);
       } else {
-        if (this.mode !== 'tcout') {
-          this.setTcIn(false);
-        }
+        // if (this.mode !== 'tcout') {
+        //   this.setTcIn(false);
+        // }
+        this.outposition = this.tcoutInput.value;
         this.seekVideo(this.outposition / this.video.duration * 100, this.cuts);
-        this.setTcOut();
+        this.setTcOut(true, this.outposition);
+        this.addCut();
       }
     } else {
       this.__focused = setTimeout(() => {

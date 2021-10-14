@@ -1,3 +1,8 @@
+# 2.15.0 (2021-10-14)
+
+### Features:
+- rewrite all components
+
 # 2.13.4 (2021-10-11)
 
 ### Features:

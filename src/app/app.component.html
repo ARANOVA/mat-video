@@ -224,10 +224,16 @@
           (playChange)="playEvent($event)"
           [(time)]="currentTime"
           (cutEvent)="cutEvent($event)"
+          [defaultCutType]="defaultCutType"
           [cutType]="cutType"
           [cuts]="cuts"
           [selected]="selected"
           (selectedChanged)="selectedChanged($event)"
+          [playCut]="playCut"
+          [marks]="marks"         
+          [selectedMarker]="selectedMarker"
+          (selectedMarkChanged)="selectedMarkChanged($event)"
+          (posterChanged)="posterChanged($event)"
           >
         </mat-video>
         <!--
@@ -235,17 +241,15 @@
           
           
           
-          (posterChanged)="posterChanged($event)"
-          [playCut]="playCut"
+          
+          
           
           
           (durationChanged)="durationChanged($event)"
 [(time)]="currentTimeChange" -->
 <!--
-            [defaultCutType]="defaultCutType"
-          [marks]="marks"         
-          [selectedMarker]="selectedMark"
-          (selectedMarkChanged)="selectedMarkChanged($event)"
+            
+          
 
 -->
        <!-- <app-test-form class="w-1/2" *ngIf="form"
@@ -263,8 +267,7 @@
         selectedcut: {{selected}}
       </span>
         <ul>
-          <li *ngFor="let cut of cuts; let i = index">
-            <img *ngIf="cut.thumb" [src]="cut.thumb" style="width: 240px;height: 135px" />
+          <li *ngFor="let cut of cuts; let i = index" (dblclick)="doubleClick($event, cut.idx, i)">
             {{ cut.tcin }} - {{ cut.tcout}} ({{ cut.idx }}) {{cut.selected}}
             <button (click)="deleteClip(cut.idx)">Borrar</button>
             <button (click)="selectCut(null, i)">Select</button>

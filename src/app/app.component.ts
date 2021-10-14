@@ -75,8 +75,8 @@ export class AppComponent {
   speedManual = 1;
 
   marks = [
-    {tcin: 1, tcout: 20, type: 'mark', idx: '222', selected: false, thumb: undefined},
-    {tcin: 25, type: 'mark', idx: '22222222', selected: false, thumb: undefined},
+    // {tcin: 1, tcout: 20, type: 'mark', idx: '222', selected: false, thumb: undefined},
+    // {tcin: 25, type: 'mark', idx: '22222222', selected: false, thumb: undefined},
   ];
 
   cuts = [
@@ -92,7 +92,7 @@ export class AppComponent {
   cutType = 'invalid';
 
   selected = null;
-  selectedMark = null;
+  selectedMarker = null;
   playCut = null;
   speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4, 6, 8];
   speedIndex: number = 2 ;
@@ -165,7 +165,6 @@ export class AppComponent {
     if ($event.type === 'add') {
       this.cuts.push({...$event.cut});
       this.cuts.sort((a, b) => a.tcin - b.tcin);
-      console.log("this.cuts", this.cuts)
     } else if ($event.type === 'tcin') {
       //this.cuts.push({...$event.cut});
     } else if ($event.type === 'restart') {
@@ -248,7 +247,7 @@ export class AppComponent {
       if (cut.idx == $event) {
         this.marks[i].selected = true;
         if (update) {
-          this.selectedMark = i;
+          this.selectedMarker = i;
         }
       } else {
         cut.selected = false;
@@ -258,9 +257,7 @@ export class AppComponent {
 
   deSelect() {
     this.selected = null;
-    this.cuts.forEach((cut: any) => {
-      cut.selected = false;
-    });
+    this.cuts.forEach((cut: any) => cut.selected = false);
   }
 
   selectCut($event: MouseEvent, idx: number) {
@@ -276,7 +273,7 @@ export class AppComponent {
       cut.selected = idx === i;
     });
     // "Emit" selected
-    setTimeout(() => this.selectedMark = this.marks[idx].idx, 0);
+    setTimeout(() => this.selectedMarker = this.marks[idx].idx, 0);
   }
 
 
@@ -287,17 +284,13 @@ export class AppComponent {
    * @param idx 
    * @param emit 
    */
-   doubleClick($event: MouseEvent, cutidx: string | null = null) {
+  doubleClick($event: MouseEvent, cutidx: string | null = null, i: number) {
     if ($event) {
       $event.stopPropagation();
     }
-    const idx = this.cuts.findIndex((cut: any) => {
-      return cut.idx === cutidx;
-    });
-    if (idx > -1) {
-      // "Emit" double click
-      setTimeout(() => this.playCut = this.cuts[idx].idx, 0);
-    }
+    this.selectCut(this.cuts[i], i);
+    // "Emit" double click
+    setTimeout(() => this.playCut = this.cuts[i].idx, 0);
   }
 
   playEvent($event: boolean) {
