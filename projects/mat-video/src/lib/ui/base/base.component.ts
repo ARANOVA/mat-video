@@ -29,7 +29,9 @@ export class BaseUiComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy(): void {
-    this.evt.removeEvents(this.events);
+    if (this.events) {
+      this.evt.removeEvents(this.events);
+    }
   }
 
 }

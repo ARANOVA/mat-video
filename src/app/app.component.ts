@@ -197,8 +197,9 @@ export class AppComponent {
   durationChanged($event: number) {
     console.log("DURATION:", $event);
     const step = $event / 60;
+    const cuts = [];
     for (let i = 0; i < 30; i++) {
-      this.cuts.push(
+      cuts.push(
         {
           tcin: i * 2 * step,
           tcout: i * 2 * step + 30,
@@ -209,6 +210,7 @@ export class AppComponent {
         }
       );
     }
+    setTimeout(() => this.cuts = cuts, 300);
   }
 
   deleteClip(cutidx: string): void {
