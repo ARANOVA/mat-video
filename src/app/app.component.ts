@@ -1,5 +1,5 @@
 import { formatNumber } from '@angular/common';
-import { Component, VERSION, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, VERSION, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import buildInfo from './../../package.json';
@@ -9,7 +9,27 @@ import buildInfo from './../../package.json';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
+  @ViewChild('trimmerBar') trimmerBar;
+  private __barWidth = 0;
+  fps = 25;
+  /**
+   * Current time percent
+   */
+  curTimePercent = 0;
+
+  /**
+   * Current time min percent
+   */
+  curMinPercent = 0;
+
+  /**
+   * Current time max percent
+   */
+  curMaxPercent = 100;
+  selectedCut: any = null;
+  private __videoduration: number;
+
   version = VERSION.full;
   appversion: string = buildInfo.version;
 
@@ -80,13 +100,13 @@ export class AppComponent {
   ];
 
   cuts = [
-      // {tcin: 10, tcout: 20, type: 'invalid', idx: '2', selected: false, thumb: undefined},
-      // {tcin: 25, tcout: 27, type: 'mark', idx: '2222', selected: false, thumb: undefined},
-      // {tcin: 55, tcout: 58, type: 'audio', idx: '22222', selected: false, thumb: undefined},
-      // {tcin: 45.04, tcout: 50, type: 'cut', idx: '1', selected: false}
+    // {tcin: 10, tcout: 20, type: 'invalid', idx: '2', selected: false, thumb: undefined},
+    // {tcin: 25, tcout: 27, type: 'mark', idx: '2222', selected: false, thumb: undefined},
+    // {tcin: 55, tcout: 58, type: 'audio', idx: '22222', selected: false, thumb: undefined},
+    // {tcin: 45.04, tcout: 50, type: 'cut', idx: '1', selected: false}
   ];
 
-  initialcuts = this.cuts.map((cut: any) => { return {...cut} });
+  initialcuts = this.cuts.map((cut: any) => { return { ...cut } });
 
   defaultCutType = 'invalid';
   cutType = 'invalid';
@@ -95,7 +115,7 @@ export class AppComponent {
   selectedMarker = null;
   playCut = null;
   speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4, 6, 8];
-  speedIndex: number = 2 ;
+  speedIndex: number = 2;
 
   form: FormGroup;
 
@@ -106,7 +126,7 @@ export class AppComponent {
      * 
      * @return {number}
      */
-   public get currentTimeChange(): number {
+  public get currentTimeChange(): number {
     return this.currentTime;
   }
 
@@ -116,14 +136,14 @@ export class AppComponent {
    * @param {number} $event 
    */
   public set currentTimeChange($event: number) {
-      console.log("CHANGE TIME")
-      this.currentTime = $event;
+    console.log("CHANGE TIME")
+    this.currentTime = $event;
   }
-  
+
   changeSpeed(speed: MatButtonToggleChange) {
     console.log("SPEED", speed.value)
-    
-    if (speed.value >= 0.125 && speed.value<=8){
+
+    if (speed.value >= 0.125 && speed.value <= 8) {
       this.video.nativeElement.playbackRate = speed.value;
     }
 
@@ -149,7 +169,10 @@ export class AppComponent {
         tcin: new FormControl(),
       })
     });
-    this.form.patchValue({metadata: { tcin: 10.4 } })
+    this.form.patchValue({ metadata: { tcin: 10.4 } })
+  }
+  ngAfterViewInit(): void {
+    this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
   }
 
   private __remove(idx: string): boolean {
@@ -163,7 +186,7 @@ export class AppComponent {
   cutEvent($event: any) {
     console.log('CUT EVENT', $event);
     if ($event.type === 'add') {
-      this.cuts.push({...$event.cut});
+      this.cuts.push({ ...$event.cut });
       this.cuts.sort((a, b) => a.tcin - b.tcin);
     } else if ($event.type === 'tcin') {
       //this.cuts.push({...$event.cut});
@@ -179,7 +202,7 @@ export class AppComponent {
     }
   }
 
-  posterChanged($event: {thumb: string, idx: string | null}) {
+  posterChanged($event: { thumb: string, idx: string | null }) {
     console.log("posterChanged", $event.idx)
     if ($event.idx === null) {
       this.poster = $event.thumb;
@@ -195,6 +218,7 @@ export class AppComponent {
   }
 
   durationChanged($event: number) {
+    this.__videoduration = $event;
     console.log("DURATION:", $event);
     const step = $event / 60;
     const cuts = [];
@@ -216,13 +240,13 @@ export class AppComponent {
   deleteClip(cutidx: string): void {
     console.log("deleteClip", cutidx)
     if (cutidx) {
-        const idx = this.cuts.findIndex((cut: any) => {
-            return cut.idx === cutidx;
-        });
-        if (idx > -1) {
-            this.cuts.splice(idx, 1);
-        }
-        console.log(idx, this.cuts);
+      const idx = this.cuts.findIndex((cut: any) => {
+        return cut.idx === cutidx;
+      });
+      if (idx > -1) {
+        this.cuts.splice(idx, 1);
+      }
+      console.log(idx, this.cuts);
     }
   }
 
@@ -314,13 +338,139 @@ export class AppComponent {
   }
 
   getVideoTitle(video: any, force: boolean = false) {
-      if (!video.title || video.title.startsWith('gen:') || force) {
-          return `${video.type == 'cut' ? 'Corte' : video.type == 'audio' ? 'Narración' : 'Descarte'} de ` +
-              `${formatNumber(video.tcin, 'es', '2.2-2')} a ` +
-              `${formatNumber(video.tcout, 'es', '2.2-2')} ` +
-              `(${formatNumber(this.getDuration(video), 'es', '0.0-2')} segundos)`;
-      }
-      return video.title;
+    if (!video.title || video.title.startsWith('gen:') || force) {
+      return `${video.type == 'cut' ? 'Corte' : video.type == 'audio' ? 'Narración' : 'Descarte'} de ` +
+        `${formatNumber(video.tcin, 'es', '2.2-2')} a ` +
+        `${formatNumber(video.tcout, 'es', '2.2-2')} ` +
+        `(${formatNumber(this.getDuration(video), 'es', '0.0-2')} segundos)`;
+    }
+    return video.title;
   }
+
+
+
+
+
+
+  /**
+   * Perforrmance loop
+   * 
+   * @param {number} index 
+   * @param {any} cut 
+   * @returns {string}
+   */
+  trackByCuts(index: number, cut: any): string {
+    return cut.idx;
+  }
+
+  /**
+   * Get left position of cut block (UI)
+   * 
+   * @param {number} tcin               the tc input value
+   * @param {number | undefined} tcout  the tc output value
+   * @returns {number}
+   */
+  getStartCut(tcin: number, tcout?: number): number {
+    if (!this.trimmerBar || !this.__barWidth || !this.__videoduration) {
+      return 0;
+    }
+    this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
+    if (tcout) {
+      // Hacer media, es una marca
+      tcin = tcin + (tcout - tcin) / 2;
+    }
+    const curPercent = (tcin / this.__videoduration) * 100;
+    return Math.round((curPercent - this.curMinPercent) * this.__barWidth / (this.curMaxPercent - this.curMinPercent));
+  }
+
+  /**
+   * Get width of cut block (UI)
+   * 
+   * @param {number} tcin               the tc input value
+   * @param {number | undefined} tcout  the tc output value
+   * @returns {number}
+   */
+  getWidthCut(tcin: number, tcout?: number): number {
+    if (!this.trimmerBar) {
+      return 0;
+    }
+    if (!tcout || tcout > this.__videoduration + 1 / this.fps) {
+      return 2;
+    }
+    this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
+    const max = Math.min(tcout, this.__videoduration);
+    const w = (max / this.__videoduration) * this.__barWidth;
+    const l = (tcin / this.__videoduration) * this.__barWidth;
+    return Math.round(Math.max(2, (w - l) * (100 / (this.curMaxPercent - this.curMinPercent))));
+  }
+
+  /**
+   * Return list of class  for the block
+   * 
+   * @param {ClipInterface} cut             the cut
+   * @param {string | undefined} forceCls   the forced class (from HTML loop)
+   * @returns {string[]}
+   */
+  getClassCut(cut: any, forceCls?: string): string[] {
+    const cls = [forceCls ? forceCls : (cut.type === 'mark' ? 'cut' : cut.type)];
+    if (cut.selected) {
+      cls.push('selected');
+    }
+    if (!cut.idx) {
+      cls.push('editing');
+    }
+    return cls;
+  }
+
+
+  // /**
+  //  * Select / Deselect current cut
+  //  * 
+  //  * @param $event 
+  //  * @param idx 
+  //  * @param emit 
+  //  */
+  //  selectClip($event: MouseEvent, idx: string | null = null, collection: any[], emit: boolean = true) {
+  //   if ($event) {
+  //     $event.stopPropagation();
+  //   }
+  //   if (!collection || this.ctrlKey) {
+  //     return;
+  //   }
+  //   this.__select(idx, collection);
+  //   if (collection === this.cuts) {
+  //     this.curMinPercent = 0;
+  //     this.curMaxPercent = 100;
+  //     const index = collection.findIndex((cut: any) => cut.idx === idx);
+  //     if (index > -1) {
+  //       const tcin = collection[index].tcin;
+  //       const tcout = collection[index].tcout;
+  //       if (tcin > 0 && this.video.duration) {
+  //         const min = Math.round(tcin * 100 / this.video.duration) - 10;
+  //         if (min < 0) {
+  //           this.curMinPercent = 0;
+  //         } else {
+  //           this.curMinPercent = min;
+  //         }
+  //       }
+  //       if (tcout < this.video.duration) {
+  //         const max = Math.round(tcout * 100 / this.video.duration) + 10;
+  //         if (max > 100) {
+  //           this.curMaxPercent = 100;
+  //           //this.curMinPercent = (100 - max)
+  //         } else {
+  //           this.curMaxPercent = max;
+  //         }
+  //       }
+  //     }
+  //   }
+  //   if (emit) {
+  //     if (collection === this.cuts) {
+  //       setTimeout(() => this.selectedChanged.emit(idx), 0);
+  //     } else {
+  //       setTimeout(() => this.selectedMarkChanged.emit(idx), 0);
+  //     }
+  //   }
+  // }
 
 }

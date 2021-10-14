@@ -31,6 +31,6 @@
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
     "preserveWhitespaces": false,
-    "enableIvy": false
+    "enableIvy": true
   }
 }

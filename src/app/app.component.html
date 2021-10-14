@@ -174,7 +174,7 @@
       <div class="flex flex-row w-full videofull" style="" *ngIf="src">
           <video #video [src]="src" width="100%" controls></video>
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-col w-full">
         <mat-button-toggle-group name="speed" aria-label="speed" [value]="speedManual" (change)="changeSpeed($event)">
           <mat-button-toggle value="1">1</mat-button-toggle>
           <mat-button-toggle value="2">2</mat-button-toggle>
@@ -182,7 +182,79 @@
           <mat-button-toggle value="6">6</mat-button-toggle>
           <mat-button-toggle value="8">8</mat-button-toggle>
         </mat-button-toggle-group>
-        
+
+        <div class="editor">
+          <mat-editor-control
+            [color]="color"
+            [video]="video"
+            [fps]="fps"
+            [keyboard]="keyboard && !focused"
+            [editorButtons]="editorButtons"
+            [editorOrderButtons]="editorOrderButtons"
+            [defaultCutType]="defaultCutType"
+            [cutType]="cutType"
+            [cuts]="cuts"
+            (cutEvent)="emitCutEvent($event)"
+            (focused)="emitFocus($event)"
+            [selected]="selected"
+            (selectedChanged)="emitSelectedChange($event)"
+            [playCut]="playCut"
+            [marks]="marks"         
+            [selectedMarker]="selectedMarker"
+            (selectedMarkChanged)="emitSelectedMarkChange($event)"
+            (posterChanged)="emitPosterChange($event)"
+          ></mat-editor-control>
+        </div>
+
+        <div class="editor">
+          <mat-slider
+    [color]="color"
+    [min]="curMinPercent"
+    [max]="curMaxPercent"
+    step="0.1"
+    [value]="curTimePercent"
+    (input)="seekVideo($event.value)"
+>
+
+</mat-slider>
+        <div #trimmerBar class="cut-bar-wrapper mt-2">
+          <div *ngIf="videoduration" class="cut-bar">
+            <div *ngIf="curMinPercent > 0 || curMaxPercent < 100" class="textIn">
+                <div class="l"></div>
+                <div class="text">{{ curMinPercent | percentToTime:video.duration }}</div>
+            </div>
+      
+              <ng-container *ngFor="let cut of cuts; let idx=index; trackBy: trackByCuts">
+                <div
+                  [ngClass]="getClassCut(cut)"
+                  [ngStyle]="{'left.px': getStartCut(cut.tcin), 'width.px': getWidthCut(cut.tcin, cut.tcout)}"
+                  >
+              </div>
+              </ng-container>
+      
+              <ng-container *ngIf="selectedCut && !selectedCut.idx">
+                  <div 
+                    [ngClass]="getClassCut(selectedCut)"
+                    [ngStyle]="{'left.px': getStartCut(selectedCut.tcin), 'width.px': getWidthCut(selectedCut.tcin, selectedCut.tcout)}">
+                  </div>
+              </ng-container>
+      
+              <ng-container *ngFor="let mark of marks; let idx=index">
+                  <div
+                    [ngStyle]="{'left.px': getStartCut(mark.tcin), 'width.px': getWidthCut(mark.tcin, mark.tcout)}"
+                    [ngClass]="getClassCut(mark, 'mark')">
+                      <div>
+                          <div class="line"></div>
+                          <div class="ball"
+                            ></div>
+                      </div>
+                  </div>
+              </ng-container>
+
+            </div>
+      
+      </div>
+      
       </div>
     </div>
   </div>
@@ -218,7 +290,7 @@
           [showSpeed]="showSpeed" 
           [speedScale]="speedScale"
           [speedIndex]="speedIndex"
-          [editor]="editor"
+          [editor]="false"
           [editorButtons]="editorButtons"       
           [playingState]="playingState"
           (playChange)="playEvent($event)"

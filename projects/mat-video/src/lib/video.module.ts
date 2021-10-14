@@ -31,7 +31,6 @@ import { MatVolumeControlComponent } from './ui/mat-volume-control/mat-volume-co
 import { MatSpeedControlComponent } from './ui/mat-speed-control/mat-speed-control.component';
 import { MatEditorControlComponent } from './ui/mat-editor-control/mat-editor-control.component';
 import { MatVideoComponent } from './video.component';
-import { MatInputTimeFormatDirective } from './directives/mat-time-format.directive';
 import { TcInputComponent } from './ui/tc-input/tc-input.component';
 import { BaseUiComponent } from './ui/base/base.component';
 
@@ -55,7 +54,6 @@ import { BaseUiComponent } from './ui/base/base.component';
     MatFrameByFrameControlComponent,
     MatSpeedControlComponent,
     MatEditorControlComponent,
-    MatInputTimeFormatDirective,
     TcInputComponent,
     BaseUiComponent
   ],
@@ -76,8 +74,7 @@ import { BaseUiComponent } from './ui/base/base.component';
   exports: [
     MatVideoComponent,
     MatVideoSourceDirective,
-    MatVideoTrackDirective,
-    MatInputTimeFormatDirective
+    MatVideoTrackDirective
   ],
   providers: [FullscreenService, EventService]
 })
