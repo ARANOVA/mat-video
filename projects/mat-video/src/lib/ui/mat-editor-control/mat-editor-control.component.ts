@@ -491,6 +491,10 @@ export class MatEditorControlComponent extends BaseUiComponent {
     this.restart(false);
   }
 
+  trackByCuts(index: number, cut: any): string {
+    return cut.idx;
+  }
+
   /**
    * Return list of class  for the block
    * 
