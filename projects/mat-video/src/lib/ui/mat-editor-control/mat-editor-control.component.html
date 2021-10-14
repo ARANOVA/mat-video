@@ -13,8 +13,6 @@
             <div class="l"></div>
             <div class="text">{{ curMinPercent | percentToTime:video.duration }}</div>
         </div>
-<!--
-    
 
         <ng-container *ngFor="let cut of cuts; let idx=index; trackBy: trackByCuts">
         <div
@@ -40,7 +38,7 @@
                 </div>
             </div>
         </ng-container>
--->
+
         <div *ngIf="curMinPercent > 0 || curMaxPercent < 100" class="textOut">
             <div class="l"></div>
             <div class="text">{{ curMaxPercent | percentToTime:video.duration }}</div>

@@ -22,22 +22,12 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
-import { TestFormComponent } from './form/test-form/test-form.component';
 registerLocaleData(localeEs);
 import { ReactiveFormsModule } from '@angular/forms';
-import { PercentToTimePipe } from './pipes/percent-to-time.pipe';
-import { SecondsToTimePipe } from './pipes/seconds-to-time.pipe';
-import { MatEditorControlComponent } from './components/mat-editor-control/mat-editor-control.component';
-import { TcInputComponent } from 'mat-video/lib/ui/tc-input/tc-input.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    TestFormComponent,
-    PercentToTimePipe,
-    SecondsToTimePipe,
-    MatEditorControlComponent,
-    TcInputComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,

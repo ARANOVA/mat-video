@@ -579,6 +579,8 @@ export class MatEditorControlComponent extends BaseUiComponent {
             this.curMaxPercent = max;
           }
         }
+        this.inposition = tcin;
+        this.outposition = tcout;
       }
     }
     if (emit) {
@@ -757,7 +759,11 @@ export class MatEditorControlComponent extends BaseUiComponent {
         this.outposition = this.tcoutInput.value;
         this.seekVideo(this.outposition / this.video.duration * 100, this.cuts);
         this.setTcOut(true, this.outposition);
-        this.addCut();
+        if (this.selectedCut.idx) {
+          this.editCut();
+        } else {
+          this.addCut();
+        }
       }
     } else {
       this.__focused = setTimeout(() => {

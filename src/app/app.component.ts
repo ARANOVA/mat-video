@@ -1,4 +1,5 @@
 import { formatNumber } from '@angular/common';
+import { Version } from '@angular/compiler';
 import { AfterViewInit, Component, VERSION, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
@@ -9,32 +10,9 @@ import buildInfo from './../../package.json';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements AfterViewInit {
-  @ViewChild('trimmerBar') trimmerBar;
-  private __barWidth = 0;
-  fps = 25;
-  /**
-   * Current time percent
-   */
-  curTimePercent = 0;
-
-  /**
-   * Current time min percent
-   */
-  curMinPercent = 0;
-
-  /**
-   * Current time max percent
-   */
-  curMaxPercent = 100;
-  selectedCut: any = null;
-  private __videoduration: number;
-
+export class AppComponent {
   version = VERSION.full;
   appversion: string = buildInfo.version;
-
-  @ViewChild('video') video!: any;
-
   ngclass = 'mat-video-responsive';
 
   // CDN: 34.117.80.76:80
@@ -120,6 +98,8 @@ export class AppComponent implements AfterViewInit {
   form: FormGroup;
 
   errors: [];
+  private __videoduration: number;
+  @ViewChild('video') video!: any;
 
   /**
      * Executed when de form change the current Time
@@ -170,9 +150,6 @@ export class AppComponent implements AfterViewInit {
       })
     });
     this.form.patchValue({ metadata: { tcin: 10.4 } })
-  }
-  ngAfterViewInit(): void {
-    this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
   }
 
   private __remove(idx: string): boolean {
@@ -348,129 +325,5 @@ export class AppComponent implements AfterViewInit {
   }
 
 
-
-
-
-
-  /**
-   * Perforrmance loop
-   * 
-   * @param {number} index 
-   * @param {any} cut 
-   * @returns {string}
-   */
-  trackByCuts(index: number, cut: any): string {
-    return cut.idx;
-  }
-
-  /**
-   * Get left position of cut block (UI)
-   * 
-   * @param {number} tcin               the tc input value
-   * @param {number | undefined} tcout  the tc output value
-   * @returns {number}
-   */
-  getStartCut(tcin: number, tcout?: number): number {
-    if (!this.trimmerBar || !this.__barWidth || !this.__videoduration) {
-      return 0;
-    }
-    this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
-    if (tcout) {
-      // Hacer media, es una marca
-      tcin = tcin + (tcout - tcin) / 2;
-    }
-    const curPercent = (tcin / this.__videoduration) * 100;
-    return Math.round((curPercent - this.curMinPercent) * this.__barWidth / (this.curMaxPercent - this.curMinPercent));
-  }
-
-  /**
-   * Get width of cut block (UI)
-   * 
-   * @param {number} tcin               the tc input value
-   * @param {number | undefined} tcout  the tc output value
-   * @returns {number}
-   */
-  getWidthCut(tcin: number, tcout?: number): number {
-    if (!this.trimmerBar) {
-      return 0;
-    }
-    if (!tcout || tcout > this.__videoduration + 1 / this.fps) {
-      return 2;
-    }
-    this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
-    const max = Math.min(tcout, this.__videoduration);
-    const w = (max / this.__videoduration) * this.__barWidth;
-    const l = (tcin / this.__videoduration) * this.__barWidth;
-    return Math.round(Math.max(2, (w - l) * (100 / (this.curMaxPercent - this.curMinPercent))));
-  }
-
-  /**
-   * Return list of class  for the block
-   * 
-   * @param {ClipInterface} cut             the cut
-   * @param {string | undefined} forceCls   the forced class (from HTML loop)
-   * @returns {string[]}
-   */
-  getClassCut(cut: any, forceCls?: string): string[] {
-    const cls = [forceCls ? forceCls : (cut.type === 'mark' ? 'cut' : cut.type)];
-    if (cut.selected) {
-      cls.push('selected');
-    }
-    if (!cut.idx) {
-      cls.push('editing');
-    }
-    return cls;
-  }
-
-
-  // /**
-  //  * Select / Deselect current cut
-  //  * 
-  //  * @param $event 
-  //  * @param idx 
-  //  * @param emit 
-  //  */
-  //  selectClip($event: MouseEvent, idx: string | null = null, collection: any[], emit: boolean = true) {
-  //   if ($event) {
-  //     $event.stopPropagation();
-  //   }
-  //   if (!collection || this.ctrlKey) {
-  //     return;
-  //   }
-  //   this.__select(idx, collection);
-  //   if (collection === this.cuts) {
-  //     this.curMinPercent = 0;
-  //     this.curMaxPercent = 100;
-  //     const index = collection.findIndex((cut: any) => cut.idx === idx);
-  //     if (index > -1) {
-  //       const tcin = collection[index].tcin;
-  //       const tcout = collection[index].tcout;
-  //       if (tcin > 0 && this.video.duration) {
-  //         const min = Math.round(tcin * 100 / this.video.duration) - 10;
-  //         if (min < 0) {
-  //           this.curMinPercent = 0;
-  //         } else {
-  //           this.curMinPercent = min;
-  //         }
-  //       }
-  //       if (tcout < this.video.duration) {
-  //         const max = Math.round(tcout * 100 / this.video.duration) + 10;
-  //         if (max > 100) {
-  //           this.curMaxPercent = 100;
-  //           //this.curMinPercent = (100 - max)
-  //         } else {
-  //           this.curMaxPercent = max;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   if (emit) {
-  //     if (collection === this.cuts) {
-  //       setTimeout(() => this.selectedChanged.emit(idx), 0);
-  //     } else {
-  //       setTimeout(() => this.selectedMarkChanged.emit(idx), 0);
-  //     }
-  //   }
-  // }
 
 }
