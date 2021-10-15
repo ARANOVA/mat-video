@@ -17,8 +17,8 @@ export class AppComponent {
 
   // CDN: 34.117.80.76:80
 
-  // src = 'assets/NASA.mp4';
-  src = 'https://firebasestorage.googleapis.com/v0/b/r9---flyfut---dev.appspot.com/o/test-1%2Flow_1622632163798%7C1622632168355%7C1622632172696%7C1622632177082.mp4?alt=media&token=12e71b0f-e735-4f15-b6cc-87935b5e514b';
+  src = 'assets/NASA.mp4';
+  //src = 'https://firebasestorage.googleapis.com/v0/b/r9---flyfut---dev.appspot.com/o/test-1%2Flow_1622632163798%7C1622632168355%7C1622632172696%7C1622632177082.mp4?alt=media&token=12e71b0f-e735-4f15-b6cc-87935b5e514b';
   // src = 'http://34.117.80.76:80/test-1/low_1622632163798%7C1622632168355%7C1622632172696%7C1622632177082.mp4?alt=media&token=12e71b0f-e735-4f15-b6cc-87935b5e514b';
   title = 'NASA Rocket Launch';
   width = 600;
@@ -73,8 +73,8 @@ export class AppComponent {
   speedManual = 1;
 
   marks = [
-    // {tcin: 1, tcout: 20, type: 'mark', idx: '222', selected: false, thumb: undefined},
-    // {tcin: 25, type: 'mark', idx: '22222222', selected: false, thumb: undefined},
+    {tcin: 1, tcout: 20, type: 'cut', idx: '222', selected: false, thumb: undefined},
+    {tcin: 25, type: 'cut', idx: '22222222', selected: false, thumb: undefined},
   ];
 
   cuts = [
@@ -211,7 +211,7 @@ export class AppComponent {
         }
       );
     }
-    setTimeout(() => this.cuts = cuts, 300);
+    // setTimeout(() => this.cuts = cuts, 300);
   }
 
   deleteClip(cutidx: string): void {
