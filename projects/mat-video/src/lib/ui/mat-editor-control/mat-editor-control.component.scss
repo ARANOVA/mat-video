@@ -50,12 +50,12 @@ $accent: #ed5b08;
     border: 2px solid #fff;
 }
 .cut.editing, .invalid.editing {
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    border: 2px solid #ccc;
 }
 .audio {
     background-color: $secondary;
 }
-.cut {
+.cut.editing {
     background-color: $accent;
 }
 

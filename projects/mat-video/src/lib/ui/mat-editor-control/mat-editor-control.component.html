@@ -7,31 +7,38 @@
     (input)="seekVideo($event.value)"
 >
 </mat-slider>
-<div #trimmerBar class="cut-bar-wrapper" (click)="selectClip($event, null, cuts)">
+<div #trimmerBar class="cut-bar-wrapper" (click)="selectClip($event, null, cuts); selectClip($event, null, marks)">
     <div *ngIf="video.duration" class="cut-bar">
         <div *ngIf="curMinPercent > 0 || curMaxPercent < 100" class="textIn">
             <div class="l"></div>
             <div class="text">{{ curMinPercent | percentToTime:video.duration }}</div>
         </div>
 
-        <ng-container *ngFor="let cut of cuts; let idx=index; trackBy: trackByCuts">
+        <ng-container *ngIf="styles.cuts">
         <div
+            *ngFor="let cut of cuts; let i=index; trackBy: trackByIdx"
             (click)="selectClip($event, cut.idx, cuts)"
             (dblclick)="doubleClick($event, cut.idx, cuts)"
-            [ngClass]="getClassCut(cut)"
-            [ngStyle]="{'left.px': getStartCut(cut.tcin), 'width.px': getWidthCut(cut.tcin, cut.tcout)}"
+            class="cut"
+            [ngStyle]="styles.cuts[cut.idx]"
             >
         </div>
         </ng-container>
 
         <ng-container *ngIf="selectedCut && !selectedCut.idx">
-            <div (click)="selectClip($event, selectedCut.idx, cuts)" (dblclick)="doubleClick($event, selectedCut.idx, cuts)" [ngClass]="getClassCut(selectedCut)"
-                [ngStyle]="{'left.px': getStartCut(selectedCut.tcin), 'width.px': getWidthCut(selectedCut.tcin, selectedCut.tcout)}">
+            <div
+                (click)="selectClip($event, selectedCut.idx, cuts)"
+                (dblclick)="doubleClick($event, selectedCut.idx, cuts)"
+                [class]="cutType"
+                [ngStyle]="styles.selected.selected"
+            >
             </div>
         </ng-container>
 
-        <ng-container *ngFor="let mark of marks; let idx=index">
-            <div [ngStyle]="{'left.px': getStartCut(mark.tcin), 'width.px': getWidthCut(mark.tcin, mark.tcout)}" [ngClass]="getClassCut(mark, 'mark')">
+        <ng-container *ngIf="styles.marks">
+            <div *ngFor="let mark of marks; let i=index; trackBy: trackByIdx"
+                class="mark"
+                [ngStyle]="styles.marks[mark.idx]">
                 <div>
                     <div class="line"></div>
                     <div class="ball" (click)="selectClip($event, mark.idx, marks)" (dblclick)="doubleClick($event, mark.idx, marks)"></div>

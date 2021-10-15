@@ -14,6 +14,7 @@ import { fromEvent } from 'rxjs';
 import { EventHandler } from '../../interfaces/event-handler.interface';
 import { ClipInterface } from '../../interfaces/clip.interface';
 import { BaseUiComponent } from '../base/base.component';
+import { StyleInterface } from '../../interfaces/style.interface';
 
 
 const countDecimals = (value) => {
@@ -53,6 +54,12 @@ export class MatEditorControlComponent extends BaseUiComponent {
   private __videoSize: { w: number, h: number };
   private __focused: any;
   private __lastthumb: { thumb: string; idx: string | null } | null = { thumb: '', idx: null };
+  private __bgs = {
+    cut: '#ed5b08',
+    invalid: 'repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0) 5px, rgba(255, 255, 255, 0) 10px, #ed5b08 5px, #ed5b08 15px)',
+    audio: '#999999',
+    mark: 'repeating-linear-gradient(45deg,rgba(0, 0, 0, 0) 5px,rgba(255, 255, 255, 0) 10px,rgba(255, 255, 255, 0.2) 5px,rgba(255, 255, 255, 0.2) 15px'
+  }
 
   @Input() color: ThemePalette = 'accent';
 
@@ -169,11 +176,26 @@ export class MatEditorControlComponent extends BaseUiComponent {
   private __seek: any;
   private __interval: any;
 
+  public styles: {
+    cuts: {[key: string]: StyleInterface},
+    marks: {[key: string]: StyleInterface},
+    selected: {[key: string]: StyleInterface}
+  } = {
+    cuts: {},
+    marks: {},
+    selected: {}
+  };
+
   protected events: EventHandler[] = [
     { element: null, name: 'seeking', callback: () => this.disabled = true, dispose: null },
     { element: null, name: 'seeked', callback: () => {this.disabled = false; this.updateCurrentTime(this.video.currentTime)}, dispose: null },
     { element: null, name: 'timeupdate', callback: () => this.updateCurrentTime(this.video.currentTime), dispose: null },
-    { element: null, name: 'loadeddata', callback: event => {this.disabled = false; this.getVideoSize(event)}, dispose: null }
+    { element: null, name: 'loadeddata', callback: event => {
+      this.disabled = false;
+      this.getVideoSize(event);
+      this.composeStyles('cuts', this.cuts);
+      this.composeStyles('marks', this.marks);
+    }, dispose: null },
   ];
 
   private __delaySeek() {
@@ -206,6 +228,11 @@ export class MatEditorControlComponent extends BaseUiComponent {
         } else if (this.editing === 'in') {
           this.inposition = this.currentTime;
           this.selectedCut.tcin = this.currentTime;
+        }
+        this.composeStyles('selected', [this.selectedCut]);
+        // Si es una edición, es necesario también actualizar el "original"
+        if (this.selectedCut.idx && ['cut', 'invalid'].indexOf(this.cutType) > -1) {
+          this.composeStyles('cuts', [this.selectedCut], 'update')
         }
       }
     });
@@ -328,7 +355,13 @@ export class MatEditorControlComponent extends BaseUiComponent {
    * @param changes 
    */
   ngOnChanges(changes: SimpleChanges): void {
-    // 
+    //
+    if (changes.cuts && changes.cuts.currentValue && changes.cuts.currentValue.length > 0) {
+      this.composeStyles('cuts', this.cuts);
+    }
+    // if (changes.marks && changes.marks.currentValue && changes.marks.currentValue.length > 0) {
+    //   this.composeStyles('marks', this.marks);
+    // }
     if (changes.selected) {
       this.selectClip(null, changes.selected.currentValue, this.cuts, false);
     }
@@ -366,6 +399,11 @@ export class MatEditorControlComponent extends BaseUiComponent {
           if (this.__interval) {
             clearInterval(this.__interval);
           }
+          // No lo actualiza dinámicamente
+          const style = this.styles[collection === this.cuts ? 'cuts' : 'marks'][collection[index].idx];
+          if (style) {
+            style.border = '2px solid #fff';
+          }
           if (collection === this.cuts) {
             this.selectedCut = collection[index];
             this.mode = 'tc';
@@ -375,7 +413,12 @@ export class MatEditorControlComponent extends BaseUiComponent {
           return true;
         }
       } else {
-        collection.forEach((cut: any) => cut.selected = false);
+        // No lo actualiza dinámicamente
+        const selected = collection.find((cut: any) => cut.selected);
+        if (selected) {
+          this.styles[collection === this.cuts ? 'cuts' : 'marks'][selected.idx].border = '';
+          collection.forEach((cut: any) => cut.selected = false);
+        }
         this.selected = '';
       }
     }
@@ -428,6 +471,11 @@ export class MatEditorControlComponent extends BaseUiComponent {
     if (created) {
       this.setTcOut(false, this.selectedCut.tcout);
     }
+    this.composeStyles('selected', [this.selectedCut]);
+    // Si es una edición, es necesario también actualizar el "original"
+    if (this.selectedCut.idx && ['cut', 'invalid'].indexOf(this.cutType) > -1) {
+      this.composeStyles('cuts', [this.selectedCut], 'update')
+    }
   }
 
   /**
@@ -439,6 +487,11 @@ export class MatEditorControlComponent extends BaseUiComponent {
     this.mode = mode ? mode : 'tc';
     if (update) {
       this.seekVideo(this.selectedCut.tcout / this.video.duration * 100, this.cuts);
+    }
+    this.composeStyles('selected', [this.selectedCut]);
+    // Si es una edición, es necesario también actualizar el "original"
+    if (this.selectedCut.idx && ['cut', 'invalid'].indexOf(this.cutType) > -1) {
+      this.composeStyles('cuts', [this.selectedCut], 'update')
     }
   }
 
@@ -477,6 +530,9 @@ export class MatEditorControlComponent extends BaseUiComponent {
         this.__lastthumb = { thumb: '', idx: null };
       }
     }
+    if (['cut', 'invalid'].indexOf(this.cutType) > -1) {
+      this.composeStyles('cuts', [this.selectedCut], 'update')
+    }
     this.cutEvent.emit({ type: 'add', cut: { ...this.selectedCut } });
     this.restart(false);
   }
@@ -491,8 +547,24 @@ export class MatEditorControlComponent extends BaseUiComponent {
     this.restart(false);
   }
 
-  trackByCuts(index: number, cut: any): string {
+  trackByIdx(index: number, cut: any): string {
     return cut.idx;
+  }
+
+  composeStyles(key: string, collection: any[], update?: string) {
+    if (!update) {
+      this.styles[key as 'cuts' | 'marks' | 'selected'] = {};
+    }
+    if (collection) {
+      collection.forEach((cut: ClipInterface) => {
+        this.styles[key as 'cuts' | 'marks' | 'selected'][cut.idx || 'selected'] = <StyleInterface>{
+          'left.px': this.getStartCut(cut.tcin),
+          'width.px': this.getWidthCut(cut.tcin, cut.tcout),
+          background: this.__bgs[cut.type],
+          border: cut.selected ? '2px solid #fff' : ''
+        }
+      });
+    }
   }
 
   /**
@@ -555,6 +627,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
       return;
     }
     this.__select(idx, collection);
+    const changeStyles = [this.curMinPercent, this.curMaxPercent];
     if (collection === this.cuts) {
       this.curMinPercent = 0;
       this.curMaxPercent = 100;
@@ -582,6 +655,13 @@ export class MatEditorControlComponent extends BaseUiComponent {
         this.inposition = tcin;
         this.outposition = tcout;
       }
+    }
+    if (changeStyles !== [this.curMinPercent, this.curMaxPercent]) {
+      this.composeStyles('cuts', this.cuts);
+      this.composeStyles('marks', this.marks);
+    } else {
+      // Cambiar el borde del seleccionado
+      // this.composeStyles('marks', this.marks);
     }
     if (emit) {
       if (collection === this.cuts) {

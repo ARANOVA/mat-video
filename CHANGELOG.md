@@ -1,3 +1,8 @@
+# 2.15.1 (2021-10-14)
+
+### Features:
+- **mat-editor:** static styles generation (better performance)
+
 # 2.15.0 (2021-10-14)
 
 ### Features:

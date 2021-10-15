@@ -77,11 +77,12 @@ export class AppComponent {
     {tcin: 25, type: 'cut', idx: '22222222', selected: false, thumb: undefined},
   ];
 
-  cuts = [
-    // {tcin: 10, tcout: 20, type: 'invalid', idx: '2', selected: false, thumb: undefined},
-    // {tcin: 25, tcout: 27, type: 'mark', idx: '2222', selected: false, thumb: undefined},
-    // {tcin: 55, tcout: 58, type: 'audio', idx: '22222', selected: false, thumb: undefined},
-    // {tcin: 45.04, tcout: 50, type: 'cut', idx: '1', selected: false}
+  cuts = [];
+  testcuts = [
+    {tcin: 10, tcout: 20, type: 'invalid', idx: '2', selected: false, thumb: undefined},
+    {tcin: 25, tcout: 27, type: 'mark', idx: '2222', selected: false, thumb: undefined},
+    {tcin: 55, tcout: 58, type: 'audio', idx: '22222', selected: false, thumb: undefined},
+    {tcin: 45.04, tcout: 50, type: 'cut', idx: '1', selected: false, thumb: undefined}
   ];
 
   initialcuts = this.cuts.map((cut: any) => { return { ...cut } });
@@ -149,6 +150,7 @@ export class AppComponent {
         tcin: new FormControl(),
       })
     });
+    this.cuts = this.testcuts;
     this.form.patchValue({ metadata: { tcin: 10.4 } })
   }
 
@@ -175,7 +177,7 @@ export class AppComponent {
         this.selected = null;
       }
     } else if ($event.type === 'edit') {
-
+      this.selected = null;
     }
   }
 
@@ -197,14 +199,15 @@ export class AppComponent {
   durationChanged($event: number) {
     this.__videoduration = $event;
     console.log("DURATION:", $event);
-    const step = $event / 60;
-    const cuts = [];
-    for (let i = 0; i < 30; i++) {
+    return;
+    const step = $event / 10;
+    let cuts = [];
+    for (let i = 0; i < 3; i++) {
       cuts.push(
         {
           tcin: i * 2 * step,
-          tcout: i * 2 * step + 30,
-          type: 'cut',
+          tcout: i * 2 * step + 10,
+          type: this.cutType,
           idx: i.toString(),
           selected: false,
           thumb: undefined
@@ -291,7 +294,7 @@ export class AppComponent {
     if ($event) {
       $event.stopPropagation();
     }
-    this.selectCut(this.cuts[i], i);
+    this.selectCut(null, i);
     // "Emit" double click
     setTimeout(() => this.playCut = this.cuts[i].idx, 0);
   }
