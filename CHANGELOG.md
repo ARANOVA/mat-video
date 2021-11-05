@@ -1,3 +1,8 @@
+# 2.15.2 (2021-11-05)
+
+### Features:
+- **mat-editor:** bug getting tcin/out in edit message
+
 # 2.15.1 (2021-10-14)
 
 ### Features:

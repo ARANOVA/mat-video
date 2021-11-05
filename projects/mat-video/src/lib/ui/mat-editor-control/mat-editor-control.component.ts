@@ -482,16 +482,19 @@ export class MatEditorControlComponent extends BaseUiComponent {
    * Sets the tc output point
    */
   setTcOut(update: boolean = false, tcout?: number, mode?: string) {
-    this.outposition = tcout || roundFn(this.currentTime, 1 / this.fps, 0);
-    this.selectedCut.tcout = tcout || roundFn(this.video.currentTime, 1 / this.fps, 0);
-    this.mode = mode ? mode : 'tc';
-    if (update) {
-      this.seekVideo(this.selectedCut.tcout / this.video.duration * 100, this.cuts);
+    tcout = tcout || roundFn(this.video.currentTime, 1 / this.fps, 0);
+    this.outposition = tcout;
+    if (this.selectedCut) {
+      this.selectedCut.tcout = tcout;
+      this.mode = mode ? mode : 'tc';
+      this.composeStyles('selected', [this.selectedCut]);
+      // Si es una edición, es necesario también actualizar el "original"
+      if (this.selectedCut.idx && ['cut', 'invalid'].indexOf(this.cutType) > -1) {
+        this.composeStyles('cuts', [this.selectedCut], 'update')
+      }
     }
-    this.composeStyles('selected', [this.selectedCut]);
-    // Si es una edición, es necesario también actualizar el "original"
-    if (this.selectedCut.idx && ['cut', 'invalid'].indexOf(this.cutType) > -1) {
-      this.composeStyles('cuts', [this.selectedCut], 'update')
+    if (update) {
+      this.seekVideo(tcout / this.video.duration * 100, this.cuts);
     }
   }
 
@@ -543,6 +546,8 @@ export class MatEditorControlComponent extends BaseUiComponent {
   editCut() {
     this.mode = 'tc';
     this.selectedCut.selected = false;
+    this.selectedCut.tcout = this.tcoutInput.value;
+    this.selectedCut.tcin = this.tcinInput.value;
     this.cutEvent.emit({ type: 'edit', cut: { ...this.selectedCut } });
     this.restart(false);
   }
@@ -838,11 +843,13 @@ export class MatEditorControlComponent extends BaseUiComponent {
         // }
         this.outposition = this.tcoutInput.value;
         this.seekVideo(this.outposition / this.video.duration * 100, this.cuts);
-        this.setTcOut(true, this.outposition);
-        if (this.selectedCut.idx) {
-          this.editCut();
-        } else {
-          this.addCut();
+        if (this.selectedCut) {
+          this.setTcOut(true, this.outposition);
+          if (this.selectedCut.idx) {
+            this.editCut();
+          } else {
+            this.addCut();
+          }
         }
       }
     } else {
