@@ -1,3 +1,8 @@
+# 2.15.3 (2021-11-11)
+
+### Features:
+- update requirements for angular@13
+
 # 2.15.2 (2021-11-05)
 
 ### Features:
