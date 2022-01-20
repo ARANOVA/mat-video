@@ -60,6 +60,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
     audio: '#999999',
     mark: 'repeating-linear-gradient(45deg,rgba(0, 0, 0, 0) 5px,rgba(255, 255, 255, 0) 10px,rgba(255, 255, 255, 0.2) 5px,rgba(255, 255, 255, 0.2) 15px'
   }
+  private __clickTimeout: any;
 
   @Input() color: ThemePalette = 'accent';
 
@@ -177,25 +178,27 @@ export class MatEditorControlComponent extends BaseUiComponent {
   private __interval: any;
 
   public styles: {
-    cuts: {[key: string]: StyleInterface},
-    marks: {[key: string]: StyleInterface},
-    selected: {[key: string]: StyleInterface}
+    cuts: { [key: string]: StyleInterface },
+    marks: { [key: string]: StyleInterface },
+    selected: { [key: string]: StyleInterface }
   } = {
-    cuts: {},
-    marks: {},
-    selected: {}
-  };
+      cuts: {},
+      marks: {},
+      selected: {}
+    };
 
   protected events: EventHandler[] = [
     { element: null, name: 'seeking', callback: () => this.disabled = true, dispose: null },
-    { element: null, name: 'seeked', callback: () => {this.disabled = false; this.updateCurrentTime(this.video.currentTime)}, dispose: null },
+    { element: null, name: 'seeked', callback: () => { this.disabled = false; this.updateCurrentTime(this.video.currentTime) }, dispose: null },
     { element: null, name: 'timeupdate', callback: () => this.updateCurrentTime(this.video.currentTime), dispose: null },
-    { element: null, name: 'loadeddata', callback: event => {
-      this.disabled = false;
-      this.getVideoSize(event);
-      this.composeStyles('cuts', this.cuts);
-      this.composeStyles('marks', this.marks);
-    }, dispose: null },
+    {
+      element: null, name: 'loadeddata', callback: event => {
+        this.disabled = false;
+        this.getVideoSize(event);
+        this.composeStyles('cuts', this.cuts);
+        this.composeStyles('marks', this.marks);
+      }, dispose: null
+    },
   ];
 
   private __delaySeek() {
@@ -256,8 +259,8 @@ export class MatEditorControlComponent extends BaseUiComponent {
       repeat()
     );
 
-    this.mousemove$.subscribe(_ => { });    
-    
+    this.mousemove$.subscribe(_ => { });
+
     this.mousedown$.subscribe((e) => {
       if (!this.ctrlKey) {
         return;
@@ -283,9 +286,9 @@ export class MatEditorControlComponent extends BaseUiComponent {
       } else {
         this.setTcIn(true, roundFn(tc, 1 / this.fps, 0));
       }
-      
+
     });
-    
+
     this.__register();
   }
 
@@ -295,7 +298,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
     if ($event.key === 'Control' || $event.key === 'Meta') {
       this.ctrlKey = false;
     }
-    
+
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -426,6 +429,22 @@ export class MatEditorControlComponent extends BaseUiComponent {
     if (this.selectedCut && collection === this.cuts) {
       this.restart();
     }
+  }
+
+  /**
+   * 
+   * @param {MouseEvent} $event 
+   * @param {string | null} idx 
+   * @param {ClipInterface[]} collection 
+   * @param {boolean} emit 
+   */
+  private __setClickTimeout($event: MouseEvent, idx: string | null = null, collection: ClipInterface[], emit: boolean) {
+    // clear any existing timeout
+    clearTimeout(this.__clickTimeout);
+    this.__clickTimeout = setTimeout(() => {
+      this.__clickTimeout = null;
+      this.selectClip($event, idx, collection, emit);
+    }, 200);
   }
 
   /**
@@ -598,6 +617,10 @@ export class MatEditorControlComponent extends BaseUiComponent {
    * @param emit 
    */
   doubleClick($event: MouseEvent, idx: string | null = null, collection: ClipInterface[], emit: boolean = true) {
+    if (this.__clickTimeout) {
+      clearTimeout(this.__clickTimeout);
+      this.__clickTimeout = null;
+    }
     if ($event) {
       $event.stopPropagation();
     }
@@ -624,13 +647,24 @@ export class MatEditorControlComponent extends BaseUiComponent {
    * @param idx 
    * @param emit 
    */
-  selectClip($event: MouseEvent, idx: string | null = null, collection: ClipInterface[], emit: boolean = true) {
+  click($event: MouseEvent, idx: string | null = null, collection: ClipInterface[], emit: boolean = true) {
     if ($event) {
       $event.stopPropagation();
     }
     if (!collection || this.ctrlKey) {
       return;
     }
+    this.__setClickTimeout($event, idx, collection, emit);
+  }
+
+  /**
+   * Select / Deselect current cut
+   * 
+   * @param $event 
+   * @param idx 
+   * @param emit 
+   */
+  selectClip($event: MouseEvent, idx: string | null = null, collection: ClipInterface[], emit: boolean = true) {
     this.__select(idx, collection);
     const changeStyles = [this.curMinPercent, this.curMaxPercent];
     if (collection === this.cuts) {
@@ -694,7 +728,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
       tcin = tcin + (tcout - tcin) / 2;
     }
     const curPercent = (tcin / this.video.duration) * 100;
-    return Math.round((curPercent - this.curMinPercent) * this.__barWidth / (this.curMaxPercent- this.curMinPercent));
+    return Math.round((curPercent - this.curMinPercent) * this.__barWidth / (this.curMaxPercent - this.curMinPercent));
   }
 
   /**
@@ -861,7 +895,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
 
   incr(input: string) {
     if (input === 'tcin') {
-      this.inposition = roundFn(this.inposition + 1/this.fps, 1/this.fps, 0);
+      this.inposition = roundFn(this.inposition + 1 / this.fps, 1 / this.fps, 0);
       if (this.inposition > this.video.duration) {
         this.inposition = this.video.duration;
       }
@@ -870,7 +904,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
 
   decr(input: string) {
     if (input === 'tcin') {
-      this.inposition = roundFn(this.inposition - 1/this.fps, 1/this.fps, 0);
+      this.inposition = roundFn(this.inposition - 1 / this.fps, 1 / this.fps, 0);
       if (this.inposition < 0) {
         this.inposition = 0;
       }

@@ -17,7 +17,7 @@
         <ng-container *ngIf="styles.cuts">
         <div
             *ngFor="let cut of cuts; let i=index; trackBy: trackByIdx"
-            (click)="selectClip($event, cut.idx, cuts)"
+            (click)="click($event, cut.idx, cuts)"
             (dblclick)="doubleClick($event, cut.idx, cuts)"
             class="cut"
             [ngStyle]="styles.cuts[cut.idx]"
@@ -27,7 +27,7 @@
 
         <ng-container *ngIf="selectedCut && !selectedCut.idx">
             <div
-                (click)="selectClip($event, selectedCut.idx, cuts)"
+                (click)="click($event, selectedCut.idx, cuts)"
                 (dblclick)="doubleClick($event, selectedCut.idx, cuts)"
                 [class]="cutType"
                 [ngStyle]="styles.selected.selected"
@@ -41,7 +41,7 @@
                 [ngStyle]="styles.marks[mark.idx]">
                 <div>
                     <div class="line"></div>
-                    <div class="ball" (click)="selectClip($event, mark.idx, marks)" (dblclick)="doubleClick($event, mark.idx, marks)"></div>
+                    <div class="ball" (click)="click($event, mark.idx, marks)" (dblclick)="doubleClick($event, mark.idx, marks)"></div>
                 </div>
             </div>
         </ng-container>
