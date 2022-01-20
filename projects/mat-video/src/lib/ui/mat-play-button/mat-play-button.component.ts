@@ -30,11 +30,12 @@ export class MatPlayButtonComponent extends BaseUiComponent {
   @Output() playChanged = new EventEmitter<boolean>();
 
   protected events: EventHandler[] = [
-    { element: null, name: 'play', callback: event => this.setVideoPlayback(true), dispose: null },
+    /*{ element: null, name: 'play', callback: event => this.setVideoPlayback(true), dispose: null },
     { element: null, name: 'pause', callback: event => this.setVideoPlayback(false), dispose: null },
     { element: null, name: 'durationchange', callback: event => this.setVideoPlayback(false), dispose: null },
     { element: null, name: 'ended', callback: event => this.setVideoPlayback(false), dispose: null },
     { element: null, name: 'click', callback: event => this.toggleVideoPlayback(), dispose: null }
+    */
   ]
 
   setVideoPlayback(value: boolean) {
