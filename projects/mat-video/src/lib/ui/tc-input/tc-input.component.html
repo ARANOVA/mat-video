@@ -5,10 +5,10 @@
     (focusin)="onFocusIn($event)"
     (focusout)="onFocusOut($event)">
   <input class="tc-input-element"
-        [style.width.px]="22"
+        [style.width.px]="33"
         formControlName="mm"
-        size="2"
-        maxLength="2"
+        size="3"
+        maxLength="3"
         aria-label="minutes"
         (keyup.enter)="_handleInput(parts.controls.mm, ss)"
         (input)="_handleInput(parts.controls.mm, ss)"

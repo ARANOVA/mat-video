@@ -161,7 +161,7 @@ export class TcInputComponent
     this.parts = formBuilder.group({
       mm: [
         null,
-        [Validators.required, Validators.minLength(2), Validators.maxLength(2)]
+        [Validators.required, Validators.minLength(1), Validators.maxLength(4)]
       ],
       ss: [
         null,
@@ -247,7 +247,7 @@ export class TcInputComponent
   }
 
   _handleInput(control: AbstractControl, nextElement?: HTMLInputElement): void {
-    this.autoFocusNext(control, nextElement);
+    // this.autoFocusNext(control, nextElement);
     this.onChange(this.value);
   }
 
