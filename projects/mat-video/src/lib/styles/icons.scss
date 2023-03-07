@@ -4,13 +4,13 @@
   font-weight: 400;
   src: url(https://fonts.gstatic.com/s/materialicons/v36/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format("woff2");
 }
+
 /* fallback */
 @font-face {
   font-family: "Material Icons Outlined";
   font-style: normal;
   font-weight: 400;
-  src: url(https://fonts.gstatic.com/s/materialiconsoutlined/v63/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUce.woff2)
-    format("woff2");
+  src: url(https://fonts.gstatic.com/s/materialiconsoutlined/v63/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUce.woff2) format("woff2");
 }
 
 ::ng-deep.material-icons {
@@ -25,6 +25,7 @@
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
+  font-feature-settings: "liga";
   -moz-font-feature-settings: "liga";
   -moz-osx-font-smoothing: grayscale;
 }
@@ -41,6 +42,7 @@
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
+  font-feature-settings: "liga";
   -moz-font-feature-settings: "liga";
   -moz-osx-font-smoothing: grayscale;
 }

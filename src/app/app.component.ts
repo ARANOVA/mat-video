@@ -1,6 +1,5 @@
 import { formatNumber } from '@angular/common';
-import { Version } from '@angular/compiler';
-import { AfterViewInit, Component, VERSION, ViewChild } from '@angular/core';
+import { Component, VERSION, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import buildInfo from './../../package.json';
@@ -73,16 +72,16 @@ export class AppComponent {
   speedManual = 1;
 
   marks = [
-    {tcin: 1, tcout: 20, type: 'cut', idx: '222', selected: false, thumb: undefined},
-    {tcin: 25, type: 'cut', idx: '22222222', selected: false, thumb: undefined},
+    { tcin: 1, tcout: 20, type: 'cut', idx: '222', selected: false, thumb: undefined },
+    { tcin: 25, type: 'cut', idx: '22222222', selected: false, thumb: undefined },
   ];
 
   cuts = [];
   testcuts = [
-    {tcin: 10, tcout: 20, type: 'invalid', idx: '2', selected: false, thumb: undefined},
-    {tcin: 25, tcout: 27, type: 'mark', idx: '2222', selected: false, thumb: undefined},
-    {tcin: 55, tcout: 58, type: 'audio', idx: '22222', selected: false, thumb: undefined},
-    {tcin: 45.04, tcout: 50, type: 'cut', idx: '1', selected: false, thumb: undefined}
+    { tcin: 10, tcout: 20, type: 'invalid', idx: '2', selected: false, thumb: undefined },
+    { tcin: 25, tcout: 27, type: 'mark', idx: '2222', selected: false, thumb: undefined },
+    { tcin: 55, tcout: 58, type: 'audio', idx: '22222', selected: false, thumb: undefined },
+    { tcin: 45.04, tcout: 50, type: 'cut', idx: '1', selected: false, thumb: undefined }
   ];
 
   initialcuts = this.cuts.map((cut: any) => { return { ...cut } });
@@ -94,7 +93,7 @@ export class AppComponent {
   selectedMarker = null;
   playCut = null;
   speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4, 6, 8];
-  speedIndex: number = 2;
+  speedIndex = 2;
 
   form: FormGroup;
 
@@ -117,13 +116,10 @@ export class AppComponent {
    * @param {number} $event 
    */
   public set currentTimeChange($event: number) {
-    console.log("CHANGE TIME")
     this.currentTime = $event;
   }
 
   changeSpeed(speed: MatButtonToggleChange) {
-    console.log("SPEED", speed.value)
-
     if (speed.value >= 0.125 && speed.value <= 8) {
       this.video.nativeElement.playbackRate = speed.value;
     }
@@ -163,7 +159,6 @@ export class AppComponent {
   }
 
   cutEvent($event: any) {
-    console.log('CUT EVENT', $event);
     if ($event.type === 'add') {
       this.cuts.push({ ...$event.cut });
       this.cuts.sort((a, b) => a.tcin - b.tcin);
@@ -182,7 +177,6 @@ export class AppComponent {
   }
 
   posterChanged($event: { thumb: string, idx: string | null }) {
-    console.log("posterChanged", $event.idx)
     if ($event.idx === null) {
       this.poster = $event.thumb;
     } else if ($event.idx === '') {
@@ -198,10 +192,9 @@ export class AppComponent {
 
   durationChanged($event: number) {
     this.__videoduration = $event;
-    console.log("DURATION:", $event);
     return;
     const step = $event / 10;
-    let cuts = [];
+    const cuts = [];
     for (let i = 0; i < 3; i++) {
       cuts.push(
         {
@@ -218,7 +211,6 @@ export class AppComponent {
   }
 
   deleteClip(cutidx: string): void {
-    console.log("deleteClip", cutidx)
     if (cutidx) {
       const idx = this.cuts.findIndex((cut: any) => {
         return cut.idx === cutidx;
@@ -230,11 +222,9 @@ export class AppComponent {
     }
   }
 
-  selectedChanged($event: string | null, update: boolean = false) {
-    console.log("selectedChanged");
+  selectedChanged($event: string | null, update = false) {
     this.selected = $event;
     this.cuts.forEach((cut: any, i: number) => {
-      console.log("selectedChanged", $event, cut.idx, cut.idx == $event);
       if (cut.idx == $event) {
         this.cuts[i].selected = true;
         if (update) {
@@ -246,7 +236,7 @@ export class AppComponent {
     });
   }
 
-  selectedMarkChanged($event: string | null, update: boolean = false) {
+  selectedMarkChanged($event: string | null, update = false) {
     console.log("selectedMarkChanged APP");
     this.marks.forEach((cut: any, i: number) => {
       console.log("selectedMarkChanged", $event, cut.idx, cut.idx == $event);
@@ -317,7 +307,7 @@ export class AppComponent {
     return Math.round(cut.tcout - cut.tcin);
   }
 
-  getVideoTitle(video: any, force: boolean = false) {
+  getVideoTitle(video: any, force = false) {
     if (!video.title || video.title.startsWith('gen:') || force) {
       return `${video.type == 'cut' ? 'Corte' : video.type == 'audio' ? 'Narración' : 'Descarte'} de ` +
         `${formatNumber(video.tcin, 'es', '2.2-2')} a ` +

@@ -28,12 +28,12 @@ export class TestFormComponent implements OnInit {
   /**
    * True if the fields are read only (not editables)
    */
-  @Input() disabled: boolean = false;
+  @Input() disabled = false;
 
   /**
    * If the focus is in any input field
    */
-  @Input() inputFocus: boolean = false;
+  @Input() inputFocus = false;
 
   /**
    * Emitted when a fcus event
@@ -57,21 +57,23 @@ export class TestFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // do something interesting
   }
 
 
   selectTypeByKey($event: any): void {
-
+    // do something interesting
   }
 
   updatePlayerList(): void {
-
+    // do something interesting
   }
 
   /**
    * Update enable/disable control programatically
    */
   updateControlsStatus() {
+    // do something interesting
   }
 
 

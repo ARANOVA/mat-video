@@ -1,12 +1,12 @@
 <mat-slider
-    [color]="color"
-    [min]="curMinPercent"
-    [max]="curMaxPercent"
-    step="0.1"
-    [value]="curTimePercent"
-    (input)="seekVideo($event.value)"
+  [color]="color"
+  [min]="curMinPercent"
+  [max]="curMaxPercent"
+  step="0.1"
+  (input)="seekVideo($event.value)"
 >
-</mat-slider>
+  <input matSliderThumb [value]="curTimePercent">
+<mat-slider>
 <div #trimmerBar class="cut-bar-wrapper" (click)="selectClip($event, null, cuts); selectClip($event, null, marks)">
     <div *ngIf="video.duration" class="cut-bar">
         <div *ngIf="curMinPercent > 0 || curMaxPercent < 100" class="textIn">
@@ -63,10 +63,10 @@
                 <!-- <input matInput matInputTimeFormat placeholder="0" type="text" [(ngModel)]="inposition"
                     #tcinInput (click)="tcinInput.select()" (keyup)="keyup('tcin', $event)"
                     (focus)="focus(true)" (blur)="focus(false)" /> -->
-                <tc-input [(value)]="inposition" placeholder="00:00" required
+                <app-tc-input [(value)]="inposition" placeholder="00:00" required
                     #tcinInput (focus)="focus(true)" (blur)="focus(false)"
                     (keyup)="keyup('tcin', $event)"
-                ></tc-input>
+                ></app-tc-input>
             </mat-form-field>
             <!--
             <button mat-button matSuffix mat-icon-button (click)="incr('tcin')">
@@ -95,18 +95,18 @@
                 <!-- <input matInput matInputTimeFormat placeholder="0" type="text" [(ngModel)]="outposition"
                     #tcoutInput (click)="tcoutInput.select()" (keyup)="keyup('tcout', $event)"
                     (focus)="focus(true)" (blur)="focus(false)"/> -->
-                <tc-input [(value)]="outposition" placeholder="00:00" required
+                <app-tc-input [(value)]="outposition" placeholder="00:00" required
                     #tcoutInput (focus)="focus(true)" (blur)="focus(false)"
                     (keyup)="keyup('tcout', $event)"
-                ></tc-input>
+                ></app-tc-input>
             </mat-form-field>
         </div>
 
-        <mat-radio-group aria-label="Tipo de corte" [(ngModel)]="selectedCut.type" *ngIf="!defaultCutType"
+        <app-mat-radio-group aria-label="Tipo de corte" [(ngModel)]="selectedCut.type" *ngIf="!defaultCutType"
             [style.order]="editorOrderButtons.typeCutSelector" class="px-2" [ngClass]="{'pl-0': editorOrderButtons.typeCutSelector == 0, 'pr-0': editorOrderButtons.typeCutSelector == 9}">
             <mat-radio-button [value]="'cut'" class="marr-16">Corte</mat-radio-button>
             <mat-radio-button [value]="'invalid'">Desechar</mat-radio-button>
-        </mat-radio-group>
+        </app-mat-radio-group>
 
         <div style="flex: 1" [style.order]="editorOrderButtons.spacer"></div>
         <button mat-icon-button aria-label="Crear zona" *ngIf="selectedCut && !selectedCut.idx && mode === 'tc'" (click)="addCut()" [style.order]="editorOrderButtons.addButton">

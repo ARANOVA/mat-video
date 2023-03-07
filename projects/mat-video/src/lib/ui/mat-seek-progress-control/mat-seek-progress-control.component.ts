@@ -1,14 +1,13 @@
-import { Component, EventEmitter, Input, Output, Renderer2 } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
 import { EventHandler } from '../../interfaces/event-handler.interface';
-import { EventService } from '../../services/event.service';
 import { BaseUiComponent } from '../base/base.component';
 
 @Component({
-  selector: 'mat-seek-progress-control',
+  selector: 'app-mat-seek-progress-control',
   templateUrl: './mat-seek-progress-control.component.html',
-  styles: ['.mat-slider-horizontal {width: 100%;}']
+  styleUrls: ['./mat-seek-progress-control.component.scss'],
 })
 export class MatSeekProgressControlComponent extends BaseUiComponent {
   curTimePercent = 0;
@@ -21,10 +20,10 @@ export class MatSeekProgressControlComponent extends BaseUiComponent {
   @Input() bufferedTime = 0;
 
   protected events: EventHandler[] = [
-    { element: null, name: 'seeked', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null},
-    { element: null, name: 'canplaythrough', callback: event => this.updateBufferedTime(), dispose: null },
-    { element: null, name: 'timeupdate', callback: event => this.updateCurrentTime(this.video.currentTime), dispose: null },
-    { element: null, name: 'progress', callback: event => this.updateBufferedTime(), dispose: null }
+    { element: null, name: 'seeked', callback: () => this.updateCurrentTime(this.video.currentTime), dispose: null },
+    { element: null, name: 'canplaythrough', callback: () => this.updateBufferedTime(), dispose: null },
+    { element: null, name: 'timeupdate', callback: () => this.updateCurrentTime(this.video.currentTime), dispose: null },
+    { element: null, name: 'progress', callback: () => this.updateBufferedTime(), dispose: null }
   ];
 
   seekVideo(value: number): void {

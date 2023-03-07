@@ -4,7 +4,7 @@ import { EventHandler } from '../../interfaces/event-handler.interface';
 import { EventService } from '../../services/event.service';
 
 @Component({
-  selector: 'mat-video-spinner',
+  selector: 'app-mat-video-spinner',
   templateUrl: './mat-video-spinner.component.html',
   styleUrls: [
     './mat-video-spinner.component.scss',

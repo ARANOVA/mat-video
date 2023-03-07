@@ -4,7 +4,7 @@ import { ThemePalette } from '@angular/material/core';
 import { BaseUiComponent } from '../base/base.component';
 
 @Component({
-  selector: 'mat-volume-control',
+  selector: 'app-mat-volume-control',
   templateUrl: './mat-volume-control.component.html',
   styleUrls: ['./mat-volume-control.component.scss']
 })
@@ -51,7 +51,7 @@ export class MatVolumeControlComponent extends BaseUiComponent {
     this.updateMuted();
   }
 
-  updateMuted(emitChange: boolean = true): void {
+  updateMuted(emitChange = true): void {
     if (this.video) {
       this.video.muted = this.muted;
     }

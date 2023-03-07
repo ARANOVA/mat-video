@@ -10,15 +10,16 @@ export class BaseUiComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   @Input() video: HTMLVideoElement;
 
-  @Input() keyboard: boolean = false;
+  @Input() keyboard = false;
 
-  @Input() fps: number = 25;
+  @Input() fps = 25;
 
   protected events: EventHandler[];
 
-  constructor(private renderer: Renderer2, private evt: EventService) {}
+  constructor(private renderer: Renderer2, private evt: EventService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
+    // do something interesting
   }
 
   ngAfterViewInit(): void {

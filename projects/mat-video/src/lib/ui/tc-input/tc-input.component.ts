@@ -1,5 +1,5 @@
-import {FocusMonitor} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   Component,
   ElementRef,
@@ -11,7 +11,8 @@ import {
   Output,
   Self,
   ViewChild,
-  forwardRef
+  forwardRef,
+  HostBinding
 } from '@angular/core';
 import {
   AbstractControl,
@@ -31,18 +32,21 @@ export class TcInterface {
   constructor(
     public mm: string,
     public ss: string
-  ) {}
+  ) { }
 }
 
-const pad = (n: any, width: number = 2, z: string = '0'): string => {
+const pad = (n: number, width = 2, z = '0'): string => {
   z = z || '0';
-  n = n + '';
-  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+  const n1 = n + '';
+  return n1.length >= width ? n1 : new Array(width - n1.length + 1).join(z) + n1;
 }
+
+type OnChange = (a: number) => void;
+type OnTouched = () => void;
 
 /** Custom `MatFormFieldControl` for telephone number input. */
 @Component({
-  selector: 'tc-input',
+  selector: 'app-tc-input',
   templateUrl: 'tc-input.component.html',
   styleUrls: ['tc-input.component.scss'],
   providers: [
@@ -52,26 +56,26 @@ const pad = (n: any, width: number = 2, z: string = '0'): string => {
       useExisting: forwardRef(() => TcInputComponent),
       multi: true
     }
-  ],
-  host: {
-    '[class.input-floating]': 'shouldLabelFloat',
-    '[id]': 'id',
-  }
+  ]
 })
 export class TcInputComponent
   implements ControlValueAccessor, MatFormFieldControl<number>, OnDestroy {
+  
+  focused = false;
+    
+  @HostBinding('id') id = `tc-input-${TcInputComponent.nextId++}`;
+  @HostBinding('class.input-floating') shouldLabelFloat = this.focused || !this.empty;
+
   static nextId = 0;
   @ViewChild('mm') mmInput: HTMLInputElement;
   @ViewChild('ss') ssInput: HTMLInputElement;
 
   parts: FormGroup;
   stateChanges = new Subject<void>();
-  focused = false;
   touched = false;
   controlType = 'tc-input';
-  id = `tc-input-${TcInputComponent.nextId++}`;
-  onChange = (_: any) => {};
-  onTouched = () => {};
+  onChange: OnChange;
+  onTouched: OnTouched;
 
   get empty() {
     const {
@@ -79,10 +83,6 @@ export class TcInputComponent
     } = this.parts;
 
     return !mm && !ss;
-  }
-
-  get shouldLabelFloat() {
-    return this.focused || !this.empty;
   }
 
   @Input('aria-describedby') userAriaDescribedBy: string;
@@ -192,7 +192,9 @@ export class TcInputComponent
     if (!this._elementRef.nativeElement.contains(event.relatedTarget as Element)) {
       this.touched = true;
       this.focused = false;
-      this.onTouched();
+      if (this.onTouched) {
+        this.onTouched();
+      }
       this.stateChanges.next();
       this.blur.emit(true);
     }
@@ -234,11 +236,11 @@ export class TcInputComponent
     this.value = tc;
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: OnChange): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: OnTouched): void {
     this.onTouched = fn;
   }
 
@@ -248,7 +250,10 @@ export class TcInputComponent
 
   _handleInput(control: AbstractControl, nextElement?: HTMLInputElement): void {
     // this.autoFocusNext(control, nextElement);
-    this.onChange(this.value);
+    console.log(control, nextElement);
+    if (this.onChange) {
+      this.onChange(this.value);
+    }
   }
 
   static ngAcceptInputType_disabled: BooleanInput;

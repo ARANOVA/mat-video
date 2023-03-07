@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'mat-time-control',
+  selector: 'app-mat-time-control',
   templateUrl: './mat-time-control.component.html',
   styles: ['.playtime{display:inline;font-size:12px;}']
 })

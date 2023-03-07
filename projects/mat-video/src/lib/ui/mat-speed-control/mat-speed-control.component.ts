@@ -1,7 +1,7 @@
 import { Component, HostListener, Input } from '@angular/core';
 
 @Component({
-  selector: 'mat-speed-control',
+  selector: 'app-mat-speed-control',
   templateUrl: './mat-speed-control.component.html',
   styleUrls: ['./mat-speed-control.component.scss']
 })
@@ -11,7 +11,9 @@ export class MatSpeedControlComponent {
   @Input() speedIndex = 2;
   @Input() keyboard = true;
 
-  constructor() { }
+  constructor() {
+    // do something interesting
+  }
 
   speedControl(direction: number) {
     this.speedIndex += direction;

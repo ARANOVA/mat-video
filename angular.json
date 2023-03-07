@@ -3,6 +3,49 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "@aranova/mat-video": {
+      "projectType": "library",
+      "root": "projects/mat-video",
+      "sourceRoot": "projects/mat-video/src",
+      "prefix": "lib",
+      "architect": {
+          "build": {
+              "builder": "@angular-devkit/build-angular:ng-packagr",
+              "options": {
+                  "project": "projects/mat-video/ng-package.json"
+              },
+              "configurations": {
+                  "production": {
+                      "tsConfig": "projects/mat-video/tsconfig.lib.prod.json"
+                  },
+                  "development": {
+                      "tsConfig": "projects/mat-video/tsconfig.lib.json"
+                  }
+              },
+              "defaultConfiguration": "production"
+          },
+          "test": {
+              "builder": "@angular-devkit/build-angular:karma",
+              "options": {
+                  "main": "projects/mat-video/src/test.ts",
+                  "tsConfig": "projects/mat-video/tsconfig.spec.json",
+                  "karmaConfig": "projects/mat-video/karma.conf.js"
+              }
+          },
+          "lint": {
+              "builder": "@angular-devkit/build-angular:tslint",
+              "options": {
+                  "tsConfig": [
+                      "projects/mat-video/tsconfig.lib.json",
+                      "projects/mat-video/tsconfig.spec.json"
+                  ],
+                  "exclude": [
+                      "**/node_modules/**"
+                  ]
+              }
+          }
+      }
+  },
     "mat-video-app": {
       "projectType": "application",
       "schematics": {
@@ -43,7 +86,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -135,47 +177,6 @@
           }
         }
       }
-    },
-    "mat-video": {
-      "projectType": "library",
-      "root": "projects/mat-video",
-      "sourceRoot": "projects/mat-video/src",
-      "prefix": "mat",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/mat-video/tsconfig.lib.json",
-            "project": "projects/mat-video/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/mat-video/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/mat-video/src/test.ts",
-            "tsConfig": "projects/mat-video/tsconfig.spec.json",
-            "karmaConfig": "projects/mat-video/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/mat-video/tsconfig.lib.json",
-              "projects/mat-video/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
     }
-  },
-  "defaultProject": "mat-video-app"
+  }
 }
