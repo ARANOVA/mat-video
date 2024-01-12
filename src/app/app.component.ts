@@ -116,6 +116,7 @@ export class AppComponent {
    * @param {number} $event 
    */
   public set currentTimeChange($event: number) {
+    console.log("EVENT", $event)
     this.currentTime = $event;
   }
 

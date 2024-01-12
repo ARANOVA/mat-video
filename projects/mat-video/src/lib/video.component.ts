@@ -134,6 +134,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
         val = 0;
       }
       if (Math.abs(val - video.currentTime) > 0.0001) {
+        console.log("VAL", val)
         video.currentTime = val;
       }
       if (!this.lastTime || Math.abs(this.lastTime - video.currentTime) > 0.0001) {
@@ -158,7 +159,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   private srcObjectURL: string;
 
   private isMouseMoving = false;
-  private isMouseMovingTimer: NodeJS.Timer;
+  private isMouseMovingTimer: string | number | NodeJS.Timeout;
   private isMouseMovingTimeout = 2000;
 
   private events: EventHandler[];

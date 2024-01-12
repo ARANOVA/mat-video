@@ -14,6 +14,7 @@ export class MatFrameByFrameControlComponent extends BaseUiComponent {
 
     const currentFrames = this.video.currentTime * this.fps;
     const newPos = (currentFrames + nbFrames) / this.fps; // + 0.00001;
+    console.log("newPos", newPos)
     this.video.currentTime = newPos;
   }
 

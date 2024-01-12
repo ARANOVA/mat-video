@@ -78,6 +78,7 @@ export class TcInputComponent
   onTouched: OnTouched;
 
   get empty() {
+    if (!this.parts) return true;
     const {
       value: { mm, ss }
     } = this.parts;

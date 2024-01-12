@@ -10,6 +10,8 @@ import { BaseUiComponent } from '../base/base.component';
 })
 export class MatVolumeControlComponent extends BaseUiComponent {
 
+  curVolumePercent = 0;
+
   @Input() color: ThemePalette = 'primary';
 
   @Input() volume = 1;
@@ -30,8 +32,8 @@ export class MatVolumeControlComponent extends BaseUiComponent {
     }
   }
 
-  setVolume(value: number): void {
-    this.volume = value;
+  setVolume(): void {
+    this.volume = this.curVolumePercent;
     this.video.volume = this.volume;
     this.volumeChanged.emit(this.volume);
 

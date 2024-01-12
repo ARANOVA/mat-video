@@ -206,6 +206,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
       clearTimeout(this.__seek);
     }
     this.__seek = setTimeout(() => {
+      console.log("this.currentTime", this.currentTime)
       this.video.currentTime = this.currentTime;
     }, 250);
   }
@@ -223,6 +224,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
         this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
         const leftPercent = (this.x - rect.left) * (this.curMaxPercent - this.curMinPercent) / this.__barWidth;
         const tc = (leftPercent + this.curMinPercent) * this.video.duration / 100;
+        console.log("roundFn", roundFn(tc, 1 / this.fps, 0))
         this.currentTime = roundFn(tc, 1 / this.fps, 0);
         this.__delaySeek();
         if (this.editing === '' || this.editing === 'out') {
@@ -782,6 +784,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
     }
     const percentage = value / 100;
     const newTime = this.video.duration * percentage;
+    console.log("newTime", newTime)
     this.video.currentTime = newTime;
     if (!this.__lastthumb.thumb && collection == this.cuts) {
       this.__askFrame = true;
@@ -843,6 +846,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
   }
 
   updateCurrentTime(time: number): void {
+    console.log("time", time)
     this.currentTime = time;
     this.curTimePercent = this.updateTime(this.currentTimeChanged, this.currentTime);
   }

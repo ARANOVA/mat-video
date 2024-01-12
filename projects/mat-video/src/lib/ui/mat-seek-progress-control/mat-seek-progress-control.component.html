@@ -17,11 +17,10 @@
 ></app-mat-progress-bar>
 -->
 <mat-slider
-  [color]="color"
-  min="0"
-  max="100"
-  step="0.1"
-  (input)="seekVideo($event.value)"
->
-  <input matSliderThumb [(ngModel)]="curTimePercent">
+    [color]="color"
+    min="0"
+    max="100"
+    step="0.1"
+    [showTickMarks]="false">
+  <input matSliderThumb [(ngModel)]="curTimePercent" (valueChange)="seekVideo()">
 </mat-slider>

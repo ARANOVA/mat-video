@@ -26,8 +26,8 @@ export class MatSeekProgressControlComponent extends BaseUiComponent {
     { element: null, name: 'progress', callback: () => this.updateBufferedTime(), dispose: null }
   ];
 
-  seekVideo(value: number): void {
-    const percentage = value / 100;
+  seekVideo(): void {
+    const percentage = this.curTimePercent / 100;
     const newTime = this.video.duration * percentage;
     this.video.currentTime = newTime;
   }

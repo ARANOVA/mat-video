@@ -15,12 +15,12 @@
        This browser does not support HTML5 video.
     </video>
   </div>
-  <div class="controls" *ngIf="videoLoaded" [ngClass]="getOverlayClass('visible ' + controlClass, 'hidden')">
+  <div class="controls" *ngIf=" videoLoaded" [ngClass]="getOverlayClass('visible ' + controlClass, 'hidden')">
     <div class="progress" [ngClass]="sliderClass">
       <!-- [currentTime]="time" -->
       <app-mat-seek-progress-control [color]="color" [video]="video" [fps]="fps"></app-mat-seek-progress-control>
     </div>
-    <div class="menu">
+   <div class="menu">
       <div class="buttons">
         <app-mat-play-button
           [video]="video"
@@ -28,6 +28,7 @@
           [play]="playingState"
           [style.order]="orderConfiguration.playButton"
         ></app-mat-play-button>
+      
         <app-mat-frame-by-frame-control
           *ngIf="showFrameByFrame"
           [video]="video"
@@ -74,7 +75,7 @@
         ></app-mat-fullscreen-button>
       </div>
     </div>
-    <div class="editor" *ngIf="editor">
+    <!-- <div class="editor" *ngIf="editor">
       <app-mat-editor-control
         [color]="color"
         [video]="video"
@@ -95,7 +96,7 @@
         (selectedMarkChanged)="emitSelectedMarkChange($event)"
         (posterChanged)="emitPosterChange($event)"
       ></app-mat-editor-control>
-    </div>
+    </div> -->
   </div>
   <app-mat-video-spinner [spinner]="spinner" [video]="video"></app-mat-video-spinner>
 </div>
