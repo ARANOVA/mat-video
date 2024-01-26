@@ -4,7 +4,7 @@ import { EventHandler } from '../../interfaces/event-handler.interface';
 import { EventService } from '../../services/event.service';
 
 @Component({
-  selector: 'mat-video-spinner',
+  selector: 'app-mat-video-spinner',
   templateUrl: './mat-video-spinner.component.html',
   styleUrls: [
     './mat-video-spinner.component.scss',
@@ -26,11 +26,11 @@ export class MatVideoSpinnerComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.events = [
-      { element: this.video, name: 'loadstart', callback: event => (this.videoBuffering = true), dispose: null },
-      { element: this.video, name: 'loadedmetadata', callback: event => (this.videoBuffering = false), dispose: null },
-      { element: this.video, name: 'playing', callback: event => (this.videoBuffering = false), dispose: null },
-      { element: this.video, name: 'waiting', callback: event => (this.videoBuffering = true), dispose: null },
-      { element: this.video, name: 'durationchange', callback: event => (this.videoBuffering = true), dispose: null }
+      // { element: this.video, name: 'loadstart', callback: event => (this.videoBuffering = true), dispose: null },
+      // { element: this.video, name: 'loadedmetadata', callback: event => (this.videoBuffering = false), dispose: null },
+      // { element: this.video, name: 'playing', callback: event => (this.videoBuffering = false), dispose: null },
+      // { element: this.video, name: 'waiting', callback: event => (this.videoBuffering = true), dispose: null },
+      // { element: this.video, name: 'durationchange', callback: event => (this.videoBuffering = true), dispose: null }
     ];
 
     this.video.onloadeddata = () => (this.videoBuffering = false);

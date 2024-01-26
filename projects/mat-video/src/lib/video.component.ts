@@ -12,6 +12,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
+import { ClipInterface } from './interfaces/clip.interface';
 
 import { EventHandler } from './interfaces/event-handler.interface';
 import { EventService } from './services/event.service';
@@ -22,7 +23,7 @@ interface HashNumber {
 
 
 @Component({
-  selector: 'mat-video',
+  selector: 'app-mat-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss', './styles/icons.scss']
 })
@@ -43,7 +44,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() showFrameByFrame = false;
   @Input() showVolume = false;
   @Input() showSpeed = false;
-  @Input() fps: number = 25;
+  @Input() fps = 25;
   @Input() download = false;
   @Input() color: ThemePalette = 'accent';
   @Input() spinner = 'spin';
@@ -54,8 +55,8 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() controlClass = '';
   @Input() headerClass = '';
   @Input() sliderClass = '';
-  @Input() cuts: any = [];
-  @Input() marks: any = [];
+  @Input() cuts: ClipInterface[] = [];
+  @Input() marks: ClipInterface[] = [];
   @Input() defaultCutType = 'cut';
   @Input() cutType: string | null = null;
   @Input() speedScale: number[] = [0.5, 0.75, 1, 1.25, 1.5, 2, 4, 8];
@@ -96,8 +97,8 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   @Output() timeChange = new EventEmitter<number>();
 
-  @Output() cutEvent = new EventEmitter<any>();
-  @Output() posterChanged = new EventEmitter<{thumb: string; idx: string | null}>();
+  @Output() cutEvent = new EventEmitter<ClipInterface>();
+  @Output() posterChanged = new EventEmitter<{ thumb: string; idx: string | null }>();
   @Output() selectedChanged = new EventEmitter<string | null>();
   @Output() selectedMarkChanged = new EventEmitter<string | null>();
 
@@ -133,6 +134,7 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
         val = 0;
       }
       if (Math.abs(val - video.currentTime) > 0.0001) {
+        console.log("VAL", val)
         video.currentTime = val;
       }
       if (!this.lastTime || Math.abs(this.lastTime - video.currentTime) > 0.0001) {
@@ -152,30 +154,30 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   videoLoaded = false;
 
-  focused: boolean = false;
+  focused = false;
 
   private srcObjectURL: string;
 
   private isMouseMoving = false;
-  private isMouseMovingTimer: NodeJS.Timer;
+  private isMouseMovingTimer: string | number | NodeJS.Timeout;
   private isMouseMovingTimeout = 2000;
 
   private events: EventHandler[];
 
-  constructor(private renderer: Renderer2, private evt: EventService) {}
+  constructor(private renderer: Renderer2, private evt: EventService) { }
 
   ngAfterViewInit(): void {
     this.events = [
       {
         element: this.video.nativeElement,
         name: 'loadstart',
-        callback: event => (this.videoLoaded = false),
+        callback: () => (this.videoLoaded = false),
         dispose: null
       },
       {
         element: this.video.nativeElement,
         name: 'loadedmetadata',
-        callback: event => this.evLoadedMetadata(event),
+        callback: () => this.evLoadedMetadata(),
         dispose: null
       },
       {
@@ -187,25 +189,25 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
       {
         element: this.video.nativeElement,
         name: 'contextmenu',
-        callback: event => event.preventDefault(),
+        callback: () => event.preventDefault(),
         dispose: null
       },
       {
         element: this.video.nativeElement,
         name: 'timeupdate',
-        callback: event => this.evTimeUpdate(event),
+        callback: () => this.evTimeUpdate(),
         dispose: null
       },
       {
         element: this.player.nativeElement,
         name: 'mousemove',
-        callback: event => this.evMouseMove(event),
+        callback: () => this.evMouseMove(),
         dispose: null
       },
       {
         element: this.video.nativeElement,
         name: 'durationchange',
-        callback: event => (this.durationChanged.emit(this.video.nativeElement.duration)),
+        callback: () => (this.durationChanged.emit(this.video.nativeElement.duration)),
         dispose: null
       }
     ];
@@ -239,13 +241,13 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
     return this.video && this.video.nativeElement ? (this.video.nativeElement as HTMLVideoElement) : null;
   }
 
-  evLoadedMetadata(event: any): void {
+  evLoadedMetadata(): void {
     this.videoWidth = this.video.nativeElement.videoWidth;
     this.videoHeight = this.video.nativeElement.videoHeight;
     this.videoLoaded = true;
   }
 
-  evMouseMove(event: any): void {
+  evMouseMove(): void {
     this.isMouseMoving = true;
     clearTimeout(this.isMouseMovingTimer);
     this.isMouseMovingTimer = setTimeout(() => {
@@ -253,11 +255,11 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
     }, this.isMouseMovingTimeout);
   }
 
-  evTimeUpdate(event: any): void {
+  evTimeUpdate(): void {
     this.time = this.getVideoTag().currentTime;
   }
 
-  getOverlayClass(activeClass: string, inactiveClass: string): any {
+  getOverlayClass(activeClass: string, inactiveClass: string): string {
     if (this.overlay === null) {
       return !this.playing || this.isMouseMoving ? activeClass : inactiveClass;
     } else {
@@ -285,18 +287,18 @@ export class MatVideoComponent implements AfterViewInit, OnChanges, OnDestroy {
     } else if ('srcObject' in HTMLVideoElement.prototype) {
       this.video.nativeElement.srcObject = src;
     } else {
-      this.srcObjectURL = URL.createObjectURL(src);
+      this.srcObjectURL = URL.createObjectURL(src as MediaSource);
       this.video.nativeElement.src = this.srcObjectURL;
     }
 
     this.video.nativeElement.muted = this.muted;
   }
 
-  emitCutEvent($event: any) {
+  emitCutEvent($event: ClipInterface) {
     this.cutEvent.emit($event)
   }
 
-  emitPosterChange($event: {thumb: string; idx: string | null}) {
+  emitPosterChange($event: { thumb: string; idx: string | null }) {
     this.posterChanged.emit($event)
   }
 

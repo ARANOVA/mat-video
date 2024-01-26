@@ -43,7 +43,7 @@ interface HashNumber {
 }
 
 @Component({
-  selector: 'mat-editor-control',
+  selector: 'app-mat-editor-control',
   templateUrl: './mat-editor-control.component.html',
   styleUrls: ['./mat-editor-control.component.scss']
 })
@@ -70,7 +70,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
 
   @Input() cutType: string | null = null;
 
-  @Input() editorButtons: boolean = false;
+  @Input() editorButtons = false;
 
   @Input() editorOrderButtons: HashNumber = {
     tcinInput: 0,
@@ -136,12 +136,12 @@ export class MatEditorControlComponent extends BaseUiComponent {
   /**
    * NgModel for tc input
    */
-  public inposition: number = 0;
+  public inposition = 0;
 
   /**
    * NgModel for tc output
    */
-  public outposition: number = 0;
+  public outposition = 0;
 
   /**
    * Editing mode
@@ -170,10 +170,10 @@ export class MatEditorControlComponent extends BaseUiComponent {
   keyboard$: any;
   x: number;
   y: number;
-  disabled: boolean = true;
+  disabled = true;
   private _sub: any;
   private _sub2: any;
-  ctrlKey: boolean = false;
+  ctrlKey = false;
   private __seek: any;
   private __interval: any;
 
@@ -206,6 +206,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
       clearTimeout(this.__seek);
     }
     this.__seek = setTimeout(() => {
+      console.log("this.currentTime", this.currentTime)
       this.video.currentTime = this.currentTime;
     }, 250);
   }
@@ -223,6 +224,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
         this.__barWidth = this.trimmerBar.nativeElement.offsetWidth;
         const leftPercent = (this.x - rect.left) * (this.curMaxPercent - this.curMinPercent) / this.__barWidth;
         const tc = (leftPercent + this.curMinPercent) * this.video.duration / 100;
+        console.log("roundFn", roundFn(tc, 1 / this.fps, 0))
         this.currentTime = roundFn(tc, 1 / this.fps, 0);
         this.__delaySeek();
         if (this.editing === '' || this.editing === 'out') {
@@ -259,9 +261,11 @@ export class MatEditorControlComponent extends BaseUiComponent {
       repeat()
     );
 
-    this.mousemove$.subscribe(_ => { });
+    this.mousemove$.subscribe(_ => {
+      // do something interesting
+    });
 
-    this.mousedown$.subscribe((e) => {
+    this.mousedown$.subscribe((e: any) => {
       if (!this.ctrlKey) {
         return;
       }
@@ -452,7 +456,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
    * 
    * @param {boolean} update    if the selected value cut must be update
    */
-  setTcIn(update: boolean = true, tcin?: number, mode?: string) {
+  setTcIn(update = true, tcin?: number, mode?: string) {
     const prevTCin = this.currentTime;
     const cur = roundFn(this.currentTime, 1 / this.fps, 0);
     const inposition = this.tcinInput.value;
@@ -475,7 +479,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
         this.__lastthumb.idx = this.selectedCut.idx;
         this.posterChanged.emit(this.__lastthumb);
       }
-      this.seekVideo(this.selectedCut.tcin / this.video.duration * 100, this.cuts, !!!tcin || this.inposition !== prevTCin);
+      this.seekVideo(this.selectedCut.tcin / this.video.duration * 100, this.cuts, !tcin || this.inposition !== prevTCin);
     }
     if (!tcin) {
       if (this.mode === 'tcin') {
@@ -500,7 +504,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
   /**
    * Sets the tc output point
    */
-  setTcOut(update: boolean = false, tcout?: number, mode?: string) {
+  setTcOut(update = false, tcout?: number, mode?: string) {
     tcout = tcout || roundFn(this.video.currentTime, 1 / this.fps, 0);
     this.outposition = tcout;
     if (this.selectedCut) {
@@ -520,7 +524,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
   /**
    * Restart selected cut
    */
-  restart(emit: boolean = true) {
+  restart(emit = true) {
     if (emit && this.selectedCut && !this.selectedCut.idx) {
       // Si ya estaba añadido buscar y eliminar en el padre
       this.cutEvent.emit({ type: 'reset', cut: { ...this.selectedCut } });
@@ -616,7 +620,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
    * @param idx 
    * @param emit 
    */
-  doubleClick($event: MouseEvent, idx: string | null = null, collection: ClipInterface[], emit: boolean = true) {
+  doubleClick($event: MouseEvent, idx: string | null = null, collection: ClipInterface[], emit = true) {
     if (this.__clickTimeout) {
       clearTimeout(this.__clickTimeout);
       this.__clickTimeout = null;
@@ -647,7 +651,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
    * @param idx 
    * @param emit 
    */
-  click($event: MouseEvent, idx: string | null = null, collection: ClipInterface[], emit: boolean = true) {
+  click($event: MouseEvent, idx: string | null = null, collection: ClipInterface[], emit = true) {
     if ($event) {
       $event.stopPropagation();
     }
@@ -664,7 +668,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
    * @param idx 
    * @param emit 
    */
-  selectClip($event: MouseEvent, idx: string | null = null, collection: ClipInterface[], emit: boolean = true) {
+  selectClip($event: MouseEvent, idx: string | null = null, collection: ClipInterface[], emit = true) {
     this.__select(idx, collection);
     const changeStyles = [this.curMinPercent, this.curMaxPercent];
     if (collection === this.cuts) {
@@ -695,7 +699,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
         this.outposition = tcout;
       }
     }
-    if (changeStyles !== [this.curMinPercent, this.curMaxPercent]) {
+    if (changeStyles[0] !== this.curMinPercent && changeStyles[1] !== this.curMaxPercent) {
       this.composeStyles('cuts', this.cuts);
       this.composeStyles('marks', this.marks);
     } else {
@@ -774,12 +778,13 @@ export class MatEditorControlComponent extends BaseUiComponent {
    * 
    * @param value 
    */
-  seekVideo(value: number, collection?: ClipInterface[], update: boolean = true): void {
+  seekVideo(value: number, collection?: ClipInterface[], update = true): void {
     if (isNaN(value)) {
       return;
     }
     const percentage = value / 100;
     const newTime = this.video.duration * percentage;
+    console.log("newTime", newTime)
     this.video.currentTime = newTime;
     if (!this.__lastthumb.thumb && collection == this.cuts) {
       this.__askFrame = true;
@@ -841,6 +846,7 @@ export class MatEditorControlComponent extends BaseUiComponent {
   }
 
   updateCurrentTime(time: number): void {
+    console.log("time", time)
     this.currentTime = time;
     this.curTimePercent = this.updateTime(this.currentTimeChanged, this.currentTime);
   }

@@ -4,9 +4,8 @@ import { EventHandler } from '../../interfaces/event-handler.interface';
 import { BaseUiComponent } from '../base/base.component';
 
 @Component({
-  selector: 'mat-play-button',
-  templateUrl: './mat-play-button.component.html',
-  styleUrls: ['./mat-play-button.component.scss']
+  selector: 'app-mat-play-button',
+  templateUrl: './mat-play-button.component.html'
 })
 export class MatPlayButtonComponent extends BaseUiComponent {
 
@@ -17,10 +16,14 @@ export class MatPlayButtonComponent extends BaseUiComponent {
 
   set play(val: boolean) {
     if (val) {
-      var playPromise = this.video.play();
+      const playPromise = this.video.play();
       if (playPromise !== undefined) {
-        playPromise.then(_ => {})
-        .catch(error => {});
+        playPromise.then(() => {
+          // do something interesting
+        })
+        .catch(() => {
+          // do something interesting
+        });
       }
     } else {
       this.video.pause();

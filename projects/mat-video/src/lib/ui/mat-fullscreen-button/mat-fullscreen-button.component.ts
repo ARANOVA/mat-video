@@ -4,7 +4,7 @@ import { EventService } from '../../services/event.service';
 import { FullscreenService } from '../../services/fullscreen.service';
 
 @Component({
-  selector: 'mat-fullscreen-button',
+  selector: 'app-mat-fullscreen-button',
   templateUrl: './mat-fullscreen-button.component.html'
 })
 export class MatFullscreenButtonComponent implements OnInit {
@@ -18,7 +18,7 @@ export class MatFullscreenButtonComponent implements OnInit {
 
   @Input() keyboard = true;
 
-  constructor(private fscreen: FullscreenService, private evt: EventService) {}
+  constructor(private fscreen: FullscreenService, private evt: EventService) { }
 
   ngOnInit(): void {
     if (this.fscreen.isEnabled()) {

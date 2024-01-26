@@ -1,8 +1,8 @@
-import { Component, HostListener, Input } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { BaseUiComponent } from '../base/base.component';
 
 @Component({
-  selector: 'mat-frame-by-frame-control',
+  selector: 'app-mat-frame-by-frame-control',
   templateUrl: './mat-frame-by-frame-control.component.html',
 })
 export class MatFrameByFrameControlComponent extends BaseUiComponent {
@@ -14,6 +14,7 @@ export class MatFrameByFrameControlComponent extends BaseUiComponent {
 
     const currentFrames = this.video.currentTime * this.fps;
     const newPos = (currentFrames + nbFrames) / this.fps; // + 0.00001;
+    console.log("newPos", newPos)
     this.video.currentTime = newPos;
   }
 

@@ -8,9 +8,9 @@ describe('MatEditorControlComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MatEditorControlComponent ]
+      declarations: [MatEditorControlComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

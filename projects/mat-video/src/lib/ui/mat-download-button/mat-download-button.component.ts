@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'mat-download-button',
+  selector: 'app-mat-download-button',
   templateUrl: './mat-download-button.component.html',
   styles: ['a {color: inherit;text-decoration:none;}']
 })

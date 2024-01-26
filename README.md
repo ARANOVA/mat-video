@@ -65,18 +65,18 @@ export class AppModule { }
 A minimal example is quite simple, in your HTML file:
 
 ```html
-    <mat-video src="localOrRemoteVideo.mp4"></mat-video>
+    <app-mat-video src="localOrRemoteVideo.mp4"></app-mat-video>
 ```
 
 A slightly more customized example, in your HTML file:
 
 ```html
-    <mat-video title="My Tutorial Title" [autoplay]="true" [preload]="true" [fullscreen]="true" [download]="false" color="accent" spinner="spin" poster="image.jpg">
+    <app-mat-video title="My Tutorial Title" [autoplay]="true" [preload]="true" [fullscreen]="true" [download]="false" color="accent" spinner="spin" poster="image.jpg">
       <source matVideoSource src="tutorial.mp4" type="video/mp4">
       <source src="tutorial.webm" type="video/webm">
       <track matVideoTrack src="subtitles_en.vtt" kind="subtitles" srclang="en" label="English">
       <track src="subtitles_no.vtt" kind="subtitles" srclang="no" label="Norwegian">
-    </mat-video>
+    </app-mat-video>
 ```
 
 ## API
@@ -112,7 +112,7 @@ Listening to video events can be accomplished by directly accessing the video ta
 In your HTML file:
 
 ```html
-    <mat-video #video src="localOrRemoteVideo.mp4"></mat-video>
+    <app-mat-video #video src="localOrRemoteVideo.mp4"></app-mat-video>
 ```
 
 In your TS file:

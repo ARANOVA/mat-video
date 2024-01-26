@@ -3,7 +3,9 @@ import { EventHandler } from '../interfaces/event-handler.interface';
 
 @Injectable()
 export class EventService {
-  constructor() {}
+  constructor() {
+    // do something interesting
+  }
 
   addEvents(renderer: Renderer2, events: EventHandler[]): void {
     for (const event of events) {

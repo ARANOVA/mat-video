@@ -1,5 +1,12 @@
 .videoplayer {
   position: relative;
+  .progress, .editor {
+    display: flex;
+    app-mat-seek-progress-control, app-mat-editor-control {
+      flex-grow: 1;
+      display: flex;
+    }
+  }
   .header {
     color: white;
     display: flex;
@@ -49,9 +56,6 @@
           color: black;
       }
     }
-    & .progress {
-      height: 26px;
-    }
     & .menu {
       display: flex;
       align-items: center;
@@ -74,7 +78,7 @@
     }
   }
 
-  mat-time-control {
+  app-mat-time-control {
     padding: 0 16px;
   }
   
