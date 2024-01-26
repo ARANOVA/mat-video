@@ -1,9 +1,9 @@
-import { Directive, ElementRef, Host, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Directive, ElementRef, Host, Input, OnChanges } from '@angular/core';
 
 import { MatVideoComponent } from '../video.component';
 
 @Directive({
-  selector: '[matVideoSource]'
+  selector: '[appVideoSource]'
 })
 export class MatVideoSourceDirective implements OnChanges {
   @Input() src: string = null;
@@ -19,7 +19,7 @@ export class MatVideoSourceDirective implements OnChanges {
     this.init = false;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.source.src = this.src;
     this.source.type = this.type;
 

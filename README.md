@@ -72,9 +72,9 @@ A slightly more customized example, in your HTML file:
 
 ```html
     <app-mat-video title="My Tutorial Title" [autoplay]="true" [preload]="true" [fullscreen]="true" [download]="false" color="accent" spinner="spin" poster="image.jpg">
-      <source matVideoSource src="tutorial.mp4" type="video/mp4">
+      <source appVideoSource src="tutorial.mp4" type="video/mp4">
       <source src="tutorial.webm" type="video/webm">
-      <track matVideoTrack src="subtitles_en.vtt" kind="subtitles" srclang="en" label="English">
+      <track appVideoTrack src="subtitles_en.vtt" kind="subtitles" srclang="en" label="English">
       <track src="subtitles_no.vtt" kind="subtitles" srclang="no" label="Norwegian">
     </app-mat-video>
 ```
@@ -104,7 +104,7 @@ In addition, [source](https://www.w3schools.com/tags/tag_source.asp) and [track]
 
 The **_matVideoSource_** attribute can be used on the *source* tag to automatically reload the video when the source changes.
 
-The **_matVideoTrack_** attribute can be used on the *track* tag to automatically reload the video when the track changes.
+The **_appVideoTrack_** attribute can be used on the *track* tag to automatically reload the video when the track changes.
 
 ## Events
 Listening to video events can be accomplished by directly accessing the video tag within **mat-video**.

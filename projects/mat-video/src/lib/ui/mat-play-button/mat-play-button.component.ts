@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, Output, Renderer2, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
 import { EventHandler } from '../../interfaces/event-handler.interface';
 import { BaseUiComponent } from '../base/base.component';

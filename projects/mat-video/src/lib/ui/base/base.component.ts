@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, Renderer2, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, Renderer2, SimpleChanges } from '@angular/core';
 
 import { EventHandler } from '../../interfaces/event-handler.interface';
 import { EventService } from '../../services/event.service';
@@ -18,6 +18,7 @@ export class BaseUiComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   constructor(private renderer: Renderer2, private evt: EventService) { }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
     // do something interesting
   }

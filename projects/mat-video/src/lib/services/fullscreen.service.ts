@@ -42,7 +42,7 @@ export class FullscreenService {
 
   constructor() {
     this.keyboardAllowed = typeof Element !== 'undefined' && 'ALLOW_KEYBOARD_INPUT' in Element;
-    const ret: any = {};
+    const ret: Record<string, string> = {};
     let val;
 
     for (let i = 0; i < this.fnMap.length; i++) {
@@ -52,12 +52,12 @@ export class FullscreenService {
           // Map everything to the first list of keys
           ret[this.fnMap[0][i].toString()] = val[i];
         }
-        this.fn = ret;
+        this.fn = ret as unknown as FullscreenControls;
       }
     }
   }
 
-  public request(elem: any) {
+  public request(elem: HTMLElement) {
     const request = this.fn.requestFullscreen;
 
     elem = elem || document.documentElement;
@@ -69,6 +69,7 @@ export class FullscreenService {
     if (/5\.1[.\d]* Safari/.test(navigator.userAgent)) {
       elem[request]();
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       elem[request](this.keyboardAllowed ? (Element as any).ALLOW_KEYBOARD_INPUT : {});
     }
   }
@@ -77,7 +78,7 @@ export class FullscreenService {
     document[this.fn.exitFullscreen]();
   }
 
-  public toggle(elem: any) {
+  public toggle(elem: HTMLElement) {
     if (this.isFullscreen()) {
       this.exit();
     } else {
@@ -85,11 +86,11 @@ export class FullscreenService {
     }
   }
 
-  public onChange(callback: any) {
+  public onChange(callback: () => void) {
     document.addEventListener(this.fn.fullscreenchange, callback, false);
   }
 
-  public onError(callback: any) {
+  public onError(callback: () => void) {
     document.addEventListener(this.fn.fullscreenerror, callback, false);
   }
 

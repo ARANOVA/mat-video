@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
 import { BaseUiComponent } from '../base/base.component';
@@ -8,7 +8,7 @@ import { BaseUiComponent } from '../base/base.component';
   templateUrl: './mat-volume-control.component.html',
   styleUrls: ['./mat-volume-control.component.scss']
 })
-export class MatVolumeControlComponent extends BaseUiComponent {
+export class MatVolumeControlComponent extends BaseUiComponent implements AfterViewInit, OnChanges {
 
   curVolumePercent = 0;
 

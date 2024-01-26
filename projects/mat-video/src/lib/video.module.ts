@@ -12,7 +12,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { MatVideoSourceDirective } from './directives/mat-video-source.directive';
-import { MatVideoTrackDirective } from './directives/mat-video-track.directive';
+import { appVideoTrackDirective } from './directives/mat-video-track.directive';
 import { MinDirective } from './directives/min.directive';
 import { MaxDirective } from './directives/max.directive';
 import { SecondsToTimePipe } from './pipes/seconds-to-time.pipe';
@@ -48,7 +48,7 @@ import { BaseUiComponent } from './ui/base/base.component';
     MatVideoSpinnerComponent,
     MatSeekProgressControlComponent,
     MatVideoSourceDirective,
-    MatVideoTrackDirective,
+    appVideoTrackDirective,
     MinDirective,
     MaxDirective,
     MatFrameByFrameControlComponent,
@@ -74,7 +74,7 @@ import { BaseUiComponent } from './ui/base/base.component';
   exports: [
     MatVideoComponent,
     MatVideoSourceDirective,
-    MatVideoTrackDirective
+    appVideoTrackDirective
   ],
   providers: [FullscreenService, EventService]
 })

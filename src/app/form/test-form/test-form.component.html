@@ -15,10 +15,10 @@
             <div class="form-group flex flex-row">
                 <div class="w-1/5">{{match.localTeam.name}}</div>
                 <input matInput class="w-24 form-control" formControlName="goalsLocal" type="number" required
-                    [readonly]="disabled" (focus)="focus(true)" (blur)="focus(false)">
+                    [readonly]="disabled" (focusEvent)="focus(true)" (blurEvent)="focus(false)">
                 <strong> - </strong>
                 <input matInput class="w-24 form-control" formControlName="goalsVisitor" type="number" required
-                    [readonly]="disabled" (focus)="focus(true)" (blur)="focus(false)">
+                    [readonly]="disabled" (focusEvent)="focus(true)" (blurEvent)="focus(false)">
                 <div class="w-1/5">{{match.visitorTeam.name}}</div>
             </div>
             -->
@@ -29,7 +29,7 @@
                         <mat-label>Tipo de evento</mat-label>
                         <app-mat-select #typeSelect panelClass="selector-panel"
                             formControlName="type" class="w-full" (keydown)="selectTypeByKey($event)"
-                            (focus)="focus(true)" (blur)="focus(false)">
+                            (focusEvent)="focus(true)" (blurEvent)="focus(false)">
                             <app-mat-option *ngFor="let action of typeOptions" [value]="action.value"><span
                                     *ngIf="action.key">[{{
                                     action.key |

@@ -1,7 +1,7 @@
 export interface FullscreenControls {
-  requestFullscreen: any;
-  exitFullscreen: any;
-  fullscreenElement: any;
+  requestFullscreen: string;
+  exitFullscreen: string;
+  fullscreenElement: string;
   fullscreenEnabled: string;
   fullscreenchange: string;
   fullscreenerror: string;

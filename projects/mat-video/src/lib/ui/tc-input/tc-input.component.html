@@ -2,7 +2,7 @@
     class="tc-input-container"
     [formGroup]="parts"
     [attr.aria-labelledby]="_formField?.getLabelId()"
-    (focusin)="onFocusIn($event)"
+    (focusin)="onFocusIn()"
     (focusout)="onFocusOut($event)">
   <input class="tc-input-element"
         [style.width.px]="33"

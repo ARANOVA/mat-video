@@ -25,7 +25,7 @@ export class MatFullscreenButtonComponent implements OnInit {
       this.canFullscreen = true;
     }
 
-    this.fscreen.onChange(event => (this.fscreen.isFullscreen() ? this.onChangesFullscreen(true) : this.onChangesFullscreen(false)));
+    this.fscreen.onChange(() => (this.fscreen.isFullscreen() ? this.onChangesFullscreen(true) : this.onChangesFullscreen(false)));
   }
 
   setFullscreen(value: boolean) {

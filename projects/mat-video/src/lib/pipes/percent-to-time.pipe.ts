@@ -4,12 +4,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 /**
  * Left pad a string
  *
- * @param {string} n string or number to pad
+ * @param {string | number} n string or number to pad
  * @param {number} width length to pad
  * @param {string} z fill character
  * @returns string
  */
-const pad = (n: any, width = 2, z = '0'): string => {
+const pad = (n: string | number, width = 2, z = '0'): string => {
   z = z || '0';
   n = n + '';
   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
@@ -33,7 +33,7 @@ const roundFn = (number, increment, offset) => {
 })
 export class PercentToTimePipe implements PipeTransform {
 
-  private formatValue(value: string | null | any): string {
+  private formatValue(value: string | null): string {
     if (value !== null) {
       const time = Math.floor(parseFloat(value));
       value = value.toString().replace(/,/g, '.');

@@ -87,11 +87,12 @@ export class TcInputComponent
     return !mm && !ss;
   }
 
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('aria-describedby') userAriaDescribedBy: string;
 
-  @Output() focus = new EventEmitter<boolean>();
+  @Output() focusEvent = new EventEmitter<boolean>();
 
-  @Output() blur = new EventEmitter<boolean>();
+  @Output() blurEvent = new EventEmitter<boolean>();
 
   @Input()
   get placeholder(): string {
@@ -181,12 +182,12 @@ export class TcInputComponent
     this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
-  onFocusIn(event: FocusEvent) {
+  onFocusIn() {
     if (!this.focused) {
       this.focused = true;
       this.stateChanges.next();
 
-      this.focus.emit(true);
+      this.focusEvent.emit(true);
     }
   }
 
@@ -198,7 +199,7 @@ export class TcInputComponent
         this.onTouched();
       }
       this.stateChanges.next();
-      this.blur.emit(true);
+      this.blurEvent.emit(true);
     }
   }
 
@@ -234,7 +235,7 @@ export class TcInputComponent
     }*/
   }
 
-  writeValue(tc: TcInterface | null | any): void {
+  writeValue(tc: number): void {
     this.value = tc;
   }
 

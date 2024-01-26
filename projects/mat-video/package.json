@@ -1,5 +1,5 @@
 {
-  "name": "app-mat-video",
+  "name": "ngx-mat-video",
   "version": "2.17.0",
   "description": "mat-video is an Angular 11+ video player using Material",
   "license": "MIT",
@@ -35,6 +35,9 @@
     "url": "https://github.com/ARANOVA/mat-video/issues"
   },
   "homepage": "https://github.com/ARANOVA/mat-video",
+  "dependencies": {
+    "tslib": "^2.0 - 2.3"
+  },
   "peerDependencies": {
     "@angular/animations": "11 - 17",
     "@angular/cdk": "11 - 17",
@@ -46,7 +49,6 @@
     "@angular/platform-browser": "11 - 17",
     "@angular/platform-browser-dynamic": "11 - 17",
     "rxjs": "^6.6 - 7.8",
-    "tslib": "^2.0 - 2.3",
-    "zone.js": "^0.10 - 0.13"
+    "zone.js": "^0.10 - 0.14"
   }
 }

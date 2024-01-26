@@ -1,11 +1,11 @@
-import { Directive, ElementRef, Host, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Directive, ElementRef, Host, Input, OnChanges } from '@angular/core';
 
 import { MatVideoComponent } from '../video.component';
 
 @Directive({
-  selector: '[matVideoTrack]'
+  selector: '[appVideoTrack]'
 })
-export class MatVideoTrackDirective implements OnChanges {
+export class appVideoTrackDirective implements OnChanges {
   @Input() src: string = null;
   @Input() kind: string = null;
   @Input() srclang: string = null;
@@ -21,7 +21,7 @@ export class MatVideoTrackDirective implements OnChanges {
     this.init = false;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.track.src = this.src;
     this.track.kind = this.kind;
     this.track.srclang = this.srclang;

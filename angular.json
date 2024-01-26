@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "@aranova/mat-video": {
+    "@aranova/ngx-mat-video": {
       "projectType": "library",
       "root": "projects/mat-video",
       "sourceRoot": "projects/mat-video/src",
@@ -117,21 +117,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "mat-video-app:build"
+            "buildTarget": "mat-video-app:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "mat-video-app:build:production"
+              "buildTarget": "mat-video-app:build:production"
             },
             "development": {
-              "browserTarget": "mat-video-app:build:development"
+              "buildTarget": "mat-video-app:build:development"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "mat-video-app:build"
+            "buildTarget": "mat-video-app:build"
           }
         },
         "test": {
