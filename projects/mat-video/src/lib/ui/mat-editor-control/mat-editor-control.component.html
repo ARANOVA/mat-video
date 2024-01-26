@@ -3,10 +3,9 @@
   [min]="curMinPercent"
   [max]="curMaxPercent"
   step="0.1"
-  (input)="seekVideo($event.value)"
->
+ #ngSlider><input matSliderThumb (input)="seekVideo({source: ngSliderThumb, parent: ngSlider, value: ngSliderThumb.value}.value)" #ngSliderThumb="matSliderThumb" />
   <input matSliderThumb [value]="curTimePercent">
-<mat-slider>
+<mat-slider><input matSliderThumb />
 <div #trimmerBar class="cut-bar-wrapper" (click)="selectClip($event, null, cuts); selectClip($event, null, marks)">
     <div *ngIf="video.duration" class="cut-bar">
         <div *ngIf="curMinPercent > 0 || curMaxPercent < 100" class="textIn">

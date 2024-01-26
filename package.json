@@ -12,33 +12,34 @@
     "pkg:linux": "cd dist/mat-video && npm pack",
     "test": "npx ng test mat-video --code-coverage",
     "lint": "npx eslint \"projects/**/*.ts\" --fix",
+    "update-angular": "npx npm-check-updates --upgrade --target \"minor\" --filter \"/@angular.*/\"",
     "e2e": "npx ng e2e",
     "clean": "rm -rf dist"
   },
   "private": false,
   "dependencies": {
-    "@angular/animations": "~15.2.10",
-    "@angular/cdk": "~15.2.9",
-    "@angular/common": "~15.2.10",
-    "@angular/compiler": "~15.2.10",
-    "@angular/core": "~15.2.10",
-    "@angular/forms": "~15.2.10",
-    "@angular/localize": "~15.2.10",
-    "@angular/material": "~15.2.9",
-    "@angular/platform-browser": "~15.2.10",
-    "@angular/platform-browser-dynamic": "~15.2.10",
-    "@angular/router": "~15.2.10",
+    "@angular/animations": "~17.1.1",
+    "@angular/cdk": "~16.2.13",
+    "@angular/common": "~17.1.1",
+    "@angular/compiler": "~17.1.1",
+    "@angular/core": "~17.1.1",
+    "@angular/forms": "~17.1.1",
+    "@angular/localize": "~17.1.1",
+    "@angular/material": "~16.2.13",
+    "@angular/platform-browser": "~17.1.1",
+    "@angular/platform-browser-dynamic": "~17.1.1",
+    "@angular/router": "~17.1.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.12.0"
+    "zone.js": "~0.14.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~15.2.10",
     "@angular-eslint/eslint-plugin": "^15.2.1",
     "@angular-eslint/eslint-plugin-template": "^15.2.1",
     "@angular/cli": "~15.2.10",
-    "@angular/compiler-cli": "~15.2.10",
-    "@angular/language-service": "~15.2.10",
+    "@angular/compiler-cli": "~17.1.1",
+    "@angular/language-service": "~17.1.1",
     "@types/jasmine": "~4.3.0",
     "@types/node": "^18.11.12",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
@@ -65,6 +66,6 @@
     "tslint": "~6.1.0",
     "ng-packagr": "~15.2.2",
     "tslint-config-prettier": "1.18.0",
-    "typescript": "~4.8.2"
+    "typescript": "~5.3.3"
   }
 }

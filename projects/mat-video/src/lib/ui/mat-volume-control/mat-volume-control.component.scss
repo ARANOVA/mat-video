@@ -12,10 +12,12 @@
 }
   
 
+/* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version.*/
 ::ng-deep.mat-slider-thumb {
   border-color: transparent !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version.*/
 ::ng-deep.mat-slider-track-background {
   background-color: lightgrey !important;
   transform: translateX(0px) !important;

@@ -10,8 +10,7 @@
     [color]="color"
     min="0"
     max="1"
-    step="0.01"
-    value="1">
+    step="0.01"><input matSliderThumb value="1" />
     <input matSliderThumb [(ngModel)]="curVolumePercent" (valueChange)="setVolume()">
   </mat-slider>
 </div>

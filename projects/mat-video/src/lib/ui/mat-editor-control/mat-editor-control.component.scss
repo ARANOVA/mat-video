@@ -3,6 +3,7 @@ $secondary: #999999;
 $warn: #f44336;
 $accent: #ed5b08;
 
+/* TODO(mdc-migration): The following rule targets internal classes of slider that may no longer apply for the MDC version. */
 mat-slider {
   flex-grow: 1;
   & > mat-slider {
