@@ -62,11 +62,12 @@ export class TcInputComponent
   implements ControlValueAccessor, MatFormFieldControl<number>, OnDestroy {
   
   focused = false;
-    
+  
+  static nextId = 0;
+
   @HostBinding('id') id = `tc-input-${TcInputComponent.nextId++}`;
   @HostBinding('class.input-floating') shouldLabelFloat = this.focused || !this.empty;
 
-  static nextId = 0;
   @ViewChild('mm') mmInput: HTMLInputElement;
   @ViewChild('ss') ssInput: HTMLInputElement;
 
