@@ -5,8 +5,8 @@ metadata:
   annotations:
     github.com/project-slug: ARANOVA/mat-video
 spec:
-  type: other
-  lifecycle: unknown
+  type: library
+  lifecycle: deprecated
   owner: guests
   system: examples
   providesApis: [mat-video-grpc-api]
@@ -19,7 +19,7 @@ metadata:
   name: mat-video-grpc-api
 spec:
   type: grpc
-  lifecycle: experimental
+  lifecycle: deprecated
   owner: guests
   system: examples
   definition: |
