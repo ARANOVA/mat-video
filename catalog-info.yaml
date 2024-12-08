@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: mat-video
+  annotations:
+    github.com/project-slug: ARANOVA/mat-video
+spec:
+  type: other
+  lifecycle: unknown
+  owner: guests
