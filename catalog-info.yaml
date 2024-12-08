@@ -10,6 +10,7 @@ spec:
   owner: guests
   system: examples
   providesApis: [mat-video-grpc-api]
+  subcomponentOf: flyfut-r9
 ---
 # TEST
 # https://backstage.io/docs/features/software-catalog/descriptor-format#kind-api
