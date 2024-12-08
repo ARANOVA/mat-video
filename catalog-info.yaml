@@ -9,6 +9,7 @@ spec:
   lifecycle: unknown
   owner: guests
   system: examples
+  providesApis: [mat-video-grpc-api]
 ---
 # TEST
 # https://backstage.io/docs/features/software-catalog/descriptor-format#kind-api
